@@ -55,7 +55,9 @@ Le résultat arrive dans `boite\sortie\<date>_<nom>\` :
 
 | Fichier | Contenu |
 |---|---|
-| `resultat.png` | le meilleur candidat selon les défauts mesurables |
+| `resultat.png` | le meilleur candidat selon les défauts mesurables (référence exacte) |
+| `resultat.jpg` | la même image en JPEG, pour l'ouvrir ou la partager facilement |
+| `resultat_recolore.png` | changement de couleur seulement : la variante avec l'ombrage de ta photo, à comparer |
 | `candidat_01.png`, … | tous les candidats, verrouillés et corrigés |
 | `masques\C1.png`, … | la zone prise du modèle (blanc) ; tout le noir est l'original |
 | `rapport.md` | classement, état de chaque ligne, liste de contrôle à l'œil, durées |
@@ -81,7 +83,7 @@ compatible » (voir [le guide de prise de vue](docs/GUIDE_PRISE_DE_VUE_IPHONE16.
 | `socle_complet` | `false` | `true` répète aussi les principes que ta demande dit déjà |
 | `format_creation` | `portrait` | taille en mode création : `portrait`, `paysage`, `carre`, `vertical_9_16` |
 | `graine` | `null` | fixer une graine pour reproduire un résultat |
-| `recoloration` | `true` | changement de couleur : ombres, plis et texture repris de ta photo, seule la couleur vient du modèle |
+| `recoloration` | `"comparer"` | changement de couleur : `"comparer"` donne `resultat.png` plus une variante `resultat_recolore.png` (ombres, plis et texture repris de ta photo) ; `"oui"` ou `"non"` une fois ton choix fait |
 
 ## Comment ta demande est traitée
 

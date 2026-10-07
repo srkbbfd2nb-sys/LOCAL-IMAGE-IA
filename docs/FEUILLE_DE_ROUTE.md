@@ -32,6 +32,7 @@ secondes de traitement par le code par candidat **(E, à mesurer)**.
 |---|---|---|
 | 1 | bon dans l'ensemble, grosse tache sur une ombre du t-shirt | consigne de couleur réécrite (S-CM-01) |
 | 2 | tache plus petite, toujours présente | ombrage repris de l'original par le code (S-LUM-03) |
+| 3 | **pire** : taches noires pixelisées sur les zones éclairées, ombre non résolue ; l'application Photos de Windows n'ouvre pas un fichier | défaut de la recoloration reproduit et corrigé ; recoloration en simple variante à comparer ; copie JPEG des résultats |
 
 Mesures : 64 s par photo pour 3 candidats ; zone modifiée nettement plus nette et plus
 bruitée que le reste (×2) sur les deux essais, cause à établir (taille de la photo ?).

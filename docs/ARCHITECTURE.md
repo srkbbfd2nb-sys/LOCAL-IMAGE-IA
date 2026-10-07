@@ -102,8 +102,18 @@ première approximation, couleur de l'objet × éclairage. `recoloration.py` :
    même couleur d'origine (un bras posé sur le t-shirt n'a pas la même couleur : il
    n'est pas touché).
 
-Actif seulement pour les demandes de type couleur ou matière (principe S-LUM-03),
-désactivable (`recoloration: false`). Limites : objet d'origine de couleur uniforme ;
+L'objet est délimité d'après l'original (couleur d'origine de l'objet), pas pixel
+par pixel d'après le modèle : tout ce qu'il a nettement changé là où l'original avait
+la couleur de l'objet est recoloré, y compris ses taches sombres et ses reflets
+délavés ; la couleur cible ne se lit que là où il l'a vraiment rendue.
+
+Historique : la première version (essai 3) délimitait l'objet d'après la couleur du
+candidat ; les défauts du modèle passaient au travers, avec des bords en escalier.
+Défaut reproduit, corrigé, couvert par un test de non-régression.
+
+Actif seulement pour les demandes de type couleur ou matière (principe S-LUM-03).
+Tant que tu ne l'as pas validé sur tes photos, le réglage `recoloration: "comparer"`
+produit les deux versions (`resultat.png` sans, `resultat_recolore.png` avec). Limites : objet d'origine de couleur uniforme ;
 une matière à reflets différents (cuir brillant, métal) n'est pas rendue par ce
 calcul ; un objet d'origine très sombre amplifie le bruit (rapport borné à 8).
 

@@ -87,12 +87,18 @@ def recolorer(
                                                      "trop dispersée (objet non uniforme ?).")
     origine_chroma = np.median(_chroma(o)[objet], axis=0)
     compatible = np.abs(_chroma(o) - origine_chroma).sum(axis=-1) < TOLERANCE_CHROMA
-    # Ombres oubliées : zones entourées par l'objet, de la même couleur d'origine.
-    reprises = trous(objet) & compatible
+    # Fait aussi partie de l'objet ce que le modèle a nettement changé là où l'original
+    # avait la couleur de l'objet, même s'il l'a mal rendu (reflet délavé, tache sombre).
+    objet = objet | (m & (ecart > ECART_CHANGE) & compatible)
+    # L'objet est délimité d'après l'original, pas pixel par pixel d'après le modèle :
+    # les taches sombres ou les reflets délavés du modèle sont dans l'objet et doivent
+    # être recolorés comme le reste (sinon ils restent, avec des bords en escalier).
+    region = eroder(dilater(objet, 3), 3) & compatible          # trous et fentes comblés
+    reprises = trous(region) & compatible                       # ombres oubliées par le modèle
+    region = region | reprises
 
     # Pleine résolution, dans le cadre de la zone utile seulement.
-    zone_basse = objet | reprises
-    zone = _agrandir(dilater(zone_basse, 1), forme)
+    zone = _agrandir(dilater(region, 1), forme)
     if protege is not None:
         zone &= ~protege
     cadre = cadre_utile(zone, 8)
@@ -101,17 +107,22 @@ def recolorer(
     chroma_c = _chroma(candidat[cadre])
     chroma_o = _chroma(original[cadre])
     ecart_plein = np.abs(candidat[cadre].astype(np.float32) - original[cadre]).mean(axis=-1)
-    objet_plein = (np.abs(chroma_c - cible_chroma).sum(axis=-1) < TOLERANCE_CHROMA) & (ecart_plein > 15)
-    reprises_plein = _agrandir(dilater(reprises, 1), forme)[cadre] & (
-        np.abs(chroma_o - origine_chroma).sum(axis=-1) < TOLERANCE_CHROMA)
-    z = zone[cadre] & (objet_plein | reprises_plein)
+    compatible_plein = np.abs(chroma_o - origine_chroma).sum(axis=-1) < TOLERANCE_CHROMA
+    rendu_cible = (np.abs(chroma_c - cible_chroma).sum(axis=-1) < TOLERANCE_CHROMA) & (ecart_plein > 15)
+    objet_plein = rendu_cible | ((ecart_plein > ECART_CHANGE) & compatible_plein)
+    interieur = _agrandir(eroder(region, 1), forme)[cadre]
+    # Intérieur : tout ce qui a la couleur d'origine de l'objet. Bord : seulement ce que
+    # le modèle a effectivement recoloré (le contour exact vient alors de lui).
+    z = zone[cadre] & compatible_plein & (interieur | objet_plein)
+    z = eroder(dilater(z, 2), 2)
     z = dilater(eroder(z, 1), 1)
     if z.sum() < 100:
         return candidat, masque, Recoloration(False, "Recoloration non appliquée : zone trop petite.")
 
     lum = 0.2126 * O[..., 0] + 0.7152 * O[..., 1] + 0.0722 * O[..., 2]
     ref = float(np.percentile(lum[z], 90))
-    eclaire = z & objet_plein & (lum > 0.8 * ref) & (lum < 1.2 * ref)
+    # La couleur cible se lit seulement là où le modèle l'a vraiment rendue.
+    eclaire = z & rendu_cible & (lum > 0.8 * ref) & (lum < 1.2 * ref)
     if eclaire.sum() < 100:
         return candidat, masque, Recoloration(False, "Recoloration non appliquée : trop peu de zone "
                                                      "pleinement éclairée pour lire la couleur cible.")
@@ -119,7 +130,7 @@ def recolorer(
     couleur_cible = np.median(C[eclaire], axis=0)
     rapport = np.clip(couleur_cible / np.maximum(couleur_origine, 1e-3), 0.0, RAPPORT_MAX)
     nouveau = O * rapport
-    alpha = alpha_interne(z, 2)[..., None]
+    alpha = alpha_interne(z, 3)[..., None]
     resultat = _srgb(C * (1 - alpha) + nouveau * alpha)
 
     sortie = candidat.copy()
@@ -128,9 +139,12 @@ def recolorer(
     zone_finale[cadre] = z
     part = float(zone_finale.mean())
     ombres = float((zone_finale & ~masque).mean())
+    hors_modele = float((z & ~rendu_cible).mean() * z.size / zone_finale.size)
     note = (f"Recoloration par l'ombrage d'origine sur {part:.1%} de l'image : ombres, plis et "
             f"texture viennent de ta photo, la couleur du modèle."
-            + (f" Ombres reprises que le modèle avait laissées : {ombres:.1%} de l'image." if ombres else ""))
+            + (f" Ombres reprises que le modèle avait laissées : {ombres:.1%} de l'image." if ombres else "")
+            + (f" Zones de l'objet mal rendues par le modèle (taches, reflets délavés) recolorées : "
+               f"{hors_modele:.1%} de l'image." if hors_modele >= 0.001 else ""))
     return sortie, masque | zone_finale, Recoloration(
         True, note, round(part, 4), round(ombres, 4),
         [int(v) for v in _srgb(couleur_cible)], [int(v) for v in _srgb(couleur_origine)])

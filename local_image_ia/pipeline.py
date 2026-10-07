@@ -44,6 +44,7 @@ GENERATEUR_PAR_DEFAUT = "modèle d'édition dans ComfyUI (déclaré, non vu par 
 PRINCIPE_GRAIN = "S-SIG-01"
 PRINCIPE_DERIVE = "S-SIG-03"
 PRINCIPE_RECOLORATION = "S-LUM-03"
+RECOLORATION = ("comparer", "oui", "non")
 
 
 def compiler_demande(
@@ -92,12 +93,13 @@ def finaliser(
     chemin_protege: str | Path | None = None,
     capacites: list[Capacite] | None = None,
     durees: dict | None = None,
-    recoloration: bool = True,
+    recoloration: str | bool = "comparer",
 ) -> list[MesuresCandidat]:
     """Édition. ``chemin_masque`` à None : masque automatique, candidat par candidat.
 
-    ``recoloration`` : pour un changement de couleur, l'ombrage vient de l'original
-    (principe S-LUM-03, actif seulement pour les demandes de type couleur ou matière).
+    ``recoloration`` : pour un changement de couleur, réappliquer l'ombrage de l'original
+    (principe S-LUM-03, demandes de type couleur ou matière seulement) : « oui », « non »,
+    ou « comparer » (défaut : résultat sans, plus une variante avec, à juger à l'œil).
     """
     debut = time.monotonic()
     verifier_circularite(generateur, juge)
@@ -115,15 +117,21 @@ def finaliser(
     statut_grain, ligne_grain = statut_principe(contrat, PRINCIPE_GRAIN)
     statut_derive, _ = statut_principe(contrat, PRINCIPE_DERIVE)
     statut_recolo, _ = statut_principe(contrat, PRINCIPE_RECOLORATION)
-    recolorer_actif = recoloration and statut_recolo == "actif"
+    if recoloration is True:
+        recoloration = "oui"
+    elif recoloration is False:
+        recoloration = "non"
+    if recoloration not in RECOLORATION:
+        raise ArretDeclare(f"Réglage recoloration inconnu : {recoloration}",
+                           [f"Possibles : {', '.join(RECOLORATION)}"])
+    recolo_permise = statut_recolo == "actif"
     notes_globales: list[str] = []
     if statut_grain == "suspendu":
         notes_globales.append(
             f"Grain non réappliqué : ta ligne {ligne_grain} l'interdit (le principe "
             f"{PRINCIPE_GRAIN} est suspendu). Le grain est seulement mesuré.")
 
-    resultats: list[MesuresCandidat] = []
-    for i, chemin in enumerate(chemins_candidats, start=1):
+    def traiter_candidat(i: int, chemin, recolorer_ici: bool, suffixe: str = "") -> MesuresCandidat:
         notes: list[str] = []
         candidat, note = adapter_candidat(charger_image(chemin), forme)
         if note:
@@ -142,23 +150,22 @@ def finaliser(
                            "ilots": auto.ilots}
         info_masque["derive"] = derive.to_dict()
 
-        nom = f"candidat_{i:02d}.png"
+        nom = f"candidat_{i:02d}{suffixe}.png"
         if not masque.any():
-            enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}.png")
+            enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}{suffixe}.png")
             enregistrer_png(original, sortie / nom)
-            resultats.append(MesuresCandidat(
+            return MesuresCandidat(
                 nom=f"C{i}", fichier=nom, hors_masque=None, raccord={}, signature={},
                 grain_reapplique={}, score=float("inf"), notes=notes, masque=info_masque,
-                rejete="aucune modification détectée"))
-            continue
+                rejete="aucune modification détectée")
 
         if statut_derive == "actif":
             candidat = derive.appliquer(candidat)
-        if recolorer_actif:
+        if recolorer_ici:
             candidat, masque, recolo = recolorer(original, candidat, masque, protege)
             notes.append(recolo.note)
             info_masque["recoloration"] = recolo.to_dict()
-        enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}.png")
+        enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}{suffixe}.png")
         cadre = cadre_utile(masque, MARGE_CADRE + max(fondu, 0))
         m_c, o_c = masque[cadre], original[cadre]
         alpha = alpha_interne(m_c, fondu)
@@ -184,13 +191,28 @@ def finaliser(
         raccord = continuite_raccord(final_c, m_c, alpha)
         signature = mesurer_signature(final_c, m_c, alpha)
         enregistrer_png(final, sortie / nom)
-        resultats.append(MesuresCandidat(
+        return MesuresCandidat(
             nom=f"C{i}", fichier=nom, hors_masque=hors, raccord=raccord,
             signature=signature.to_dict(), grain_reapplique=grain_info,
             score=score_defauts(signature, raccord), notes=notes, masque=info_masque,
-        ))
+        )
 
+    resultats = [traiter_candidat(i, chemin, recoloration == "oui" and recolo_permise)
+                 for i, chemin in enumerate(chemins_candidats, start=1)]
     resultats.sort(key=lambda c: c.score)
+    retenu = next((c for c in resultats if not c.rejete), None)
+    if recoloration == "comparer" and recolo_permise and retenu is not None:
+        # Variante à comparer à l'œil : le même candidat, avec l'ombrage de l'original.
+        i = int(retenu.nom[1:])
+        variante = traiter_candidat(i, chemins_candidats[i - 1], True, "_recolore")
+        if variante.masque.get("recoloration", {}).get("appliquee"):
+            shutil.copyfile(sortie / variante.fichier, sortie / "resultat_recolore.png")
+            _copie_jpeg(sortie / "resultat_recolore.png")
+            notes_globales.append(
+                f"Variante à comparer : `resultat_recolore.png` = {retenu.nom} avec l'ombrage de ta photo "
+                "réappliqué à la nouvelle couleur (expérimental). Garde celle qui te paraît juste et "
+                "dis-le-moi : le réglage « recoloration » passera à « oui » ou « non ».")
+        notes_globales += [f"Variante recolorée : {n}" for n in variante.notes]
     if Path(chemin_original).suffix.lower() not in FORMATS_SANS_PERTE:
         notes_globales.append(
             "Original en JPEG : les sorties sont en PNG pour que le verrou reste exact. "
@@ -238,12 +260,20 @@ def _reduire_masque(masque: np.ndarray, forme: tuple[int, int]) -> np.ndarray:
     return np.asarray(im) > 127
 
 
+def _copie_jpeg(chemin_png: Path) -> None:
+    """Copie JPEG pour l'affichage et le partage ; le PNG reste la référence exacte."""
+    with Image.open(chemin_png) as im:
+        im.convert("RGB").save(chemin_png.with_suffix(".jpg"), format="JPEG", quality=95,
+                               subsampling=0)
+
+
 def _ecrire_sorties(contrat, resultats, sortie, invariant, capacites, durees, generateur, juge,
                     notes_globales, debut, entrees) -> None:
     capacites = capacites if capacites is not None else capacites_phase0()
     retenu = next((c for c in resultats if not c.rejete), None)
     if retenu is not None:
         shutil.copyfile(sortie / retenu.fichier, sortie / "resultat.png")
+        _copie_jpeg(sortie / "resultat.png")
     duree = round(time.monotonic() - debut, 1)
     titre = f"Rapport — {datetime.now():%Y-%m-%d %H:%M}"
     md = rapport_markdown(contrat, resultats, capacites, invariant, titre, juge=juge,

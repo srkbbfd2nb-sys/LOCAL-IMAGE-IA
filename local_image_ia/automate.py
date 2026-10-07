@@ -73,7 +73,7 @@ class ConfigAutomate:
     texte: str = COMPLETE         # « condensee » seulement après comparaison
     format_creation: str = "portrait"
     graine: int | None = None
-    recoloration: bool = True     # changement de couleur : ombrage repris de l'original
+    recoloration: str | bool = "comparer"   # couleur : « comparer », « oui » ou « non »
 
     @classmethod
     def charger(cls, chemin: str | Path | None) -> "ConfigAutomate":
