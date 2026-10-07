@@ -62,18 +62,22 @@ ALIAS_ETIQUETTES: dict[str, Mecanisme] = {
 
 
 def capacites_phase0() -> list[Capacite]:
-    """État réel des mécanismes en phase 0, déclaré sans optimisme."""
+    """État réel des mécanismes, déclaré sans optimisme."""
     return [
-        Capacite("Verrou par masque", EtatCapacite.VERIFIE, "code (numpy)",
-                 "Écart hors masque mesuré à chaque sortie."),
+        Capacite("Verrou (masque fourni ou automatique)", EtatCapacite.VERIFIE, "code (numpy)",
+                 "Écart hors zone modifiée mesuré à chaque sortie."),
+        Capacite("Correction de dérive colorimétrique", EtatCapacite.VERIFIE, "code (numpy)",
+                 "Gain et décalage par canal, estimés hors zone modifiée."),
         Capacite("Conditionnement profondeur / contours", EtatCapacite.ABSENT, "aucune",
-                 "Pas encore branché dans ComfyUI : les lignes caméra/pose restent dans le texte."),
-        Capacite("Générateur (modèle d'édition)", EtatCapacite.DECLARE, "ComfyUI, hors de ce code",
-                 "Les candidats sont produits à part ; ce code ne voit que les images."),
+                 "Pas encore branché : les lignes caméra/pose restent dans le texte."),
         Capacite("Signature : grain", EtatCapacite.VERIFIE, "code (numpy)",
-                 "Mesuré par bande de luminance, réappliqué si la zone éditée en manque."),
+                 "Mesuré par bande de luminance, réappliqué si la zone éditée en manque "
+                 "(sauf si ta demande l'interdit)."),
         Capacite("Signature : netteté", EtatCapacite.VERIFIE, "code (numpy)",
                  "Mesurée et comparée, pas corrigée."),
+        Capacite("Analyse de l'image par IA (sujet, intention, parties du corps)",
+                 EtatCapacite.ABSENT, "repli : consignes d'analyse dans le texte du modèle",
+                 "Demande un modèle de vision local ; prévu, voir la feuille de route."),
         Capacite("Juge vision local", EtatCapacite.ABSENT, "repli : œil humain + rapport de mesures",
                  "Un juge sérieux ne tient pas dans 6 Go à côté du générateur."),
     ]

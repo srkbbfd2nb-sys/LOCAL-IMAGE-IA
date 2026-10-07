@@ -55,7 +55,7 @@ def adapter_candidat(candidat: np.ndarray, forme: tuple[int, int]) -> tuple[np.n
     hc, wc = candidat.shape[:2]
     if (hc, wc) == (h, w):
         return candidat, None
-    if abs(wc / hc - w / h) > 0.01 * (w / h):
+    if abs(wc / hc - w / h) > 0.02 * (w / h):  # arrondis à 16 px du modèle : < 2 %
         raise ArretDeclare(
             "Le candidat n'a pas les proportions de l'original : il a été recadré.",
             [f"original : {w}×{h}", f"candidat : {wc}×{hc}",

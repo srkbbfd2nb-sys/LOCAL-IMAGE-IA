@@ -1,313 +1,1013 @@
 {
-  "version": "2026-10-07",
-  "avertissement": "Principes tirés des documents fournis (n° 2 à 7). Ce sont des règles de pratique photographique (O), pas des faits mesurés : leur effet sur le modèle se vérifie par comparaison. Les directives envoyées au modèle sont en anglais.",
+  "version": "2026-10-07b",
+  "avertissement": "Principes tirés des prompts fournis par Lazerr (dossier sources/prompts). Ce sont des règles de pratique photographique (O), pas des faits mesurés : leur effet sur le modèle se vérifie par comparaison. Les directives envoyées au modèle sont en anglais ; les contrôles finaux sont pour l'œil humain et les mesures.",
+  "modules": [
+    "IMAGE SOURCE",
+    "ELEMENT TO MODIFY",
+    "CAMERA TO PRESERVE",
+    "PERSPECTIVE",
+    "LIGHTING",
+    "ENVIRONMENT",
+    "MATERIALS",
+    "PHOTOGRAPHIC PIPELINE",
+    "INTEGRATION",
+    "COLOR SCIENCE",
+    "MICRO-DETAIL",
+    "IMPERFECTIONS",
+    "CONSTRAINTS",
+    "NEGATIVE CONSTRAINTS",
+    "FINAL REALISM CHECK"
+  ],
   "principes": [
     {
-      "id": "S-INT-01",
-      "domaine": "intégration",
+      "id": "S-ANA-01",
+      "module": "IMAGE SOURCE",
+      "domaine": "image source",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "Change only what is asked; everything else stays exactly as in the photo. The result must read as the same photograph, taken at the same instant, with the same camera, the same light and the same pose.",
-      "description": "Éditer la photo fournie, ne jamais en générer une nouvelle.",
-      "source": "Documents 2 à 4",
-      "conflits": []
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "First analyse the source image: subject, geometry, vanishing lines, horizon, surfaces, materials, secondary objects and contact zones.",
+      "description": "Analyse préalable de la source.",
+      "source": "cahier_compositing_et_cas_corps.md (analyse de l'image source) ; voiture_bmw_g70.txt §1 ; protocole_master_corps.txt §1",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\banaly\\w*",
+        "\\bmap (the|subject)\\b",
+        "\\bidentify\\b"
+      ]
+    },
+    {
+      "id": "S-ANA-02",
+      "module": "IMAGE SOURCE",
+      "domaine": "image source",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "Separate real geometry and volume from what perspective, lighting, shadow, folds, posture compression, darkness, noise, blur and lens distortion only make appear; never read distortion or shadow as structure, never invent structure.",
+      "description": "Distinguer volume réel et volume apparent (A à G du protocole master).",
+      "source": "protocole_master_corps.txt §1 ; corps_condense_13_points.txt §1 ; voiture_bmw_g70.txt §1",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bseparate real\\b",
+        "\\bdistinguish\\b",
+        "\\bnever (read|interpret)\\b"
+      ]
+    },
+    {
+      "id": "S-CAM-01",
+      "module": "CAMERA TO PRESERVE",
+      "domaine": "camera to preserve",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "Keep the camera exactly: position, height, distance, pitch, yaw, roll, apparent focal length, field of view, framing and crop; do not level, recenter, flatten or re-project the view.",
+      "description": "Verrou caméra.",
+      "source": "voiture_bmw_g70.txt §2 ; corps_condense_13_points.txt §2 ; protocole_master_corps.txt §2 ; cahier_compositing_et_cas_corps.md (caméra virtuelle)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bcamera (lock|geometry|position)\\b",
+        "\\b(keep|lock|preserve)\\b.{0,40}\\bcamera\\b",
+        "^\\W*camera\\s*:"
+      ]
+    },
+    {
+      "id": "S-PER-01",
+      "module": "PERSPECTIVE",
+      "domaine": "perspective",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Every change happens inside the existing perspective field: nearer parts stay larger, farther parts smaller, new shapes follow the same vanishing lines, foreshortening and scale as their surroundings.",
+      "description": "Perspective et raccourcis conservés.",
+      "source": "protocole_master_corps.txt §2 ; corps_condense_13_points.txt §2 ; voiture_bmw_g70.txt §2 ; cahier_compositing_et_cas_corps.md (perspective et géométrie)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bforeshortening\\b",
+        "\\bvanishing\\b",
+        "\\bperspective field\\b",
+        "\\braccourcis?\\b"
+      ]
+    },
+    {
+      "id": "S-PER-02",
+      "module": "PERSPECTIVE",
+      "domaine": "perspective",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "Apparent width is not true width: judge proportions from this exact viewpoint, not from frontal reference proportions; keep the asymmetry the camera angle creates.",
+      "description": "Proportions jugées depuis cet angle précis.",
+      "source": "protocole_master_corps.txt (avertissement de perspective) ; corps_condense_13_points.txt §2",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bapparent width\\b",
+        "\\bfrontal reference\\b",
+        "\\bfrom this (exact )?(camera angle|viewpoint)\\b"
+      ]
     },
     {
       "id": "S-LUM-01",
-      "domaine": "lumière",
+      "module": "LIGHTING",
+      "domaine": "lighting",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "Light the modified area with the same key light direction, softness and colour temperature as the rest of the photo.",
-      "description": "Même source principale, même direction, même température de couleur.",
-      "source": "Document 7 — lumière",
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "Keep the original light: direction, source size, softness, intensity, ambient and reflected light, colour temperature and falloff; changed areas receive exactly this light.",
+      "description": "Verrou lumière.",
+      "source": "voiture_bmw_g70.txt §7 ; corps_condense_13_points.txt §8 ; protocole_master_corps.txt §14 ; cahier_compositing_et_cas_corps.md (lumière)",
       "conflits": [
         "\\b(chang|modifi|nouvel|new|different)\\w*.{0,15}\\b(lumiere|eclairage|light)",
         "\\b(lumiere|eclairage|light)\\w*.{0,15}\\b(chang|modifi|different)"
+      ],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\blight(ing)? lock\\b",
+        "\\block the original lighting\\b",
+        "\\bkeep\\b.{0,40}\\blight",
+        "^\\W*lighting\\s*:"
+      ]
+    },
+    {
+      "id": "S-LUM-02",
+      "module": "LIGHTING",
+      "domaine": "lighting",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "No added light: no new key light, no rim light, no brightened subject, no contrast boost to reveal shapes; no highlight that could not exist in this lighting.",
+      "description": "Aucune lumière ajoutée.",
+      "source": "voiture_bmw_g70.txt §7 ; corps_condense_13_points.txt §8 ; protocole_master_corps.txt §14",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\brim light\\b",
+        "\\bkey light\\b",
+        "\\bno added light\\b",
+        "\\bcontrast boost\\b"
       ]
     },
     {
       "id": "S-OMB-01",
-      "domaine": "ombres",
+      "module": "LIGHTING",
+      "domaine": "lighting",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "New or changed volumes cast and receive shadows consistent with the existing light (same direction, softness and density), with contact shadows where surfaces touch.",
-      "description": "Ombres compatibles, ombres de contact.",
-      "source": "Document 7 — ombres",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "New or changed volumes cast and receive shadows consistent with the existing light (same direction, length, softness, density), with contact shadows where surfaces touch; no dark outlines.",
+      "description": "Ombres compatibles et ombres de contact.",
+      "source": "voiture_bmw_g70.txt §8 ; protocole_master_corps.txt §15 ; cahier_compositing_et_cas_corps.md (ombres)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bcontact shadows?\\b"
+      ]
     },
     {
-      "id": "S-GEO-01",
-      "domaine": "perspective et géométrie",
+      "id": "S-ENV-01",
+      "module": "ENVIRONMENT",
+      "domaine": "environment",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "Respect the existing perspective and foreshortening: new shapes follow the same vanishing lines and the same scale as their surroundings.",
-      "description": "Perspective, raccourcis, échelle cohérente avec l'environnement.",
-      "source": "Document 7 — perspective et géométrie",
-      "conflits": []
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "Leave the environment untouched: no warping, bending, displacement or cloning of walls, floor, lines, tiles or objects near the edited area.",
+      "description": "Environnement intact près de la zone éditée.",
+      "source": "voiture_bmw_g70.txt §9 ; protocole_master_corps.txt §17 ; corps_condense_13_points.txt §10",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bwarp\\w*",
+        "\\bclon(ed|ing)\\b"
+      ]
+    },
+    {
+      "id": "S-ENV-02",
+      "module": "ENVIRONMENT",
+      "domaine": "environment",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Correct occlusion order: nothing floating, fused or intersecting; edited elements stand in front of or behind the scene exactly as physics requires.",
+      "description": "Ordre d'occlusion correct.",
+      "source": "protocole_master_corps.txt §18 ; voiture_bmw_g70.txt §9",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bcorrect occlusion\\b",
+        "\\bocclusion order\\w*",
+        "\\bfloating\\b"
+      ]
     },
     {
       "id": "S-MAT-01",
-      "domaine": "matériaux et microstructure",
+      "module": "MATERIALS",
+      "domaine": "materials",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "Keep real material micro-structure (skin pores, fabric weave, small natural imperfections); never smooth, plastic-looking surfaces.",
-      "description": "Pores, fibres, imperfections naturelles ; jamais de surface plastique.",
-      "source": "Document 7 — matériaux",
+      "modes": [
+        "tous"
+      ],
+      "directive": "Keep real material micro-structure (skin pores, fabric weave, paint, metal, glass, dust, micro-scratches, small natural imperfections); never smooth, plastic-looking surfaces.",
+      "description": "Microstructure réelle des matériaux.",
+      "source": "cahier_compositing_et_cas_corps.md (matériaux et microstructure) ; protocole_master_corps.txt §13",
       "conflits": [
-        "\\b(lisse|smooth\\w*|airbrush\\w*|retouche beaute|beauty retouch\\w*)\\b"
+        "\\b(smooth|lisse)\\w*\\s+(skin|peau|surfaces?|finish)\\b",
+        "\\bairbrush\\w*",
+        "\\b(beauty retouch\\w*|retouche beaute)\\b"
+      ],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bpores\\b",
+        "\\bmicro[- ]?structure\\b"
+      ]
+    },
+    {
+      "id": "S-PIP-01",
+      "module": "PHOTOGRAPHIC PIPELINE",
+      "domaine": "photographic pipeline",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Edited areas match the photo's resolution, softness, noise, grain, compression, local contrast and lens rendering; never sharper, cleaner or more detailed than the rest of the image.",
+      "description": "Même signature photographique que la source.",
+      "source": "corps_12_points_signature.txt (signature photographique) ; voiture_bmw_g70.txt §10 ; protocole_master_corps.txt §19 ; cahier_compositing_et_cas_corps.md (texture photographique)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bphoto(graphic)? (character|signature|texture)\\b",
+        "\\bmatch\\w*\\b.{0,60}\\b(resolution|grain|noise)\\b",
+        "\\bsame\\b.{0,40}\\b(grain|noise)\\b"
+      ]
+    },
+    {
+      "id": "S-PIP-02",
+      "module": "PHOTOGRAPHIC PIPELINE",
+      "domaine": "photographic pipeline",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Stay an ordinary smartphone photograph: no studio, magazine, advertising, cinematic or DSLR rendering, no HDR, no denoise, no beauty filter, no grading.",
+      "description": "Rendu de smartphone ordinaire.",
+      "source": "voiture_bmw_g70.txt §10 ; corps_condense_13_points.txt §11 ; protocole_master_corps.txt §20",
+      "conflits": [
+        "\\b(studio|magazine|cinematic|cinematique|dslr|hdr|ultra[- ]?(sharp|net\\w*)|8k|4k)\\b"
+      ],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bsmartphone\\b",
+        "\\bphone (shot|photo\\w*)\\b"
+      ]
+    },
+    {
+      "id": "S-INT-01",
+      "module": "INTEGRATION",
+      "domaine": "integration",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "edition"
+      ],
+      "directive": "Change only what is asked; everything else stays exactly as in the photo. The result must read as the same photograph, taken at the same instant, with the same camera, the same light and the same pose.",
+      "description": "Même photo, même instant.",
+      "source": "voiture_bmw_g70.txt (GOAL) ; corps_condense_13_points.txt (GOAL) ; protocole_master_corps.txt (PRIMARY OBJECTIVE)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bsame (photo|photograph|moment|instant)\\b"
+      ]
+    },
+    {
+      "id": "S-INT-02",
+      "module": "INTEGRATION",
+      "domaine": "integration",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Edges of the edited area blend into the scene like the rest of the photo: organic contours, no cutout edge, halo or compositing seam; crisp lines stay true where the subject has them.",
+      "description": "Contours intégrés, sans détourage.",
+      "source": "voiture_bmw_g70.txt §12 ; protocole_master_corps.txt (contrôle final) ; cahier_compositing_et_cas_corps.md (intégration du sujet)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bseams?\\b",
+        "\\bcutout\\b",
+        "\\bedge transitions?\\b",
+        "\\borganic\\b"
+      ]
+    },
+    {
+      "id": "S-INT-03",
+      "module": "INTEGRATION",
+      "domaine": "integration",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Bounce light and reflections are exchanged with nearby surfaces consistently (glass, paint, skin, wet or glossy ground).",
+      "description": "Lumière de rebond et reflets.",
+      "source": "cahier_compositing_et_cas_corps.md (intégration du sujet) ; voiture_bmw_g70.txt §8",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bbounce\\b",
+        "\\breflected light\\b",
+        "\\breflections?\\b"
       ]
     },
     {
       "id": "S-COL-01",
-      "domaine": "colorimétrie",
+      "module": "COLOR SCIENCE",
+      "domaine": "color science",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "Match exposure, white balance, contrast and saturation of the modified area to the surrounding image.",
-      "description": "Même exposition, balance des blancs, contraste et saturation que le reste.",
-      "source": "Document 7 — colorimétrie",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Edited areas inherit the photo's exposure, white balance, gamma, tonal curve, saturation and colour response; foreground and background stay colour-consistent; do not recolour the whole image.",
+      "description": "Même réponse colorimétrique, cohérence premier plan / arrière-plan.",
+      "source": "protocole_master_corps.txt §21 ; voiture_bmw_g70.txt §10 ; cahier_compositing_et_cas_corps.md (colorimétrie)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bwhite balance\\b",
+        "\\bgamma\\b",
+        "\\bcolou?r (science|response)\\b"
+      ]
     },
     {
-      "id": "S-DEG-01",
-      "domaine": "dégradation réaliste",
+      "id": "S-MIC-01",
+      "module": "MICRO-DETAIL",
+      "domaine": "micro-detail",
       "mecanisme": "instruction",
       "types": [
         "tous"
       ],
-      "directive": "Do not make the modified area cleaner, sharper or more detailed than the rest of the photo: ordinary smartphone rendering, never studio or magazine.",
-      "description": "Une image parfaitement propre paraît moins photographique.",
-      "source": "Document 7 — dégradation réaliste ; documents 2 à 4 — signature photographique",
-      "conflits": [
-        "\\b(studio|magazine|ultra[- ]?(sharp|net\\w*)|8k|4k|hdr)\\b"
+      "modes": [
+        "tous"
+      ],
+      "directive": "Detail density matches the source: no oversharpened pores, no excessive micro-detail, no artificial high-frequency texture, no generative smoothness.",
+      "description": "Densité de détail identique à la source.",
+      "source": "protocole_master_corps.txt §13 et §19 ; corps_12_points_signature.txt",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bmicro[- ]?detail\\b",
+        "\\bhigh[- ]frequency\\b",
+        "\\boversharpen\\w*"
+      ]
+    },
+    {
+      "id": "S-IMP-01",
+      "module": "IMPERFECTIONS",
+      "domaine": "imperfections",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Keep natural imperfections: asymmetry, irregular texture, tiny tonal variations, imperfect transitions, minor optical flaws; plausibility, not perfection.",
+      "description": "Réalisme par l'imperfection (dégradation réaliste).",
+      "source": "protocole_master_corps.txt §23 ; corps_12_points_signature.txt ; cahier_compositing_et_cas_corps.md (dégradation réaliste)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bimperfections?\\b",
+        "\\birregularit\\w*"
+      ]
+    },
+    {
+      "id": "S-CON-01",
+      "module": "CONSTRAINTS",
+      "domaine": "constraints",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "edition"
+      ],
+      "directive": "Use the smallest possible edit region; never regenerate the whole photograph.",
+      "description": "Plus petite zone possible.",
+      "source": "voiture_bmw_g70.txt §11 ; protocole_master_corps.txt §25 ; corps_12_points_signature.txt",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bsmallest\\b",
+        "\\blocal edit\\w*"
+      ]
+    },
+    {
+      "id": "S-CON-02",
+      "module": "CONSTRAINTS",
+      "domaine": "constraints",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Add no visible watermark, logo, text, signature, caption, button or interface overlay; remove any present in a reference image.",
+      "description": "Aucun texte, logo ni surimpression.",
+      "source": "corps_12_points_signature.txt (propreté technique) ; selfie_reference_json.json (objective)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bwatermarks?\\b",
+        "\\blogos?\\b",
+        "\\boverlays?\\b"
+      ]
+    },
+    {
+      "id": "S-NEG-01",
+      "module": "NEGATIVE CONSTRAINTS",
+      "domaine": "negative constraints",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Avoid: halos, edge ringing, banding, repeated or periodic texture, duplicated details, liquify or rubber-like deformation, geometrically rigid contours, impossible shadows, noise inconsistent between zones.",
+      "description": "Défauts à éviter (liste de rejet).",
+      "source": "protocole_master_corps.txt §29 ; corps_12_points_signature.txt ; corps_condense_13_points.txt §13",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bhalos?\\b",
+        "\\bringing\\b",
+        "\\bbanding\\b",
+        "\\bliquify\\b"
+      ]
+    },
+    {
+      "id": "S-COR-01",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
+      "mecanisme": "instruction",
+      "types": [
+        "corps"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Muscle or volume grows under the skin through real shape and shading, never painted on; no drawn lines, no symmetrical blocks, no dark separation lines.",
+      "description": "Volume sous la peau, jamais dessiné.",
+      "source": "protocole_master_corps.txt §8 et §13 ; corps_condense_13_points.txt §7",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bpainted\\b",
+        "\\bdrawn\\b",
+        "\\bunder the skin\\b"
+      ]
+    },
+    {
+      "id": "S-COR-02",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
+      "mecanisme": "instruction",
+      "types": [
+        "corps"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Grow each segment gradually and continuously; never scale the silhouette or a limb uniformly; keep rib cage and pelvis geometry, do not shrink the waist.",
+      "description": "Croissance progressive, pas de mise à l'échelle uniforme.",
+      "source": "protocole_master_corps.txt §4, §7, §9 ; corps_condense_13_points.txt §4-5",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\buniform\\w*\\b.{0,20}\\bscal\\w*",
+        "\\bshrink the waist\\b",
+        "\\bgradually\\b"
+      ]
+    },
+    {
+      "id": "S-COR-03",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
+      "mecanisme": "instruction",
+      "types": [
+        "corps"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Keep anatomical plausibility: same number of limbs and fingers, joints and landmarks in place, hands and fingers unchanged in size, proportions consistent with the same person.",
+      "description": "Plausibilité anatomique (« Not too much arms »).",
+      "source": "protocole_master_corps.txt §7, §26, §27 ; corps_condense_13_points.txt §13",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bextra fingers\\b",
+        "\\btoo much arms\\b",
+        "\\banatomically plausible\\b",
+        "\\bfinger anatomy\\b"
+      ]
+    },
+    {
+      "id": "S-COR-04",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
+      "mecanisme": "instruction",
+      "types": [
+        "corps"
+      ],
+      "modes": [
+        "edition",
+        "reference"
+      ],
+      "directive": "Keep the person's identity: face, features, hair, beard, age and ethnicity unchanged; the edit never spreads beyond the body.",
+      "description": "Identité inchangée.",
+      "source": "protocole_master_corps.txt §24 ; corps_condense_13_points.txt §12",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bidentity\\b"
+      ]
+    },
+    {
+      "id": "S-COR-05",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
+      "mecanisme": "instruction",
+      "types": [
+        "corps",
+        "volume_forme"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Clothing follows the new shape: folds, tension, seams and thickness move with the volume underneath; never stretch fabric uniformly.",
+      "description": "Le vêtement suit le volume.",
+      "source": "protocole_master_corps.txt §16 ; corps_condense_13_points.txt §9",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "^\\W*(\\d+[.)]\\s*)?clothing\\b",
+        "\\bfabric\\b",
+        "\\bgarment\\b"
       ]
     },
     {
       "id": "S-VOL-01",
-      "domaine": "transformation",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
       "mecanisme": "instruction",
       "types": [
         "volume_forme"
       ],
-      "directive": "Change volume gradually and continuously along each segment; never scale the whole silhouette uniformly.",
-      "description": "Gain modéré et continu, jamais une mise à l'échelle uniforme.",
-      "source": "Documents 2 à 4 — transformation",
-      "conflits": []
-    },
-    {
-      "id": "S-VOL-02",
-      "domaine": "intégration",
-      "mecanisme": "instruction",
-      "types": [
-        "volume_forme"
+      "modes": [
+        "tous"
       ],
-      "directive": "Clothing follows the new volume: folds, tension and seams move with the shape underneath.",
-      "description": "Le vêtement suit le nouveau volume.",
-      "source": "Document 7 — intégration du sujet",
-      "conflits": []
-    },
-    {
-      "id": "S-VOL-03",
-      "domaine": "anatomie",
-      "mecanisme": "instruction",
-      "types": [
-        "volume_forme"
-      ],
-      "directive": "Keep anatomical plausibility: same number of limbs and fingers, joints in place, segment lengths and proportions consistent with the original person.",
-      "description": "Plausibilité anatomique (« Not too much arms »).",
-      "source": "Documents 2 à 4 — ordre de priorité, point 6",
-      "conflits": []
+      "directive": "Change volume gradually along each part; never scale the whole shape uniformly; transitions into neighbouring parts stay smooth.",
+      "description": "Changement de forme progressif.",
+      "source": "protocole_master_corps.txt §12",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bgradual\\w*",
+        "\\buniform\\w*\\b.{0,20}\\bscal\\w*"
+      ]
     },
     {
       "id": "S-REM-01",
-      "domaine": "remplacement",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
       "mecanisme": "instruction",
       "types": [
         "remplacement_objet"
       ],
-      "directive": "Remove every trace of the replaced object (edges, reflections, shadows, plate, debris) before placing the new one.",
-      "description": "Supprimer toute trace de l'objet d'origine.",
-      "source": "Document 6",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Remove every trace of the replaced object (badge, lights, edges, paint, old shadow shape, reflections) and rebuild any revealed background to match its surroundings, texture and noise included; no hybrid of old and new.",
+      "description": "Aucune trace de l'objet d'origine, fond révélé reconstruit.",
+      "source": "voiture_bmw_g70.txt §5 et §12",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bno trace\\b",
+        "\\bremove the original\\b",
+        "\\brevealed\\b"
+      ]
     },
     {
       "id": "S-REM-02",
-      "domaine": "remplacement",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
       "mecanisme": "instruction",
       "types": [
         "remplacement_objet"
       ],
-      "directive": "Place and scale the new object from cues in the scene: ground contact, distance, perspective lines and the size of nearby references.",
-      "description": "Position et échelle déduites de l'environnement.",
-      "source": "Document 6",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Scale and place the new object from the environment (ground lines, references of known size), not from the old silhouette; it must physically fit with credible clearances and ground contact.",
+      "description": "Échelle déduite de l'environnement, ajustement physique.",
+      "source": "voiture_bmw_g70.txt §4",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bscale it from\\b",
+        "\\bphysically fit\\b",
+        "\\bclearances?\\b"
+      ]
     },
     {
       "id": "S-REM-03",
-      "domaine": "remplacement",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
       "mecanisme": "instruction",
       "types": [
         "remplacement_objet"
       ],
-      "directive": "The new object reflects and is reflected by its environment consistently (glass, paint, wet ground).",
-      "description": "Reflets cohérents avec l'environnement.",
-      "source": "Document 6 ; document 7 — intégration",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "The new object is correct in every identifying detail for its exact model; no mixed generations or invented details; small parts (plates, badges, text) keep the source's brightness and sharpness.",
+      "description": "Identité exacte du nouvel objet.",
+      "source": "voiture_bmw_g70.txt §3 et §6",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bcorrect in every detail\\b",
+        "\\bno mixed\\b"
+      ]
     },
     {
       "id": "S-CM-01",
-      "domaine": "couleur ou matière",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
       "mecanisme": "instruction",
       "types": [
         "couleur_matiere"
       ],
-      "directive": "Change only the requested colour or material; keep the object's shape, folds, seams and highlight structure.",
+      "modes": [
+        "tous"
+      ],
+      "directive": "Change only the requested colour or material; keep the object's geometry, folds, seams, stitching and highlight structure.",
       "description": "Seule la couleur ou la matière change.",
-      "source": "Document 5 ; document 7 — matériaux",
-      "conflits": []
+      "source": "selfie_reference_json.json (car_interior, wardrobe)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bsame silhouette\\b",
+        "\\bexact same\\b.{0,30}\\bgeometry\\b"
+      ]
     },
     {
       "id": "S-CM-02",
-      "domaine": "couleur ou matière",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
       "mecanisme": "instruction",
       "types": [
         "couleur_matiere"
       ],
-      "directive": "The new material keeps plausible reflectance: matte stays matte, leather has soft highlights, metal reflects its surroundings.",
+      "modes": [
+        "tous"
+      ],
+      "directive": "The new material keeps plausible reflectance and texture under this light: matte stays matte, leather shows grain and soft highlights, metal reflects its surroundings, white stays detailed without clipping.",
       "description": "Réflectance plausible de la nouvelle matière.",
-      "source": "Document 7 — matériaux",
-      "conflits": []
+      "source": "selfie_reference_json.json (lighting) ; cahier_compositing_et_cas_corps.md (matériaux)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\breflectance\\b",
+        "\\btexture and stitching\\b"
+      ]
     },
     {
       "id": "S-VER-01",
-      "domaine": "verrou",
+      "module": "CONSTRAINTS",
+      "domaine": "constraints",
       "mecanisme": "verrou",
       "types": [
         "tous"
       ],
-      "directive": "Pixels outside the mask are copied from the original.",
-      "description": "Hors masque, l'original est recopié (identique au bit près en PNG).",
+      "modes": [
+        "edition"
+      ],
+      "directive": "Pixels outside the edited area are copied from the original.",
+      "description": "Hors zone modifiée, l'original est recopié (identique au bit près en PNG).",
       "source": "Architecture retenue, mécanisme 1",
-      "conflits": []
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
-      "id": "S-CON-01",
-      "domaine": "conditionnement",
+      "id": "S-CND-01",
+      "module": "CAMERA TO PRESERVE",
+      "domaine": "camera to preserve",
       "mecanisme": "conditionnement",
       "types": [
         "tous"
       ],
+      "modes": [
+        "edition",
+        "reference"
+      ],
       "directive": "Depth and edge maps from the source constrain camera, perspective and pose.",
       "description": "Caméra, perspective et pose contraintes par la source.",
       "source": "Architecture retenue, mécanisme 2",
-      "conflits": []
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
       "id": "S-SIG-01",
-      "domaine": "texture photographique",
+      "module": "PHOTOGRAPHIC PIPELINE",
+      "domaine": "photographic pipeline",
       "mecanisme": "signature",
       "types": [
         "tous"
       ],
-      "directive": "Luminance-dependent grain measured on the source and re-applied to the modified area.",
+      "modes": [
+        "edition"
+      ],
+      "directive": "Luminance-dependent grain measured on the source and re-applied where the edited area lacks it.",
       "description": "Grain dépendant de la luminance, mesuré puis réappliqué.",
-      "source": "Document 7 — texture photographique",
-      "conflits": []
+      "source": "cahier_compositing_et_cas_corps.md (texture photographique)",
+      "conflits": [],
+      "conflits_explicites": [
+        "\\b(do not|don't|never|no|ne pas|n'ajoute\\w*|pas d'?|sans)\\W+(\\w+\\W+){0,2}(inject\\w*|add\\w*|ajout\\w*)?\\W*(\\w+\\W+){0,1}(artificial|artificiel\\w*)\\W+(noise|bruit|grain)",
+        "\\b(do not|don't|never|ne pas)\\W+(inject|add|ajout)\\w*\\W+(\\w+\\W+){0,2}(noise|bruit|grain)"
+      ],
+      "couverture": []
     },
     {
       "id": "S-SIG-02",
-      "domaine": "texture photographique",
+      "module": "PHOTOGRAPHIC PIPELINE",
+      "domaine": "photographic pipeline",
       "mecanisme": "signature",
       "types": [
         "tous"
       ],
-      "directive": "Sharpness of the modified area compared with its surroundings.",
+      "modes": [
+        "edition"
+      ],
+      "directive": "Sharpness of the edited area compared with its surroundings.",
       "description": "Netteté comparée à l'entourage.",
-      "source": "Documents 2 à 4 — signature photographique",
-      "conflits": []
+      "source": "corps_12_points_signature.txt (signature photographique)",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
+    },
+    {
+      "id": "S-SIG-03",
+      "module": "COLOR SCIENCE",
+      "domaine": "color science",
+      "mecanisme": "signature",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "edition"
+      ],
+      "directive": "Global colour drift of the generated image measured on the unchanged area and corrected before compositing.",
+      "description": "Dérive colorimétrique du modèle mesurée hors zone modifiée, puis corrigée.",
+      "source": "cahier_compositing_et_cas_corps.md (gestion colorimétrique) ; protocole_master_corps.txt §21",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
       "id": "S-CTL-01",
-      "domaine": "contrôle final",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
       "mecanisme": "verification",
       "types": [
         "tous"
       ],
-      "directive": "Raccords : aucune bordure de détourage visible au bord de la zone éditée.",
-      "description": "Continuité aux raccords (mesurée).",
-      "source": "Document 7 — contrôle de cohérence final",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Raccords : aucune bordure de détourage, aucun halo au bord de la zone modifiée.",
+      "description": "Contrôle final.",
+      "source": "cahier_compositing_et_cas_corps.md ; voiture_bmw_g70.txt §12",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
       "id": "S-CTL-02",
-      "domaine": "contrôle final",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
       "mecanisme": "verification",
       "types": [
         "tous"
       ],
-      "directive": "Même perspective et même focale apparente que la source.",
-      "description": "Contrôle à l'œil.",
-      "source": "Document 7 — contrôle de cohérence final",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Même perspective et même focale apparente que la source ; échelle correcte.",
+      "description": "Contrôle final.",
+      "source": "cahier_compositing_et_cas_corps.md ; protocole_master_corps.txt §28",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
       "id": "S-CTL-03",
-      "domaine": "contrôle final",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
       "mecanisme": "verification",
       "types": [
         "tous"
       ],
-      "directive": "Même direction de lumière, mêmes températures de couleur, ombres compatibles.",
-      "description": "Contrôle à l'œil.",
-      "source": "Document 7 — contrôle de cohérence final",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Même direction de lumière, mêmes températures de couleur, mêmes niveaux de contraste ; ombres physiquement compatibles.",
+      "description": "Contrôle final.",
+      "source": "cahier_compositing_et_cas_corps.md ; protocole_master_corps.txt §28",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
       "id": "S-CTL-04",
-      "domaine": "contrôle final",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
       "mecanisme": "verification",
       "types": [
         "tous"
       ],
-      "directive": "Contact physique crédible, aucune texture générée incohérente.",
-      "description": "Contrôle à l'œil.",
-      "source": "Document 7 — contrôle de cohérence final",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Profondeur de champ compatible ; grain identique ; netteté compatible.",
+      "description": "Contrôle final.",
+      "source": "cahier_compositing_et_cas_corps.md ; corps_12_points_signature.txt",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     },
     {
       "id": "S-CTL-05",
-      "domaine": "contrôle final",
-      "mecanisme": "verification",
-      "types": [
-        "volume_forme"
-      ],
-      "directive": "Anatomie : nombre de membres et de doigts, articulations, mains, proportions entre segments.",
-      "description": "Contrôle à l'œil (famille de défauts portée par le modèle seul).",
-      "source": "Documents 2 à 4 — contrôle final",
-      "conflits": []
-    },
-    {
-      "id": "S-CTL-06",
-      "domaine": "contrôle final",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
       "mecanisme": "verification",
       "types": [
         "tous"
       ],
-      "directive": "Test du spectateur : quelqu'un qui n'a jamais vu l'original ne remarque rien.",
-      "description": "Contrôle par un tiers.",
-      "source": "Documents 2 à 4 et 6 — test du spectateur",
-      "conflits": []
+      "modes": [
+        "tous"
+      ],
+      "directive": "Contact physique crédible ; aucune texture « générée » incohérente ; rien de flottant.",
+      "description": "Contrôle final.",
+      "source": "cahier_compositing_et_cas_corps.md ; voiture_bmw_g70.txt §12",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
+    },
+    {
+      "id": "S-CTL-06",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Fond intact : aucune ligne déformée, aucun objet déplacé ou cloné.",
+      "description": "Contrôle final.",
+      "source": "protocole_master_corps.txt §28 ; voiture_bmw_g70.txt §9",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
+    },
+    {
+      "id": "S-CTL-07",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Test du spectateur : quelqu'un qui n'a jamais vu l'original lit une photo ordinaire, sans signe de retouche ni d'IA.",
+      "description": "Contrôle final.",
+      "source": "voiture_bmw_g70.txt (TEST) ; corps_condense_13_points.txt (TEST) ; protocole_master_corps.txt §30",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
+    },
+    {
+      "id": "S-CTL-08",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
+      "mecanisme": "verification",
+      "types": [
+        "corps"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Anatomie : membres et doigts (nombre, longueur), articulations, mains, proportions entre segments, identité du visage.",
+      "description": "Contrôle à l'œil (famille de défauts portée par le modèle seul).",
+      "source": "protocole_master_corps.txt §26-27 ; corps_condense_13_points.txt §13",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
+    },
+    {
+      "id": "S-CTL-09",
+      "module": "FINAL REALISM CHECK",
+      "domaine": "final realism check",
+      "mecanisme": "verification",
+      "types": [
+        "remplacement_objet"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "directive": "Nouvel objet : modèle exact, aucune trace de l'ancien, échelle contre les repères, contact au sol, plaque lisible.",
+      "description": "Contrôle à l'œil.",
+      "source": "voiture_bmw_g70.txt §12",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
     }
   ]
 }

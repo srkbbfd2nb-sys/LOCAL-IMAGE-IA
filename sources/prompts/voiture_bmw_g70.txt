@@ -1,0 +1,31 @@
+MAGE EDIT — REPLACE THE PARKED CAR WITH A BMW 7 SERIES, ORIGINAL PHOTO PRESERVED
+
+GOAL: Edit the supplied photo; never generate a new one. Replace the parked car with a BMW 7 Series (G70 generation). Result: the SAME photo (moment, camera, light, exposure, garage) with a different car in the same bay. Vehicle swap only: no scene redesign, no beautification, no showroom or advertising look.
+
+1. ANALYZE FIRST: Map the car's outline, wheels, contact points, shadow, plate and every surface it hides or reflects. Map the garage: floor, stains, cracks, litter, painted lines, bay edges, pillar, back wall, pipes, beam, ducts, ceiling. Measure scale from bay width, pillar and lines. Separate real geometry from perspective, darkness, noise and blur.
+
+2. CAMERA LOCK: Keep position, height, distance, pitch, yaw, roll, focal length, field of view, framing, crop. Handheld phone at standing height, tilted down, portrait: don't level, recenter or flatten it. The car follows the floor's vanishing lines and foreshortening, seen from exactly this height and angle.
+
+3. CAR IDENTITY: BMW 7 Series G70, correct in every detail: tall upright kidney grille with chrome frame, slim split headlights (thin upper light strip, main units below), wide lower apron and intakes, long flat hood, correct BMW roundel, mirrors, wheel arches, large wheels. No mixed generations, no other model, no invented details. Paint: Black Sapphire metallic.
+
+4. POSITION & SCALE: Same bay and orientation: front facing the camera, reversed in, centered, straight, all wheels on the floor. The 7 Series is longer (~5.4 m), slightly wider (~1.95 m) and lower (~1.54 m) than the original car: scale it from the environment, not from the old silhouette. It must physically fit: rear clear of the back wall, gap from the pillar, mirrors not touching it, front at or near the bay's front line.
+
+5. REMOVE THE ORIGINAL: No trace of the Peugeot: lion badge, claw lights, grille, body lines, blue paint, old shadow shape. Where the new car is lower or narrower, rebuild the revealed wall, pipes, floor and lines to match their surroundings, texture and noise included.
+
+6. PLATE: French format like the original (EU band, department band), original characters, mounted where a 7 Series carries it on the lower bumper; same brightness and sharpness as the original plate.
+
+7. LIGHT LOCK: Keep the dim, underexposed garage light: direction, softness, intensity, color temperature, falloff; the floor stays brighter near the camera, the back wall dark. The car receives exactly this light: mostly dark body, subtle highlights on edges, chrome and lower sides. Lamp state matches the original (lit or unlit, same intensity). No added light, no brightened car, no rim light, no contrast boost.
+
+8. REFLECTIONS & SHADOWS: Paint and glass reflect the real scene softly (ceiling, pipes, pillar), dimmed by the low light; no showroom gloss, no sky. Windshield dark. Contact shadows under each tire and a soft dark shadow under the body, like the original's; the matte concrete barely reflects.
+
+9. BACKGROUND LOCK: Pillar, walls, pipes, beam, ducts, ceiling, lines, stains, cracks and the white litter stay untouched: no warping, bending, displacement or cloning. Correct occlusion: the car stands in front of the wall, never merged with the pillar.
+
+10. PHOTO CHARACTER: The car matches the photo's resolution, softness, noise, grain, compression, local contrast, white balance, exposure, gamma and color. It must not be sharper, cleaner or brighter than the scene. Stay a casual, dark smartphone shot: no studio, advertising, cinematic, HDR, denoise or grading. Keep imperfections: plausibility, not perfection.
+
+11. LOCAL EDIT: Smallest region: the car, its shadow and the revealed background; never regenerate the whole photo.
+
+12. FINAL CHECK: Verify scale against pillar and bay, perspective against floor lines, wheel contact, symmetry as distorted by this angle only, clearances, light, shadows, reflections, noise and color. Remove: hybrid of both cars, Peugeot remnants, distorted grille or badge, wrong headlights, garbled plate, extra or misaligned wheels, floating car, missing shadows, halos, cutout edges, warped pillar or lines, over-sharp or over-bright car, plastic paint. The car's crisp lines stay true, but its edges blend into the scene like the rest of the photo, with no compositing seams.
+
+TEST: A viewer unaware of the original sees an ordinary, underexposed phone photo of a real BMW 7 Series parked in this garage; not an AI render, a pasted car or a showroom shot.
+
+PRIORITY: 1 camera, 2 garage, 3 light & exposure, 4 correct 7 Series, 5 scale & physical fit, 6 photographic texture, 7 imperfections. Never trade coherence or perspective for a more impressive car.

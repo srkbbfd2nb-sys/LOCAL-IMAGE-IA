@@ -3,7 +3,8 @@
 Règles (vérifiables par le code, sans confiance dans un modèle de langage) :
 1. Demande figée : stockée mot pour mot, avec une empreinte.
 2. Contrat : chaque ligne reçoit un identifiant et une destination parmi les
-   cinq mécanismes. Une ligne sans destination provoque un arrêt déclaré.
+   cinq mécanismes. Une ligne qu'aucune règle ne classe va en instruction,
+   marquée « défaut » (option : arrêt déclaré à la place).
 3. Socle additif : les principes s'ajoutent, étiquetés comme ajouts. En cas
    de conflit, la ligne de la demande gagne et le conflit est signalé.
 4. Rapport de sortie : pour chaque ligne, garantie, vérifiée ou non vérifiable.
@@ -25,7 +26,8 @@ from local_image_ia.gouvernance import ArretDeclare
 from local_image_ia.mecanismes import GARANTS_PAR_DEFAUT, Mecanisme
 from local_image_ia.routage import etiquette_inconnue, lire_etiquette, router
 from local_image_ia.socle import (
-    TYPES_DEMANDE, Principe, Socle, charger_socle, chercher_conflit, detecter_types,
+    MODES, TYPES_DEMANDE, Principe, Socle, charger_socle, chercher_conflit, chercher_couverture,
+    detecter_types,
 )
 
 COMPLETE = "complete"
@@ -35,6 +37,17 @@ ENTETE_SOCLE = (
     "Additional principles (added by the optimizer; lower priority than every line above; "
     "if one of them conflicts with a line above, the line above wins):"
 )
+ORPHELINES = ("instruction", "arret")
+FORMAT = "contrat-local-image-ia/2"
+# Estimation grossière (E) : environ 4 caractères par jeton pour un texte anglais.
+CARACTERES_PAR_JETON = 4
+# L'encodeur de texte de ComfyUI pour FLUX.2 klein complète à 512 jetons et ne coupe
+# pas (vérifié dans son code) ; au-delà, le risque est la dilution, pas la coupure (E).
+JETONS_REPERE = 512
+
+
+def estimer_jetons(texte: str) -> int:
+    return max(1, round(len(texte) / CARACTERES_PAR_JETON))
 
 
 @dataclass
@@ -56,8 +69,8 @@ class EntreeDemande:
 @dataclass
 class EntreeSocle:
     principe: Principe
-    statut: str  # "actif", "suspendu", "hors type"
-    conflit_avec: str | None = None
+    statut: str  # "actif", "suspendu", "couvert", "hors type", "hors mode"
+    conflit_avec: str | None = None  # ligne en conflit (suspendu) ou qui couvre déjà (couvert)
 
 
 @dataclass
@@ -70,6 +83,8 @@ class Contrat:
     manques: list[str]
     avertissements: list[str]
     garants: frozenset[Mecanisme] = GARANTS_PAR_DEFAUT
+    mode: str = "edition"
+    modules: list[str] = field(default_factory=list)
 
     # ----- texte envoyé au modèle -------------------------------------------------
 
@@ -77,10 +92,14 @@ class Contrat:
         if e.role == "ligne":
             return e.mecanisme in self.garants
         if e.role == "titre":
+            # Un titre ne sort que si toutes ses lignes sortent : sinon « Preserve: »
+            # disparaîtrait et laisserait ses lignes sans leur verbe.
+            enfants = [self.entree(i) for i in e.enfants]
+            if any(not self._retirable(x) for x in enfants):
+                return False
             if e.mecanisme is not None:
                 return e.mecanisme in self.garants
-            enfants = [self.entree(i) for i in e.enfants]
-            return bool(enfants) and all(self._retirable(x) for x in enfants)
+            return bool(enfants)
         return False
 
     def lignes_modele(self, mode: str) -> list[EntreeDemande]:
@@ -110,7 +129,13 @@ class Contrat:
         ajouts = self.socle_actif(Mecanisme.INSTRUCTION)
         if ajouts:
             lignes += ["", ENTETE_SOCLE]
-            lignes += [f"- {s.principe.directive}" for s in ajouts]
+            ordre = {m: i for i, m in enumerate(self.modules)}
+            par_module: dict[str, list[EntreeSocle]] = {}
+            for a in ajouts:
+                par_module.setdefault(a.principe.module, []).append(a)
+            for module in sorted(par_module, key=lambda m: ordre.get(m, len(ordre))):
+                lignes.append(f"[{module}]")
+                lignes += [f"- {a.principe.directive}" for a in par_module[module]]
         return "\n".join(lignes) + "\n"
 
     def retirees(self, mode: str) -> list[EntreeDemande]:
@@ -132,7 +157,8 @@ class Contrat:
 
     def to_dict(self) -> dict:
         return {
-            "format": "contrat-local-image-ia/1",
+            "format": FORMAT,
+            "mode": self.mode,
             "demande": {"empreinte_sha256": self.demande.empreinte, "texte": self.demande.texte},
             "garants": sorted(m.value for m in self.garants),
             "types": self.types,
@@ -148,14 +174,9 @@ class Contrat:
             ],
             "socle": {
                 "version": self.socle_version,
+                "modules": self.modules,
                 "principes": [
-                    {
-                        "id": s.principe.id, "domaine": s.principe.domaine,
-                        "mecanisme": s.principe.mecanisme.value, "types": list(s.principe.types),
-                        "directive": s.principe.directive, "description": s.principe.description,
-                        "source": s.principe.source, "conflits": list(s.principe.conflits),
-                        "statut": s.statut, "conflit_avec": s.conflit_avec,
-                    }
+                    {**s.principe.to_dict(), "statut": s.statut, "conflit_avec": s.conflit_avec}
                     for s in self.socle
                 ],
             },
@@ -165,7 +186,7 @@ class Contrat:
 
     @classmethod
     def from_dict(cls, d: dict) -> "Contrat":
-        if d.get("format") != "contrat-local-image-ia/1":
+        if d.get("format") != FORMAT:
             raise ArretDeclare("Format de contrat inconnu.", [str(d.get("format"))])
         demande = DemandeFigee.depuis_texte(d["demande"]["texte"])
         if demande.empreinte != d["demande"]["empreinte_sha256"]:
@@ -179,15 +200,8 @@ class Contrat:
             for e in d["entrees"]
         ]
         socle = [
-            EntreeSocle(
-                principe=Principe(
-                    id=p["id"], domaine=p["domaine"], mecanisme=Mecanisme(p["mecanisme"]),
-                    types=tuple(p["types"]), directive=p["directive"],
-                    description=p["description"], source=p["source"],
-                    conflits=tuple(p["conflits"]),
-                ),
-                statut=p["statut"], conflit_avec=p["conflit_avec"],
-            )
+            EntreeSocle(principe=Principe.from_dict(p), statut=p["statut"],
+                        conflit_avec=p["conflit_avec"])
             for p in d["socle"]["principes"]
         ]
         contrat = cls(
@@ -195,6 +209,7 @@ class Contrat:
             types=list(d["types"]), manques=list(d["manques"]),
             avertissements=list(d["avertissements"]),
             garants=frozenset(Mecanisme(m) for m in d["garants"]),
+            mode=d["mode"], modules=list(d["socle"]["modules"]),
         )
         verifier_non_suppression(contrat)
         for mode, cle in ((COMPLETE, "instruction_complete"), (CONDENSEE, "instruction_condensee")):
@@ -250,10 +265,28 @@ def compiler(
     socle: Socle | None = None,
     routage_manuel: dict[str, Mecanisme] | None = None,
     types_forces: list[str] | None = None,
-    garants: frozenset[Mecanisme] = GARANTS_PAR_DEFAUT,
+    mode: str = "edition",
+    orphelines: str = "instruction",
+    socle_complet: bool = False,
 ) -> Contrat:
+    """Compile la demande en contrat.
+
+    ``mode`` : « edition » (une photo est modifiée, le verrou s'applique),
+    « reference » (une ou plusieurs images servent de modèle à une image nouvelle),
+    « creation » (aucune image). Hors édition, rien n'est garanti par le masque :
+    aucune ligne ne sort du texte condensé.
+
+    ``socle_complet`` : ajouter aussi les principes que la demande dit déjà
+    (par défaut, un principe couvert par une ligne de la demande n'est pas répété).
+    """
     demande.verifier_integrite()
     socle = socle if socle is not None else charger_socle()
+    if mode not in MODES:
+        raise ArretDeclare(f"Mode inconnu : {mode}", [f"Modes possibles : {', '.join(MODES)}"])
+    if orphelines not in ORPHELINES:
+        raise ArretDeclare(f"Politique inconnue pour les lignes sans destination : {orphelines}")
+    garants = GARANTS_PAR_DEFAUT if mode == "edition" else frozenset()
+    defaut = Mecanisme.INSTRUCTION if orphelines == "instruction" else None
 
     inconnues = [
         f"{l.id} : étiquette [{etiquette_inconnue(l.texte)}]"
@@ -265,7 +298,7 @@ def compiler(
             inconnues + [f"Étiquettes possibles : {', '.join(m.value for m in Mecanisme)}"],
         )
 
-    routes = router(demande.lignes, routage_manuel)
+    routes = router(demande.lignes, routage_manuel, defaut)
     entrees: list[EntreeDemande] = []
     titre_courant: EntreeDemande | None = None
     for ligne in demande.lignes:
@@ -283,13 +316,17 @@ def compiler(
             texte_modele=r.texte_modele if role != "vide" else "",
             role=role, mecanisme=r.mecanisme, routage=r.source,
         )
-        if role == "vide":
-            titre_courant = None
-        elif role == "titre":
+        if role == "titre":
             titre_courant = e
         elif role == "ligne" and titre_courant is not None:
             titre_courant.enfants.append(e.id)
         entrees.append(e)
+
+    for e in entrees:
+        # Un titre sans destination ni ligne rattachée (« IMAGE-EDITING TASK » suivi
+        # d'un autre titre) suit la même politique que les lignes sans destination.
+        if e.role == "titre" and e.mecanisme is None and not e.enfants and defaut is not None:
+            e.mecanisme, e.routage = defaut, "défaut"
 
     orphelines = [
         e for e in entrees
@@ -304,7 +341,8 @@ def compiler(
                "« [instruction] … » ou « [verrou] … », ou utilise --routage."],
         )
 
-    contrat_partiel = Contrat(demande, entrees, socle.version, [], [], [], [], garants)
+    contrat_partiel = Contrat(demande, entrees, socle.version, [], [], [], [], garants, mode,
+                              list(socle.modules))
     instruction_lignes = contrat_partiel.entrees_par_mecanisme(Mecanisme.INSTRUCTION)
     if not instruction_lignes:
         raise ArretDeclare(
@@ -321,7 +359,12 @@ def compiler(
                                [f"Types possibles : {', '.join(TYPES_DEMANDE)}"])
         types = set(types_forces)
     else:
-        types = detecter_types([e.texte_modele for e in instruction_lignes])
+        # Les premières lignes portent l'objectif, quel que soit le mécanisme qui les a
+        # reçues (« preserving the same camera angle » envoie l'objectif en conditionnement).
+        types = detecter_types([
+            e.texte_modele for e in entrees
+            if e.porte_contenu and e.mecanisme != Mecanisme.VERIFICATION
+        ])
         if not types:
             manques.append(
                 "Type de demande non reconnu (volume ou forme, remplacement d'objet, couleur "
@@ -334,9 +377,22 @@ def compiler(
                 + ". Le périmètre de départ prévoit un seul changement par photo."
             )
 
-    if not contrat_partiel.entrees_par_mecanisme(Mecanisme.VERROU):
+    verrous = contrat_partiel.entrees_par_mecanisme(Mecanisme.VERROU)
+    if mode == "edition" and not verrous:
         manques.append(
             "Aucune ligne de verrou : seul le masque définit ce qui est protégé."
+        )
+    if mode != "edition" and verrous:
+        avertissements.append(
+            f"Mode {mode} : pas de photo à recopier, les {len(verrous)} ligne(s) de verrou ne "
+            "sont garanties par aucun mécanisme. Elles restent dans le texte du modèle."
+        )
+    par_defaut = [e.id for e in entrees if e.porte_contenu and e.routage == "défaut"]
+    if par_defaut:
+        avertissements.append(
+            f"{len(par_defaut)} ligne(s) sans mécanisme plus fort, envoyée(s) au modèle comme "
+            "instruction (routage « défaut ») : " + ", ".join(par_defaut[:12])
+            + (" …" if len(par_defaut) > 12 else "") + "."
         )
     if not contrat_partiel.entrees_par_mecanisme(Mecanisme.VERIFICATION):
         avertissements.append(
@@ -354,13 +410,29 @@ def compiler(
             "et pose restent dans le texte envoyé au modèle et ne sont pas garanties."
         )
 
-    lignes_utilisateur = [(e.id, e.texte_modele) for e in entrees if e.porte_contenu]
+    # Pour les conflits, une ligne de liste se lit avec son titre : « - DSLR studio
+    # photography » sous « Do not convert the image into: » est une interdiction.
+    parent = {enfant: t for t in entrees if t.role == "titre" for enfant in t.enfants}
+    lignes_utilisateur = [
+        (e.id, (parent[e.id].texte_modele + " " if e.id in parent else "") + e.texte_modele)
+        for e in entrees if e.porte_contenu
+    ]
     entrees_socle = []
     for p in socle.principes:
+        if not p.s_applique_au_mode(mode):
+            entrees_socle.append(EntreeSocle(p, "hors mode"))
+            continue
         if not p.s_applique_a(types):
             entrees_socle.append(EntreeSocle(p, "hors type"))
             continue
         conflit = chercher_conflit(p, lignes_utilisateur)
+        couvert = (
+            None if socle_complet or p.mecanisme != Mecanisme.INSTRUCTION
+            else chercher_couverture(p, lignes_utilisateur)
+        )
+        if couvert and not conflit:
+            entrees_socle.append(EntreeSocle(p, "couvert", couvert))
+            continue
         if conflit:
             entrees_socle.append(EntreeSocle(p, "suspendu", conflit))
             avertissements.append(
@@ -373,7 +445,16 @@ def compiler(
     contrat = Contrat(
         demande=demande, entrees=entrees, socle_version=socle.version, socle=entrees_socle,
         types=sorted(types), manques=manques, avertissements=avertissements, garants=garants,
+        mode=mode, modules=list(socle.modules),
     )
+    jetons = estimer_jetons(contrat.instruction(COMPLETE))
+    if jetons > JETONS_REPERE:
+        avertissements.append(
+            f"Instruction complète ≈ {jetons} jetons (estimation). ComfyUI ne la coupe pas, "
+            f"mais au-delà d'environ {JETONS_REPERE} jetons le modèle risque de diluer la "
+            f"consigne (E). Version condensée ≈ {estimer_jetons(contrat.instruction(CONDENSEE))} "
+            "jetons."
+        )
     verifier_non_suppression(contrat)
     return contrat
 

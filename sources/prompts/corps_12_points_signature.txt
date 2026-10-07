@@ -1,0 +1,61 @@
+IMAGE-EDITING TASK — PHOTOREALISTIC BODY TRANSFORMATION
+EDIT the supplied photograph; do NOT generate a new one.
+
+GOAL
+Make the visible physique naturally muscular, athletic and proportionate while the result reads as the SAME photo, taken at the SAME instant, from the SAME camera position, with the SAME light and pose. This is a volume modification, not a redesign of the person.
+
+PRIORITY ORDER (on conflict)
+1 identity · 2 camera geometry · 3 pose · 4 environment · 5 lighting · 6 anatomical plausibility · 7 proportions · 8 skin and photographic texture · 9 requested muscle gain · 10 natural imperfections.
+Never sacrifice coherence to add muscle.
+
+LOCKS (do not alter)
+- Camera: position, height, distance, tilt, apparent focal length, FOV, crop, foreshortening. Source is a close, elevated, downward viewpoint: keep it. Nearer structures stay larger, farther ones smaller. Do not flatten or re-project the torso.
+- Pose: torso/shoulder/pelvis rotation, arms, head, abdominal compression, natural asymmetry. No straightening, no gym pose.
+- Background and environment: no warped lines, tiles, objects, cloned textures.
+- Face, hair, hands, finger anatomy, skin identity, apparent age.
+- Lighting: direction, softness, intensity, colour temperature, ambient and reflected light. No new key light, no rim light, no added contrast.
+
+TRANSFORMATION
+- Moderate, continuous muscle gain, not a uniform scale of the silhouette.
+- Shoulders: rounded deltoid volume (anterior/lateral/posterior), no spherical look.
+- Chest: natural pectoral volume attached to sternum and clavicle; no artificial central line.
+- Arms: distributed biceps/brachialis/triceps/forearm volume with natural taper; hands unchanged.
+- Abdomen: subtle rectus/oblique/serratus definition via volume and shading, never drawn lines or symmetrical blocks.
+- Waist: keep rib cage and pelvis geometry; gain mass via shoulders, chest, upper back, lats, abdominal wall, not by shrinking the waist.
+- Lats/traps only where visible or affecting the silhouette; never reveal occluded anatomy.
+- No bodybuilder proportions, no exaggerated V-taper, no artificial veins.
+
+ANATOMY / SILHOUETTE
+Plausible origins, insertions, joints, bone landmarks. Smooth organic transitions, no bulges, angular steps, liquify look. Keep natural asymmetry (pose + camera). Correct occlusion order, no fused or floating anatomy.
+
+SKIN, LIGHT, SHADOW
+Keep original pores, marks, folds, tonal variation, subsurface look; muscle must sit under the skin, not be painted on. New volumes receive physically correct gradients, occlusion, contact shadows and reflected light. No dark outlines, no black separation lines.
+
+CLOTHING
+Keep the garment; deform only as needed (folds, seams, tension, thickness consistent). Never stretch fabric uniformly.
+
+PHOTOGRAPHIC SIGNATURE (critical for credibility)
+Edited zones must match the source in: resolution, sharpness, noise level and shape (luma + chroma, per-zone behaviour, higher in shadows), grain, compression/JPEG blockiness, demosaicing and sharpening halos typical of a smartphone, local contrast, chromatic aberration, lens softness toward the edges, depth-of-field falloff. Casual smartphone look: no DSLR, studio, magazine or cinematic rendering, no HDR, no beauty filter, no global regrade. Do not sharpen or blur edited regions selectively. Never make the edited body cleaner or sharper than the rest of the image.
+
+IMPERFECTION AND ANTI-ARTIFACT RULES
+- Preserve irregularity: asymmetric textures, uneven pores, micro tonal variation, imperfect transitions, minor optical flaws.
+- Forbidden: plastic or over-smooth skin, uniform or repeating texture, periodic patterns, identical duplicated details, halos, edge ringing, geometrically perfect or rigid contours, noise that is uniform or inconsistent between zones, resolution mismatch between modified and original areas, banding, impossible shadows.
+- Use the smallest possible edit region; do not regenerate the whole image.
+
+FINAL CHECK (before output, fix anything failing)
+A anatomy · B geometry · C light · D shadows · E perspective · F optics · G texture · H skin · I hair · J clothing · K background · L grain · M sharpness · N compression · O edge transitions between edited and unedited zones · P global coherence.
+Test: a viewer who never saw the original must read it as an ordinary smartphone photo of an athletic man in this exact place and from this exact viewpoint, with no sign of compositing or AI generation.
+
+TECHNICAL CLEANLINESS AND ZONE COHERENCE
+
+Goal: a technically clean, visually coherent final image with no unnecessary added elements.
+
+- Do not add any visible watermark, logo, text, signature or overlay.
+- Keep photographic structure: natural luminance variation, progressive transitions, non-uniform textures, detail consistent with the source resolution, noise and grain consistent with the scene, no artificially repeating patterns, no useless visual structures.
+- Do NOT inject artificial noise, artifacts or degradation. Noise and grain must derive only from the scene and the source photograph's conditions.
+- Statistical visual coherence across ALL zones: texture, spatial frequency, sharpness, noise, local contrast, illumination, depth, apparent resolution must be mutually consistent.
+- Boundaries between edited and untouched zones (contours, noise, sharpness, texture, colour, lighting, depth of field, compression): no unjustified discontinuity.
+- Export in a standard format suited to the intended use, at the source resolution, without re-compression artifacts beyond the source's own.
+
+EXTENDED FINAL CHECK (before output)
+A photographic coherence · B anatomy · C perspective · D light · E shadows · F textures · G sharpness · H noise · I compression · J zone boundaries · K global coherence.

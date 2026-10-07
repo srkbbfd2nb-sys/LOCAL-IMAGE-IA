@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:8188",
+  "preset": "klein4b",
+  "candidats": 3,
+  "budget_s": 300,
+  "fondu": 8,
+  "orphelines": "instruction",
+  "socle_complet": false,
+  "texte": "complete",
+  "format_creation": "portrait",
+  "graine": null
+}

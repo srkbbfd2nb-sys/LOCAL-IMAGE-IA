@@ -1,0 +1,41 @@
+MAGE EDIT — REALISTIC MUSCULAR TRANSFORMATION, ORIGINAL PHOTO PRESERVED
+
+GOAL: Edit the supplied photo; never generate a new one. Give the visible man a naturally muscular, athletic, harmonious physique. Result: the SAME photo (moment, camera, light, pose) with more muscle. Anatomical volume change, not a redesign. No beautification, fitness-model or bodybuilder look.
+
+1. ANALYZE FIRST: Map subject, head, neck, clavicles, shoulders, arms, elbows, forearms, hands, chest, sternum, ribs, abdomen, obliques, waist, pelvis, thighs, joints, bony landmarks, asymmetries, foreshortening, occlusions, contact points, clothing and background edges. Separate real volume from perspective, lighting, shadow, skin folds, posture compression and lens distortion. Never read distortion or shadow as anatomy; never invent anatomy.
+
+2. CAMERA LOCK: Keep position, height, distance, pitch, yaw, roll, focal length, field of view, framing, crop, horizon. The view is close, elevated, angled down: don't make it frontal, flatten it or equalize upper/lower torso. Near parts stay larger, far parts smaller. Apparent width ≠ true width; don't use frontal reference proportions. Added volume follows each surface's 3D orientation, inside the existing perspective.
+
+3. POSE LOCK: Keep torso, shoulder, spine, pelvis, head, neck, arm, elbow and wrist orientation, abdominal compression, postural asymmetry. Only microscopic adjustments if volume requires. No straightening, squared shoulders or gym pose.
+
+4. TARGET: Athletic, proportionate, visibly developed, lean not shredded, plausible for a young adult male. Grow each muscle gradually, never by uniform silhouette scaling. No extreme V-taper, huge delts or arms, exaggerated abs, fake veins, impossible insertions.
+
+5. MUSCLES:
+- Shoulders: moderate rounded deltoid volume tied to clavicle, upper chest, arm; not spherical, no abrupt transition.
+- Chest: natural upper, sternal, lower pectoral volume per angle, attached to sternum, clavicle, humerus; no fake separation or deep central line; definition follows existing light.
+- Arms: distributed biceps, brachialis, triceps, forearm volume with natural taper; stable elbows; hands and fingers unchanged.
+- Abs: subtle rectus, obliques, visible serratus; no drawn or symmetric six-pack; keep curvature from pose and angle.
+- Torso: keep rib cage and pelvis; don't shrink the waist; add mass via shoulders, chest, upper back, flanks, abs; smooth ribs → obliques → waist → pelvis.
+- Back: subtle lats, teres, rear delts, traps only where visible or shaping the silhouette; never reveal hidden anatomy.
+
+6. SILHOUETTE: Roughly bilateral growth, but keep the asymmetry from pose, perspective, light; sides not identical. Continuous contours: no bulges, angles, dents or liquify artifacts.
+
+7. SKIN: Keep pores, marks, folds, tonal variation, pigmentation. Muscle grows under the skin, never painted on. No plastic skin or synthetic texture.
+
+8. LIGHT LOCK: Keep direction, source size, softness, intensity, ambient, temperature, shadows, reflected light. New volumes get plausible highlights, gradients, occlusion, contact shadows. No new key or rim light, no contrast boost, no dark muscle outlines.
+
+9. CLOTHING: Alter only where volume demands, keeping seams, folds, thickness, tension, shadows. Fabric conforms, never stretched uniformly.
+
+10. BACKGROUND: Untouched walls, floor, tiles, objects, lines, textures: no warping, bending, displacement, cloning. Correct occlusion; no floating, fused or intersecting anatomy.
+
+11. PHOTO CHARACTER: Edited areas match resolution, sharpness, noise, grain, compression, contrast, color, lens rendering, depth of field. Stay a casual smartphone shot: not studio, magazine, cinematic or fitness photo. Keep white balance, exposure, saturation, skin tones; no beauty filter, HDR or grading. Keep imperfections: plausibility, not perfection.
+
+12. IDENTITY: Face, features, beard, hair, age, ethnicity unchanged. No beautification; edits never spread beyond the body. Smallest possible edit region, localized, never full regeneration.
+
+13. FINAL CHECK: Proportions (shoulder/waist, chest/pelvis, upper arm/forearm, thigh/calf, muscle/body fat) show the same person's progression. Verify insertions, joints, landmarks, tendons, continuity, foreshortening, and camera, light, texture, color, background match. Remove: warping, duplicated anatomy, extra fingers, altered hands, distorted nipples, halos, ringing, blur, repeated texture, AI skin, mismatched noise or light, impossible shadows, rubber look, identity drift. Edges organic, never geometric or mechanical.
+
+TEST: A viewer unaware of the original sees an ordinary photo of a real athletic man, here, from this unusual viewpoint; not an AI body, pasted bodybuilder, liquify or filter.
+
+PRIORITY: 1 identity, 2 camera, 3 pose, 4 environment, 5 light, 6 anatomy, 7 proportions, 8 skin/texture, 9 muscle gain, 10 imperfections. Never trade coherence, anatomy or perspective for more muscle.
+
+Not to much arms. Snapchat Quality

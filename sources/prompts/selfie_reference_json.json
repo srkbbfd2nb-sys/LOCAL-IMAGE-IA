@@ -1,0 +1,256 @@
+{
+  "prompt_type": "photorealistic_reference_reconstruction_with_targeted_modifications",
+  "objective": "Recreate the supplied luxury-car selfie as closely as possible while preserving the same pose, long dark curly hair, hand placement near the lips, layered gold jewelry, sunroof, camera angle, framing, outdoor daylight, and overall glamorous social-media aesthetic. Apply two specific changes only: change the original green plunging top to white while keeping the same silhouette, and change the original black leather car interior to bright white leather. Ignore and remove all text, buttons, interface elements, captions, logos, watermarks, and screen overlays.",
+  "reference_fidelity": {
+    "target": "extremely high similarity to the reference composition and styling",
+    "priority_order": [
+      "same selfie camera angle",
+      "same facial pose and gaze",
+      "same long black curly hair",
+      "same hand positioned near lips",
+      "same gold jewelry",
+      "same body orientation",
+      "same panoramic sunroof",
+      "white version of original plunging top",
+      "white leather car interior",
+      "same bright daytime lighting"
+    ]
+  },
+  "canvas": {
+    "orientation": "portrait",
+    "aspect_ratio": "approximately 9:16",
+    "framing": "tight vertical smartphone selfie",
+    "crop": "from above the head and sunroof down to the lower torso",
+    "subject_scale": "large, filling most of the frame",
+    "subject_alignment": "centered slightly right",
+    "camera_distance": "approximately arm's length",
+    "camera_height": "around eye level",
+    "perspective": "natural smartphone wide-angle selfie perspective"
+  },
+  "scene": {
+    "location": "front passenger or driver's area of a modern luxury vehicle",
+    "time_of_day": "bright daytime",
+    "mood": "confident, polished, glamorous, relaxed",
+    "environment": {
+      "sunroof": "large panoramic glass roof occupying the upper-left portion",
+      "outside_view": "clear blue sky, leafy green trees, and subtle utility lines visible through glass",
+      "side_window": "sunlit greenery and a pale outdoor wall visible through passenger-side window",
+      "dashboard": "clean modern dashboard with digital screen and circular air vents",
+      "steering_or_console": "partial premium vehicle controls visible at viewer-right",
+      "interior_style": "modern luxury vehicle"
+    }
+  },
+  "car_interior": {
+    "change_instruction": "Replace all original black leather upholstery with bright white or soft ivory leather while preserving the exact same vehicle geometry.",
+    "seats": {
+      "material": "perforated premium leather",
+      "color": "clean white / soft ivory",
+      "stitching": "subtle matching white stitching",
+      "headrests": "large supportive white leather headrests"
+    },
+    "door_panels": {
+      "main_material": "white leather",
+      "secondary_trim": "small amounts of black or metallic trim allowed for realistic contrast",
+      "finish": "premium soft-touch"
+    },
+    "dashboard": {
+      "lower_surfaces": "white or pale leather",
+      "upper_surfaces": "dark charcoal/black where structurally appropriate",
+      "accents": "silver metallic trim"
+    },
+    "headliner": "light gray or ivory",
+    "overall_result": "bright upscale white-leather luxury cabin, not an all-black interior"
+  },
+  "subject": {
+    "description": "adult woman taking a luxury-car selfie",
+    "age_appearance": "mid-20s",
+    "physique": "slim with natural proportions",
+    "pose": {
+      "head": "slightly tilted",
+      "torso": "mostly facing camera",
+      "shoulders": "relaxed",
+      "camera_arm": "extended toward camera",
+      "other_hand": "raised beside mouth with fingertips softly touching or hovering near lips",
+      "posture": "upright in the car seat"
+    },
+    "expression": {
+      "overall": "calm, confident, slightly sultry",
+      "gaze": "directly into the camera",
+      "mouth": "slightly open",
+      "lips": "relaxed and glossy"
+    },
+    "skin": {
+      "tone": "warm medium tan",
+      "undertone": "golden-neutral",
+      "finish": "luminous satin",
+      "texture": "realistic pores and natural tonal variation",
+      "blush": "soft rosy-peach warmth on cheeks",
+      "highlights": "natural daylight highlights on forehead, nose, cheekbones, chest, and shoulders",
+      "retouching": "moderate but realistic"
+    }
+  },
+  "face": {
+    "shape": "soft oval",
+    "jawline": "gently tapered",
+    "cheekbones": "defined but natural",
+    "eyes": {
+      "shape": "almond-shaped",
+      "color": "warm brown to hazel-brown",
+      "lashes": "long and defined",
+      "eyeshadow": "soft beige-gold neutral",
+      "eyeliner": "subtle"
+    },
+    "eyebrows": {
+      "shape": "full softly arched",
+      "color": "deep brown",
+      "finish": "groomed but natural"
+    },
+    "nose": {
+      "shape": "straight refined nose",
+      "tip": "softly rounded"
+    },
+    "lips": {
+      "shape": "full",
+      "color": "glossy nude-beige / warm pink",
+      "finish": "high-shine gloss"
+    }
+  },
+  "hair": {
+    "color": "deep black to very dark brown",
+    "length": "very long, reaching well below chest",
+    "texture": "thick defined curls",
+    "style": "voluminous loose curly hair",
+    "part": "soft near-center part",
+    "placement": "large sections cascading down both sides of the face and torso",
+    "curl_pattern": "loose-to-medium spiral curls with natural variation",
+    "shine": "healthy glossy highlights"
+  },
+  "wardrobe": {
+    "top": {
+      "change_instruction": "Change the original green top to white while preserving the same deep plunging neckline and fitted silhouette.",
+      "type": "sleeveless plunging V-neck top or bodysuit",
+      "color": "clean bright white",
+      "neckline": "very deep V",
+      "fit": "close-fitting",
+      "material": "soft textured stretch fabric",
+      "finish": "matte with slight natural texture",
+      "construction": "same wrap/plunge geometry as reference"
+    }
+  },
+  "jewelry": {
+    "necklaces": {
+      "style": "multiple layered gold necklaces",
+      "details": [
+        "short ornate gold chain",
+        "pearl-like central accent",
+        "decorative pendant necklace",
+        "small cross charm",
+        "tiny red jewel accent"
+      ],
+      "finish": "warm polished gold"
+    },
+    "wrist": {
+      "watch": "gold wristwatch",
+      "bracelets": "multiple stacked ribbed and rounded gold bangles"
+    },
+    "ring": {
+      "type": "large sculptural flower-shaped gold ring",
+      "placement": "on hand raised near face"
+    }
+  },
+  "hands_and_nails": {
+    "hand_pose": "index and middle fingers positioned delicately near the lips",
+    "fingers": "slender and relaxed",
+    "nails": {
+      "length": "medium-long",
+      "shape": "almond",
+      "color": "pale nude-pink",
+      "finish": "glossy"
+    }
+  },
+  "lighting": {
+    "type": "natural daylight through sunroof and windows",
+    "primary_source": "front-left and overhead sunlight",
+    "quality": "soft directional daylight",
+    "contrast": "moderate",
+    "skin_effect": "warm luminous highlights without harsh clipping",
+    "hair_effect": "glossy highlights defining curls",
+    "jewelry_effect": "small gold specular reflections",
+    "interior_effect": "white leather stays detailed with visible texture and stitching"
+  },
+  "camera": {
+    "device": "modern smartphone front-facing camera",
+    "orientation": "vertical portrait",
+    "lens": "wide selfie lens",
+    "focal_length_equivalent": "approximately 24-28mm",
+    "distance": "approximately 50-80 cm",
+    "focus": "sharpest on face and upper body",
+    "depth_of_field": "moderately deep so vehicle interior remains recognizable",
+    "processing": "subtle HDR, natural phone sharpening, mild beauty processing",
+    "image_quality": "high-resolution smartphone photograph"
+  },
+  "composition_geometry": {
+    "face_center": "approximately x=52%, y=31%",
+    "hand_near_lips": "approximately x=33%, y=39%",
+    "sunroof": "upper-left quadrant",
+    "white_headrest": "left background",
+    "dashboard_screen": "right-middle background",
+    "hair": "large dark curly masses framing both sides of torso",
+    "white_top": "dominates lower center",
+    "visual_balance": "dark curls contrast strongly against white clothing and white leather interior"
+  },
+  "color_palette": {
+    "dominant_colors": [
+      "bright white",
+      "ivory",
+      "deep black",
+      "warm tan",
+      "gold",
+      "sky blue",
+      "leaf green",
+      "charcoal accents"
+    ],
+    "overall_mood": "bright, luxurious, polished, summery"
+  },
+  "photographic_style": {
+    "genre": "luxury lifestyle car selfie",
+    "aesthetic": "high-end social-media glamour portrait",
+    "realism": "extreme photorealism",
+    "retouching": "polished but believable",
+    "desired_result": "looks like a genuine premium smartphone selfie taken inside a luxury white-leather car on a sunny day"
+  },
+  "negative_prompt": [
+    "green top",
+    "black leather seats",
+    "black interior upholstery",
+    "different pose",
+    "short hair",
+    "straight hair",
+    "blonde hair",
+    "missing curls",
+    "missing gold jewelry",
+    "missing ring",
+    "missing bangles",
+    "missing sunroof",
+    "studio background",
+    "nighttime",
+    "hard flash",
+    "cold blue skin",
+    "plastic skin",
+    "heavy beauty filter",
+    "text",
+    "captions",
+    "buttons",
+    "watermarks",
+    "logos",
+    "UI overlays",
+    "CGI",
+    "3D render",
+    "illustration",
+    "anime",
+    "extra fingers",
+    "warped hands",
+    "distorted car interior"
+  ],
+  "final_generation_instruction": "Generate one extremely photorealistic vertical smartphone selfie matching the supplied reference as closely as possible. Preserve the same seated luxury-car pose, direct gaze, long voluminous black curls, glossy nude lips, hand raised near the mouth, layered gold necklaces, gold watch, stacked bangles, flower-shaped ring, manicured nails, panoramic sunroof, outdoor blue sky and greenery, dashboard layout, and natural daylight. Change the original green plunging top to a clean white version with the same deep-V silhouette. Replace the original black leather car interior with bright premium white leather seats and matching white door-panel upholstery while retaining realistic dark and metallic trim accents. Use authentic smartphone perspective, detailed white leather texture, realistic skin texture, glossy curls, warm gold jewelry reflections, and subtle HDR. Remove all text, buttons, captions, watermarks, and interface graphics."
+}

@@ -17,3 +17,9 @@ sortie*/
 *.PNG
 *.tif
 *.tiff
+
+# Installation locale (Windows)
+moteur/
+boite/
+diagnostic/
+config.json

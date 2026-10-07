@@ -1,0 +1,846 @@
+PROTOCOLE MASTER — TRANSFORMATION ANATOMIQUE PHOTOGRAPHIQUE
+
+Tu peux utiliser le bloc ci-dessous comme prompt de référence principal pour une IA de retouche/compositing capable de modifier une image existante.
+
+IMAGE-EDITING TASK
+REALISTIC PHOTOGRAPHIC BODY TRANSFORMATION
+PRESERVE THE ORIGINAL PHOTOGRAPH
+
+PRIMARY OBJECTIVE
+
+Edit the supplied source photograph rather than generating a new photograph.
+
+Transform the existing visible male physique into a naturally muscular, athletic and harmonious physique while preserving the original person, original photograph, original camera geometry, original pose, original environment and original photographic characteristics.
+
+The result must look like the SAME photograph taken at the SAME moment, from the SAME camera position, with the SAME lighting and the SAME pose, except that the subject naturally possesses greater muscular development.
+
+This is an anatomical volume modification, not a redesign of the person.
+
+Do not recreate the photograph from scratch.
+Do not reinterpret the scene.
+Do not change the photographic perspective.
+Do not change the camera position.
+Do not change the pose unless a microscopic anatomical adjustment is strictly necessary to accommodate the increased muscular volume.
+Do not beautify the photograph.
+Do not apply a generic fitness-model appearance.
+Do not apply a bodybuilding aesthetic.
+Do not make the subject unnaturally lean or excessively muscular.
+
+==================================================
+1. SOURCE IMAGE ANALYSIS
+==================================================
+
+First perform a detailed internal analysis of the source photograph before modifying it.
+
+Identify:
+
+- subject boundaries
+- head and neck
+- clavicles
+- shoulders
+- deltoids
+- upper arms
+- elbows
+- forearms
+- wrists
+- hands
+- pectoral region
+- sternum
+- rib cage
+- upper abdomen
+- lower abdomen
+- obliques
+- waist
+- pelvis
+- visible hips
+- thighs where visible
+- all visible joints
+- all visible bony landmarks
+- natural asymmetries
+- anatomical foreshortening
+- occluded anatomical regions
+- contact points
+- clothing boundaries
+- background boundaries
+
+Distinguish carefully between:
+
+A. actual anatomical volume
+B. perspective-induced apparent volume
+C. lighting-induced apparent volume
+D. shadow
+E. natural skin folds
+F. posture-induced compression
+G. photographic distortion
+
+Never interpret perspective distortion as actual anatomy.
+
+Never interpret a shadow as a missing anatomical structure.
+
+Never invent anatomy simply because a muscular physique would normally contain it.
+
+==================================================
+2. CAMERA AND PERSPECTIVE LOCK
+==================================================
+
+LOCK THE ORIGINAL CAMERA GEOMETRY.
+
+Preserve:
+
+- camera position
+- camera height
+- camera-to-subject distance
+- camera orientation
+- pitch
+- yaw
+- roll
+- focal perspective
+- apparent focal length
+- field of view
+- perspective convergence
+- subject-to-camera relationship
+- framing
+- crop
+- horizon relationship
+- vertical perspective
+- horizontal perspective
+
+The source photograph uses a close, elevated viewpoint with a noticeable downward camera angle.
+
+Do NOT convert this into a conventional front-facing bodybuilding photograph.
+
+Do NOT flatten the perspective.
+
+Do NOT artificially equalize the apparent size of the upper and lower torso.
+
+The nearer anatomical structures must remain visually larger according to the original perspective.
+
+The farther structures must remain appropriately reduced.
+
+Maintain the original foreshortening.
+
+The body transformation must occur INSIDE the existing perspective field rather than replacing the perspective.
+
+==================================================
+3. POSE PRESERVATION
+==================================================
+
+Preserve the exact global pose.
+
+Preserve:
+
+- torso rotation
+- shoulder rotation
+- spinal orientation
+- pelvic orientation
+- arm position
+- elbow position
+- wrist orientation
+- head position
+- neck angle
+- abdominal compression
+- natural postural asymmetry
+
+Do not straighten the torso.
+
+Do not artificially square the shoulders.
+
+Do not rotate the pelvis into a symmetrical position.
+
+Do not create a gym/bodybuilding pose.
+
+The final physique must appear muscular IN THE ORIGINAL POSE.
+
+==================================================
+4. ANATOMICAL TRANSFORMATION
+==================================================
+
+Increase muscular development gradually and continuously rather than scaling the silhouette uniformly.
+
+The target physique is:
+
+- athletic
+- naturally muscular
+- proportionate
+- visibly developed
+- lean but not unnaturally shredded
+- harmonious
+- anatomically plausible
+- compatible with a young adult male physiology
+
+Avoid extreme bodybuilding proportions.
+
+Avoid exaggerated V-taper.
+
+Avoid enormous deltoids.
+
+Avoid oversized arms.
+
+Avoid exaggerated abdominal definition.
+
+Avoid artificial vascularity.
+
+Avoid impossible muscle insertions.
+
+==================================================
+5. SHOULDER COMPLEX
+==================================================
+
+Increase the apparent volume of the deltoid complex moderately.
+
+Preserve the anatomical relationship between:
+
+- anterior deltoid
+- lateral deltoid
+- posterior deltoid
+- clavicle
+- upper pectoralis
+- upper arm
+
+The lateral shoulder should become broader through actual rounded deltoid volume, not by simply moving the silhouette outward.
+
+Maintain smooth anatomical transitions.
+
+No spherical shoulder appearance.
+
+No abrupt shoulder-to-arm transition.
+
+==================================================
+6. CHEST
+==================================================
+
+Increase pectoral volume naturally.
+
+Modify:
+
+- upper pectoralis
+- sternal pectoralis
+- lower pectoral contour
+
+according to the existing viewing angle.
+
+The pectorals must remain attached naturally to the sternum, clavicle and humeral region.
+
+Do not create a stereotypical fitness-model chest.
+
+Do not create artificially separated pectoral muscles.
+
+Do not create a deep artificial central chest line.
+
+Pectoral definition must remain dependent on the existing illumination.
+
+==================================================
+7. ARMS
+==================================================
+
+Increase arm muscularity using anatomically distributed volume.
+
+Modify progressively:
+
+- biceps brachii
+- brachialis
+- triceps brachii
+- forearm musculature
+
+Do not enlarge the entire arm with a uniform radial scale.
+
+The upper arm must have natural proximal-to-distal taper.
+
+The elbow must remain anatomically stable.
+
+The forearm must remain proportionate to the upper arm.
+
+Preserve the original hand size.
+
+Do not enlarge hands.
+
+Do not alter finger anatomy.
+
+==================================================
+8. ABDOMEN
+==================================================
+
+Increase abdominal muscular development subtly.
+
+Preserve the existing abdominal surface.
+
+Enhance only anatomically plausible structures:
+
+- rectus abdominis
+- external obliques
+- serratus region where visible
+
+Do not draw abdominal muscles onto the skin.
+
+Do not use graphic six-pack lines.
+
+Do not create perfectly symmetrical abdominal blocks.
+
+Do not make the abdomen unnaturally flat if the original pose and camera angle naturally produce abdominal curvature.
+
+Muscle definition must emerge through realistic changes in volume, shading and surface geometry.
+
+==================================================
+9. WAIST AND TORSO
+==================================================
+
+Maintain the original rib-cage geometry and pelvic geometry.
+
+Do not artificially shrink the waist.
+
+Create a realistic athletic torso by increasing muscular mass primarily through:
+
+- shoulders
+- chest
+- upper back
+- lateral torso
+- abdominal wall
+
+rather than by aggressively narrowing the waist.
+
+Maintain natural transition:
+
+rib cage → obliques → waist → pelvis.
+
+==================================================
+10. LATISSIMUS / BACK CONTRIBUTION
+==================================================
+
+Where the perspective permits, introduce subtle additional volume from:
+
+- latissimus dorsi
+- teres major
+- posterior deltoid
+- trapezius
+
+Only where anatomically visible or indirectly affecting the visible silhouette.
+
+Never reveal hidden anatomy that should remain occluded.
+
+==================================================
+11. ANATOMICAL SYMMETRY
+==================================================
+
+Do not force perfect bilateral symmetry.
+
+Preserve the original natural asymmetry caused by:
+
+- pose
+- perspective
+- shoulder rotation
+- lighting
+- camera position
+- normal human anatomy
+
+Muscular development should remain approximately bilateral while the photographed appearance remains asymmetric where the original geometry requires it.
+
+==================================================
+12. SILHOUETTE CONTROL
+==================================================
+
+Modify the silhouette continuously.
+
+No sudden curvature changes.
+
+No angular transitions.
+
+No local bulges.
+
+No concave/convex artifacts.
+
+No liquify-like deformation.
+
+Every increase in volume must transition gradually into the neighboring anatomical structure.
+
+Maintain realistic anatomical landmarks.
+
+==================================================
+13. SKIN
+==================================================
+
+Preserve the original skin identity and texture.
+
+Do not replace the skin.
+
+Do not generate plastic-looking skin.
+
+Preserve:
+
+- pores
+- small imperfections
+- natural tonal variation
+- subtle pigmentation
+- tiny irregularities
+- existing marks
+- natural skin folds
+- realistic subsurface appearance
+
+Muscle growth must occur underneath the skin rather than appearing as painted-on definition.
+
+Skin texture density must remain consistent with the source photograph.
+
+Do not oversharpen pores.
+
+Do not introduce artificial high-frequency texture.
+
+==================================================
+14. LIGHTING CONSISTENCY
+==================================================
+
+LOCK THE ORIGINAL LIGHTING.
+
+Preserve:
+
+- direction of illumination
+- source position
+- source size
+- softness
+- intensity
+- ambient light
+- color temperature
+- shadow direction
+- shadow softness
+- reflected light
+
+The newly enlarged anatomical structures must interact naturally with the existing light.
+
+Generate physically plausible:
+
+- highlight gradients
+- diffuse shading
+- occlusion
+- contact shadows
+- muscle-plane transitions
+
+Do not introduce a new studio key light.
+
+Do not add cinematic rim lighting.
+
+Do not increase contrast simply to reveal muscles.
+
+Do not create highlights that could not exist in the original lighting environment.
+
+==================================================
+15. SHADOW CONSISTENCY
+==================================================
+
+Every newly modified anatomical volume must produce corresponding realistic shading.
+
+Preserve the original shadow topology.
+
+Muscular contours should influence:
+
+- local occlusion
+- subtle cast shadows
+- reflected light
+- gradients across curved surfaces
+
+Avoid dark outlines around muscles.
+
+Avoid artificial black separation lines.
+
+Avoid painted-looking muscle shadows.
+
+==================================================
+16. CLOTHING INTERACTION
+==================================================
+
+Where clothing is present, preserve the original garment.
+
+If increased body volume affects visible clothing:
+
+modify the garment only as necessary.
+
+Maintain:
+
+- fabric thickness
+- seams
+- folds
+- tension
+- compression
+- wrinkles
+- material properties
+- existing shadows
+
+The clothing must physically conform to the new anatomy.
+
+Never stretch fabric uniformly.
+
+==================================================
+17. BACKGROUND PROTECTION
+==================================================
+
+LOCK THE BACKGROUND.
+
+Do not modify:
+
+- walls
+- floor
+- tiles
+- corners
+- objects
+- background texture
+- perspective lines
+- environmental geometry
+
+Any body enlargement occurring near the background must not warp the background.
+
+No bending tiles.
+
+No curved wall lines.
+
+No displaced objects.
+
+No cloned textures.
+
+==================================================
+18. CONTACT AND OCCLUSION
+==================================================
+
+Preserve all anatomical/environmental contact relationships.
+
+Where body contours approach:
+
+- clothing
+- floor
+- objects
+- background
+- arms
+- torso
+
+ensure correct occlusion ordering.
+
+No floating anatomy.
+
+No fused anatomical regions.
+
+No impossible intersections.
+
+==================================================
+19. PHOTOGRAPHIC TEXTURE
+==================================================
+
+Preserve the original image's photographic character.
+
+The modified regions must share the same:
+
+- spatial resolution
+- sharpness
+- noise
+- grain
+- compression characteristics
+- local contrast
+- chromatic behavior
+- lens rendering
+
+Do not make the modified body unnaturally sharper than the background.
+
+Do not make modified regions cleaner than the original image.
+
+Do not introduce generative smoothness.
+
+Do not introduce excessive micro-detail.
+
+==================================================
+20. MOBILE-PHOTOGRAPH CHARACTER
+==================================================
+
+Preserve the visual character of an ordinary modern smartphone photograph.
+
+Do not convert the image into:
+
+- DSLR studio photography
+- professional bodybuilding photography
+- magazine photography
+- cinematic photography
+- commercial fitness photography
+
+The final image must remain consistent with the original casual smartphone photograph.
+
+==================================================
+21. COLOR SCIENCE
+==================================================
+
+Preserve the original:
+
+- white balance
+- exposure
+- gamma
+- tonal response
+- saturation
+- skin-tone rendering
+- shadow color
+- highlight color
+
+Any modified region must inherit the same color response.
+
+Do not recolor the entire image.
+
+Do not apply a global beauty filter.
+
+Do not apply HDR enhancement.
+
+Do not apply cinematic grading.
+
+==================================================
+22. DEPTH AND OPTICAL CONSISTENCY
+==================================================
+
+Preserve the original depth relationships.
+
+The altered anatomy must remain at the correct depth relative to:
+
+- camera
+- torso
+- arms
+- clothing
+- background
+
+Preserve realistic depth-of-field behavior.
+
+Do not selectively blur modified regions.
+
+Do not sharpen modified regions artificially.
+
+==================================================
+23. REALISM THROUGH IMPERFECTION
+==================================================
+
+Do not attempt to make the photograph mathematically perfect.
+
+Preserve natural:
+
+- asymmetry
+- irregular texture
+- tiny tonal variations
+- imperfect transitions
+- photographic noise
+- minor optical imperfections
+
+The goal is photographic plausibility, not synthetic perfection.
+
+==================================================
+24. IDENTITY PRESERVATION
+==================================================
+
+Preserve the person's identity completely.
+
+Do not modify:
+
+- facial identity
+- facial proportions
+- mouth
+- nose
+- eyes
+- jaw
+- facial hair
+- hairstyle
+- skin identity
+
+Do not beautify the face.
+
+Do not reconstruct the face.
+
+Do not alter age appearance.
+
+Do not change ethnicity or other identity characteristics.
+
+The body transformation must not propagate into unrelated areas.
+
+==================================================
+25. LOCAL EDITING PRINCIPLE
+==================================================
+
+Use the smallest possible modification region required to achieve the anatomical objective.
+
+Prefer localized geometric transformation over global image regeneration.
+
+Every unaffected pixel region should remain visually consistent with the original whenever possible.
+
+Do not regenerate the entire photograph.
+
+==================================================
+26. PROPORTIONALITY CHECK
+==================================================
+
+Before finalizing, compare:
+
+- shoulder width / waist width
+- chest width / pelvis width
+- upper arm / forearm
+- thigh / calf where visible
+- torso / limb proportions
+- muscle volume / skeletal structure
+- muscularity / apparent body-fat level
+
+The result must look like a realistic progression of the same person's physique.
+
+Not like a different person's body.
+
+==================================================
+27. ANATOMICAL REALISM CHECK
+==================================================
+
+Verify:
+
+- muscle origins
+- muscle insertions
+- joint positions
+- bone landmarks
+- muscle continuity
+- bilateral plausibility
+- tendon transitions
+- skin continuity
+- anatomical depth
+- perspective-induced foreshortening
+
+Reject any modification that produces anatomically impossible geometry.
+
+==================================================
+28. PHOTOGRAPHIC CONSISTENCY CHECK
+==================================================
+
+Verify:
+
+CAMERA:
+same viewpoint
+same perspective
+same framing
+same apparent focal characteristics
+
+LIGHT:
+same direction
+same softness
+same temperature
+same intensity
+
+SURFACE:
+same skin texture
+same noise
+same sharpness
+same color response
+
+ENVIRONMENT:
+no background deformation
+no displaced objects
+no altered geometry
+
+BODY:
+continuous anatomy
+natural proportions
+natural asymmetry
+no artificial muscle outlines
+
+==================================================
+29. ARTIFACT REJECTION
+==================================================
+
+Strictly eliminate:
+
+- warped background
+- duplicated anatomy
+- malformed joints
+- extra fingers
+- altered hands
+- distorted nipples
+- unnatural chest separation
+- artificial veins
+- plastic skin
+- excessive sharpening
+- halos
+- edge ringing
+- unnatural blur
+- texture repetition
+- AI-generated skin patterns
+- inconsistent noise
+- inconsistent lighting
+- impossible shadows
+- floating anatomy
+- abrupt silhouette changes
+- liquify artifacts
+- rubber-like anatomy
+- exaggerated bodybuilding proportions
+- face alteration
+- identity drift
+
+==================================================
+30. FINAL VISUAL TARGET
+==================================================
+
+The final result should pass the following conceptual test:
+
+"If someone who had never seen the original photograph looked at the edited photograph, it should read naturally as an ordinary photograph of a real athletic male body photographed in this exact environment and from this exact unusual viewpoint."
+
+It must NOT read as:
+
+"AI-generated muscular body."
+
+It must NOT read as:
+
+"bodybuilder pasted onto an existing photograph."
+
+It must NOT read as:
+
+"liquified photograph."
+
+It must NOT read as:
+
+"fitness-model filter."
+
+It must read as:
+
+"the same original photograph, with naturally greater muscular development."
+
+==================================================
+FINAL PRIORITY ORDER
+==================================================
+
+When conflicts occur, prioritize in this exact order:
+
+1. Preserve original identity
+2. Preserve original camera geometry
+3. Preserve original pose
+4. Preserve original environment
+5. Preserve original lighting
+6. Preserve anatomical plausibility
+7. Preserve realistic proportions
+8. Preserve original skin and photographic texture
+9. Apply requested muscular development
+10. Preserve natural imperfections
+
+Never sacrifice photographic coherence merely to make the physique more muscular.
+
+Never sacrifice anatomy merely to make muscles more visible.
+
+Never sacrifice the original perspective merely to make the physique aesthetically conventional.
+
+
+
+SOURCE-SPECIFIC PERSPECTIVE WARNING
+
+This photograph is captured from an unusual elevated and relatively close viewpoint.
+
+Do not use frontal anatomical reference proportions.
+
+Do not assume that the apparent width of each body segment represents its true anatomical width.
+
+Respect perspective-induced magnification and foreshortening.
+
+The upper torso, shoulders, arms and abdomen must retain their original spatial relationship to the camera.
+
+Any added muscular volume must follow the three-dimensional orientation of the existing anatomical surfaces.
+
+Do not rotate, flatten, straighten or re-project the torso for aesthetic reasons.
+
+Do not make both sides of the torso visually identical.
+
+The asymmetrical appearance of the body is partly caused by the camera angle and must remain.
+
+The final muscular physique must therefore be anatomically plausible specifically FROM THIS CAMERA ANGLE, rather than merely plausible from a conventional front-facing viewpoint.
+
+
+Some information's on the photography has to be kept to have the best harmony possible with realistic looks.
+
+Double-check the entire edit to ensure visual, anatomical, lighting, and contextual consistency.
+
+Perform a thorough final check of the entire edit. Verify every specified requirement and ensure that all requested changes are accurately implemented, mutually consistent, and fully integrated with the original image. Assess the overall photorealism and visual authenticity of the result, ensuring that the image looks like a genuine, naturally captured photograph rather than an AI-generated or visibly manipulated image. Carefully inspect all contours, edges, transitions, junctions, intersections, and altered areas. Eliminate any unnaturally geometric, rigid, mechanical, overly smooth, or mathematically defined shapes. Ensure that every modified boundary follows the natural anatomical, physical, and photographic contours of the subject, with organic transitions, subtle irregularities, realistic depth, texture, perspective, lighting, and occlusion. The final result must appear physically coherent and naturally integrated, with no visible signs of artificial compositing or AI manipulation.
