@@ -86,6 +86,27 @@ Limites déclarées :
 - Les seuils (12 niveaux, 6 MAD, 1,5 %) sont des estimations **(E)** à calibrer sur
   tes photos.
 
+## Changement de couleur : l'ombrage vient de l'original
+
+Premier essai réel (t-shirt blanc → vert foncé) : une partie du t-shirt à l'ombre est
+restée grise ou mal éclairée, même avec une consigne explicite. Pour un changement de
+couleur, la lumière n'a pas à être confiée au modèle **(O)** : une photo est, en
+première approximation, couleur de l'objet × éclairage. `recoloration.py` :
+
+1. lit la couleur cible dans le candidat, là où l'objet est pleinement éclairé ;
+2. lit la couleur d'origine au même endroit dans ta photo ;
+3. applique à chaque pixel de l'objet `original × (cible / origine)`, canal par canal,
+   en lumière linéaire : ombres, plis, reflets, teinte des ombres et texture du tissu
+   viennent de ta photo ;
+4. reprend les ombres que le modèle a oubliées : zones entourées par l'objet et de
+   même couleur d'origine (un bras posé sur le t-shirt n'a pas la même couleur : il
+   n'est pas touché).
+
+Actif seulement pour les demandes de type couleur ou matière (principe S-LUM-03),
+désactivable (`recoloration: false`). Limites : objet d'origine de couleur uniforme ;
+une matière à reflets différents (cuir brillant, métal) n'est pas rendue par ce
+calcul ; un objet d'origine très sombre amplifie le bruit (rapport borné à 8).
+
 ## Le moteur : FLUX.2 klein 4B dans ComfyUI
 
 - Graphe identique au modèle officiel « Flux.2 [Klein] 4B Distilled: Image Edit »

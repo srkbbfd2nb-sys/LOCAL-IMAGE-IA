@@ -108,6 +108,8 @@ def _parser() -> argparse.ArgumentParser:
     f.add_argument("--fondu", type=int, default=8, help="Largeur du fondu, en pixels, dans la zone modifiée")
     f.add_argument("--graine", type=int, default=0)
     f.add_argument("--generateur", default=GENERATEUR_PAR_DEFAUT)
+    f.add_argument("--sans-recoloration", action="store_true",
+                   help="Changement de couleur : garder l'ombrage du modèle au lieu de l'original")
 
     sous.add_parser("socle", help="Lister les principes du socle")
     sous.add_parser("verifier", help="Vérifier que ce Python fait tourner LOCAL-IMAGE-IA")
@@ -195,7 +197,8 @@ def main(argv: list[str] | None = None) -> int:
                     raise ArretDeclare("Mode édition : --original est obligatoire.")
                 resultats = finaliser(contrat, args.original, args.masque, args.candidats,
                                       args.sortie, fondu=args.fondu, graine=args.graine,
-                                      generateur=args.generateur, chemin_protege=args.protege)
+                                      generateur=args.generateur, chemin_protege=args.protege,
+                                      recoloration=not args.sans_recoloration)
                 print("Classement sur défauts mesurables (l'anatomie reste à juger à l'œil) :")
                 for rang, c in enumerate(resultats, start=1):
                     etat = f"rejeté : {c.rejete}" if c.rejete else f"score {c.score}"

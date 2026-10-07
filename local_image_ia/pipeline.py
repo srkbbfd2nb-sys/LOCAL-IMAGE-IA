@@ -33,6 +33,7 @@ from local_image_ia.masque_auto import estimer_derive, masque_par_difference, re
 from local_image_ia.mecanismes import capacites_phase0
 from local_image_ia.mesures import continuite_raccord, ecart_hors_masque, mesurer_signature, score_defauts
 from local_image_ia.rapport import MesuresCandidat, rapport_markdown
+from local_image_ia.recoloration import recolorer
 from local_image_ia.signature import reappliquer_grain
 from local_image_ia.socle import charger_socle
 from local_image_ia.verrou import composer
@@ -42,6 +43,7 @@ JUGE_PAR_DEFAUT = "œil humain, aidé des mesures du code"
 GENERATEUR_PAR_DEFAUT = "modèle d'édition dans ComfyUI (déclaré, non vu par ce code)"
 PRINCIPE_GRAIN = "S-SIG-01"
 PRINCIPE_DERIVE = "S-SIG-03"
+PRINCIPE_RECOLORATION = "S-LUM-03"
 
 
 def compiler_demande(
@@ -90,8 +92,13 @@ def finaliser(
     chemin_protege: str | Path | None = None,
     capacites: list[Capacite] | None = None,
     durees: dict | None = None,
+    recoloration: bool = True,
 ) -> list[MesuresCandidat]:
-    """Édition. ``chemin_masque`` à None : masque automatique, candidat par candidat."""
+    """Édition. ``chemin_masque`` à None : masque automatique, candidat par candidat.
+
+    ``recoloration`` : pour un changement de couleur, l'ombrage vient de l'original
+    (principe S-LUM-03, actif seulement pour les demandes de type couleur ou matière).
+    """
     debut = time.monotonic()
     verifier_circularite(generateur, juge)
     invariant = verifier_non_suppression(contrat)
@@ -107,6 +114,8 @@ def finaliser(
 
     statut_grain, ligne_grain = statut_principe(contrat, PRINCIPE_GRAIN)
     statut_derive, _ = statut_principe(contrat, PRINCIPE_DERIVE)
+    statut_recolo, _ = statut_principe(contrat, PRINCIPE_RECOLORATION)
+    recolorer_actif = recoloration and statut_recolo == "actif"
     notes_globales: list[str] = []
     if statut_grain == "suspendu":
         notes_globales.append(
@@ -132,10 +141,10 @@ def finaliser(
             info_masque = {"source": "automatique", "part": round(auto.part, 4), "seuil": auto.seuil,
                            "ilots": auto.ilots}
         info_masque["derive"] = derive.to_dict()
-        enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}.png")
 
         nom = f"candidat_{i:02d}.png"
         if not masque.any():
+            enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}.png")
             enregistrer_png(original, sortie / nom)
             resultats.append(MesuresCandidat(
                 nom=f"C{i}", fichier=nom, hors_masque=None, raccord={}, signature={},
@@ -145,6 +154,11 @@ def finaliser(
 
         if statut_derive == "actif":
             candidat = derive.appliquer(candidat)
+        if recolorer_actif:
+            candidat, masque, recolo = recolorer(original, candidat, masque, protege)
+            notes.append(recolo.note)
+            info_masque["recoloration"] = recolo.to_dict()
+        enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}.png")
         cadre = cadre_utile(masque, MARGE_CADRE + max(fondu, 0))
         m_c, o_c = masque[cadre], original[cadre]
         alpha = alpha_interne(m_c, fondu)

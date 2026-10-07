@@ -8,5 +8,6 @@
   "socle_complet": false,
   "texte": "complete",
   "format_creation": "portrait",
-  "graine": null
+  "graine": null,
+  "recoloration": true
 }

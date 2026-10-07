@@ -26,6 +26,16 @@ mémoire vive géré par ComfyUI **(F)**. Estimation pour une vraie photo de 24 
 3 candidats : 1 à 2 minutes, dont environ 20 s de génération et jusqu'à une dizaine de
 secondes de traitement par le code par candidat **(E, à mesurer)**.
 
+### Premiers essais réels (t-shirt blanc → vert foncé)
+
+| Essai | Résultat à l'œil | Ce qui a changé ensuite |
+|---|---|---|
+| 1 | bon dans l'ensemble, grosse tache sur une ombre du t-shirt | consigne de couleur réécrite (S-CM-01) |
+| 2 | tache plus petite, toujours présente | ombrage repris de l'original par le code (S-LUM-03) |
+
+Mesures : 64 s par photo pour 3 candidats ; zone modifiée nettement plus nette et plus
+bruitée que le reste (×2) sur les deux essais, cause à établir (taille de la photo ?).
+
 ### Ce que j'attends de toi
 
 1. ~~Lancer `windows\installer.bat`, puis `windows\diagnostic.bat`.~~ Fait.

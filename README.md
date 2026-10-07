@@ -81,6 +81,7 @@ compatible » (voir [le guide de prise de vue](docs/GUIDE_PRISE_DE_VUE_IPHONE16.
 | `socle_complet` | `false` | `true` répète aussi les principes que ta demande dit déjà |
 | `format_creation` | `portrait` | taille en mode création : `portrait`, `paysage`, `carre`, `vertical_9_16` |
 | `graine` | `null` | fixer une graine pour reproduire un résultat |
+| `recoloration` | `true` | changement de couleur : ombres, plis et texture repris de ta photo, seule la couleur vient du modèle |
 
 ## Comment ta demande est traitée
 

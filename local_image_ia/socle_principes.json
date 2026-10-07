@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-07c",
+  "version": "2026-10-07d",
   "avertissement": "Principes tirés des prompts fournis par Lazerr (dossier sources/prompts). Ce sont des règles de pratique photographique (O), pas des faits mesurés : leur effet sur le modèle se vérifie par comparaison. Les directives envoyées au modèle sont en anglais ; les contrôles finaux sont pour l'œil humain et les mesures.",
   "modules": [
     "IMAGE SOURCE",
@@ -843,6 +843,24 @@
       "directive": "Global colour drift of the generated image measured on the unchanged area and corrected before compositing.",
       "description": "Dérive colorimétrique du modèle mesurée hors zone modifiée, puis corrigée.",
       "source": "cahier_compositing_et_cas_corps.md (gestion colorimétrique) ; protocole_master_corps.txt §21",
+      "conflits": [],
+      "conflits_explicites": [],
+      "couverture": []
+    },
+    {
+      "id": "S-LUM-03",
+      "module": "LIGHTING",
+      "domaine": "lighting",
+      "mecanisme": "signature",
+      "types": [
+        "couleur_matiere"
+      ],
+      "modes": [
+        "edition"
+      ],
+      "directive": "Recolouring keeps the original shading: shadows, folds, highlights and fabric texture come from the original photo, only the colour comes from the model.",
+      "description": "Changement de couleur : l'ombrage de ta photo est réappliqué à la nouvelle couleur (par le code).",
+      "source": "essai réel du 7 octobre 2026 (ombre du t-shirt mal recolorée par le modèle) ; cahier_compositing_et_cas_corps.md (lumière)",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": []

@@ -73,6 +73,7 @@ class ConfigAutomate:
     texte: str = COMPLETE         # « condensee » seulement après comparaison
     format_creation: str = "portrait"
     graine: int | None = None
+    recoloration: bool = True     # changement de couleur : ombrage repris de l'original
 
     @classmethod
     def charger(cls, chemin: str | Path | None) -> "ConfigAutomate":
@@ -222,7 +223,7 @@ class Automate:
         if tache.mode == "edition":
             finaliser(contrat, tache.image, tache.masque, bruts, dossier, fondu=self.config.fondu,
                       graine=base, generateur=generateur, chemin_protege=tache.protege,
-                      capacites=capacites, durees=durees)
+                      capacites=capacites, durees=durees, recoloration=self.config.recoloration)
         else:
             finaliser_sans_original(contrat, bruts, dossier, generateur=generateur,
                                     capacites=capacites, durees=durees)
