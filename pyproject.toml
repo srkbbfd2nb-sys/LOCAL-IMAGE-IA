@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-image-ia"
+version = "0.1.0"
+description = "Couche de contrat, de verrous, d'optimiseur et de mesures pour l'édition visuelle locale par IA"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "Pillow>=10.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+retouche = "local_image_ia.cli:main"
+
+[tool.setuptools]
+packages = ["local_image_ia"]
+
+[tool.setuptools.package-data]
+local_image_ia = ["socle_principes.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

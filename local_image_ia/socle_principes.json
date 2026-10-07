@@ -1,0 +1,313 @@
+{
+  "version": "2026-10-07",
+  "avertissement": "Principes tirés des documents fournis (n° 2 à 7). Ce sont des règles de pratique photographique (O), pas des faits mesurés : leur effet sur le modèle se vérifie par comparaison. Les directives envoyées au modèle sont en anglais.",
+  "principes": [
+    {
+      "id": "S-INT-01",
+      "domaine": "intégration",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "Change only what is asked; everything else stays exactly as in the photo. The result must read as the same photograph, taken at the same instant, with the same camera, the same light and the same pose.",
+      "description": "Éditer la photo fournie, ne jamais en générer une nouvelle.",
+      "source": "Documents 2 à 4",
+      "conflits": []
+    },
+    {
+      "id": "S-LUM-01",
+      "domaine": "lumière",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "Light the modified area with the same key light direction, softness and colour temperature as the rest of the photo.",
+      "description": "Même source principale, même direction, même température de couleur.",
+      "source": "Document 7 — lumière",
+      "conflits": [
+        "\\b(chang|modifi|nouvel|new|different)\\w*.{0,15}\\b(lumiere|eclairage|light)",
+        "\\b(lumiere|eclairage|light)\\w*.{0,15}\\b(chang|modifi|different)"
+      ]
+    },
+    {
+      "id": "S-OMB-01",
+      "domaine": "ombres",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "New or changed volumes cast and receive shadows consistent with the existing light (same direction, softness and density), with contact shadows where surfaces touch.",
+      "description": "Ombres compatibles, ombres de contact.",
+      "source": "Document 7 — ombres",
+      "conflits": []
+    },
+    {
+      "id": "S-GEO-01",
+      "domaine": "perspective et géométrie",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "Respect the existing perspective and foreshortening: new shapes follow the same vanishing lines and the same scale as their surroundings.",
+      "description": "Perspective, raccourcis, échelle cohérente avec l'environnement.",
+      "source": "Document 7 — perspective et géométrie",
+      "conflits": []
+    },
+    {
+      "id": "S-MAT-01",
+      "domaine": "matériaux et microstructure",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "Keep real material micro-structure (skin pores, fabric weave, small natural imperfections); never smooth, plastic-looking surfaces.",
+      "description": "Pores, fibres, imperfections naturelles ; jamais de surface plastique.",
+      "source": "Document 7 — matériaux",
+      "conflits": [
+        "\\b(lisse|smooth\\w*|airbrush\\w*|retouche beaute|beauty retouch\\w*)\\b"
+      ]
+    },
+    {
+      "id": "S-COL-01",
+      "domaine": "colorimétrie",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "Match exposure, white balance, contrast and saturation of the modified area to the surrounding image.",
+      "description": "Même exposition, balance des blancs, contraste et saturation que le reste.",
+      "source": "Document 7 — colorimétrie",
+      "conflits": []
+    },
+    {
+      "id": "S-DEG-01",
+      "domaine": "dégradation réaliste",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "directive": "Do not make the modified area cleaner, sharper or more detailed than the rest of the photo: ordinary smartphone rendering, never studio or magazine.",
+      "description": "Une image parfaitement propre paraît moins photographique.",
+      "source": "Document 7 — dégradation réaliste ; documents 2 à 4 — signature photographique",
+      "conflits": [
+        "\\b(studio|magazine|ultra[- ]?(sharp|net\\w*)|8k|4k|hdr)\\b"
+      ]
+    },
+    {
+      "id": "S-VOL-01",
+      "domaine": "transformation",
+      "mecanisme": "instruction",
+      "types": [
+        "volume_forme"
+      ],
+      "directive": "Change volume gradually and continuously along each segment; never scale the whole silhouette uniformly.",
+      "description": "Gain modéré et continu, jamais une mise à l'échelle uniforme.",
+      "source": "Documents 2 à 4 — transformation",
+      "conflits": []
+    },
+    {
+      "id": "S-VOL-02",
+      "domaine": "intégration",
+      "mecanisme": "instruction",
+      "types": [
+        "volume_forme"
+      ],
+      "directive": "Clothing follows the new volume: folds, tension and seams move with the shape underneath.",
+      "description": "Le vêtement suit le nouveau volume.",
+      "source": "Document 7 — intégration du sujet",
+      "conflits": []
+    },
+    {
+      "id": "S-VOL-03",
+      "domaine": "anatomie",
+      "mecanisme": "instruction",
+      "types": [
+        "volume_forme"
+      ],
+      "directive": "Keep anatomical plausibility: same number of limbs and fingers, joints in place, segment lengths and proportions consistent with the original person.",
+      "description": "Plausibilité anatomique (« Not too much arms »).",
+      "source": "Documents 2 à 4 — ordre de priorité, point 6",
+      "conflits": []
+    },
+    {
+      "id": "S-REM-01",
+      "domaine": "remplacement",
+      "mecanisme": "instruction",
+      "types": [
+        "remplacement_objet"
+      ],
+      "directive": "Remove every trace of the replaced object (edges, reflections, shadows, plate, debris) before placing the new one.",
+      "description": "Supprimer toute trace de l'objet d'origine.",
+      "source": "Document 6",
+      "conflits": []
+    },
+    {
+      "id": "S-REM-02",
+      "domaine": "remplacement",
+      "mecanisme": "instruction",
+      "types": [
+        "remplacement_objet"
+      ],
+      "directive": "Place and scale the new object from cues in the scene: ground contact, distance, perspective lines and the size of nearby references.",
+      "description": "Position et échelle déduites de l'environnement.",
+      "source": "Document 6",
+      "conflits": []
+    },
+    {
+      "id": "S-REM-03",
+      "domaine": "remplacement",
+      "mecanisme": "instruction",
+      "types": [
+        "remplacement_objet"
+      ],
+      "directive": "The new object reflects and is reflected by its environment consistently (glass, paint, wet ground).",
+      "description": "Reflets cohérents avec l'environnement.",
+      "source": "Document 6 ; document 7 — intégration",
+      "conflits": []
+    },
+    {
+      "id": "S-CM-01",
+      "domaine": "couleur ou matière",
+      "mecanisme": "instruction",
+      "types": [
+        "couleur_matiere"
+      ],
+      "directive": "Change only the requested colour or material; keep the object's shape, folds, seams and highlight structure.",
+      "description": "Seule la couleur ou la matière change.",
+      "source": "Document 5 ; document 7 — matériaux",
+      "conflits": []
+    },
+    {
+      "id": "S-CM-02",
+      "domaine": "couleur ou matière",
+      "mecanisme": "instruction",
+      "types": [
+        "couleur_matiere"
+      ],
+      "directive": "The new material keeps plausible reflectance: matte stays matte, leather has soft highlights, metal reflects its surroundings.",
+      "description": "Réflectance plausible de la nouvelle matière.",
+      "source": "Document 7 — matériaux",
+      "conflits": []
+    },
+    {
+      "id": "S-VER-01",
+      "domaine": "verrou",
+      "mecanisme": "verrou",
+      "types": [
+        "tous"
+      ],
+      "directive": "Pixels outside the mask are copied from the original.",
+      "description": "Hors masque, l'original est recopié (identique au bit près en PNG).",
+      "source": "Architecture retenue, mécanisme 1",
+      "conflits": []
+    },
+    {
+      "id": "S-CON-01",
+      "domaine": "conditionnement",
+      "mecanisme": "conditionnement",
+      "types": [
+        "tous"
+      ],
+      "directive": "Depth and edge maps from the source constrain camera, perspective and pose.",
+      "description": "Caméra, perspective et pose contraintes par la source.",
+      "source": "Architecture retenue, mécanisme 2",
+      "conflits": []
+    },
+    {
+      "id": "S-SIG-01",
+      "domaine": "texture photographique",
+      "mecanisme": "signature",
+      "types": [
+        "tous"
+      ],
+      "directive": "Luminance-dependent grain measured on the source and re-applied to the modified area.",
+      "description": "Grain dépendant de la luminance, mesuré puis réappliqué.",
+      "source": "Document 7 — texture photographique",
+      "conflits": []
+    },
+    {
+      "id": "S-SIG-02",
+      "domaine": "texture photographique",
+      "mecanisme": "signature",
+      "types": [
+        "tous"
+      ],
+      "directive": "Sharpness of the modified area compared with its surroundings.",
+      "description": "Netteté comparée à l'entourage.",
+      "source": "Documents 2 à 4 — signature photographique",
+      "conflits": []
+    },
+    {
+      "id": "S-CTL-01",
+      "domaine": "contrôle final",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "directive": "Raccords : aucune bordure de détourage visible au bord de la zone éditée.",
+      "description": "Continuité aux raccords (mesurée).",
+      "source": "Document 7 — contrôle de cohérence final",
+      "conflits": []
+    },
+    {
+      "id": "S-CTL-02",
+      "domaine": "contrôle final",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "directive": "Même perspective et même focale apparente que la source.",
+      "description": "Contrôle à l'œil.",
+      "source": "Document 7 — contrôle de cohérence final",
+      "conflits": []
+    },
+    {
+      "id": "S-CTL-03",
+      "domaine": "contrôle final",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "directive": "Même direction de lumière, mêmes températures de couleur, ombres compatibles.",
+      "description": "Contrôle à l'œil.",
+      "source": "Document 7 — contrôle de cohérence final",
+      "conflits": []
+    },
+    {
+      "id": "S-CTL-04",
+      "domaine": "contrôle final",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "directive": "Contact physique crédible, aucune texture générée incohérente.",
+      "description": "Contrôle à l'œil.",
+      "source": "Document 7 — contrôle de cohérence final",
+      "conflits": []
+    },
+    {
+      "id": "S-CTL-05",
+      "domaine": "contrôle final",
+      "mecanisme": "verification",
+      "types": [
+        "volume_forme"
+      ],
+      "directive": "Anatomie : nombre de membres et de doigts, articulations, mains, proportions entre segments.",
+      "description": "Contrôle à l'œil (famille de défauts portée par le modèle seul).",
+      "source": "Documents 2 à 4 — contrôle final",
+      "conflits": []
+    },
+    {
+      "id": "S-CTL-06",
+      "domaine": "contrôle final",
+      "mecanisme": "verification",
+      "types": [
+        "tous"
+      ],
+      "directive": "Test du spectateur : quelqu'un qui n'a jamais vu l'original ne remarque rien.",
+      "description": "Contrôle par un tiers.",
+      "source": "Documents 2 à 4 et 6 — test du spectateur",
+      "conflits": []
+    }
+  ]
+}

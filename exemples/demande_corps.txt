@@ -1,0 +1,23 @@
+OBJECTIVE:
+Edit the provided photo, never generate a new one.
+Make the visible physique naturally muscular, athletic and harmonious.
+Add coherent thickness to the shoulders, chest, arms and back.
+
+PRIORITY ORDER IF IN CONFLICT:
+1. identity, 2. camera geometry, 3. pose, 4. environment, 5. light
+
+LOCKS:
+Keep the face, hair and hands identical.
+Keep the background and environment unchanged.
+Keep the same camera height, distance and tilt.
+
+FORBIDDEN:
+No bodybuilder proportions, no exaggerated V shape, no artificial veins.
+Not too much arms.
+
+PHOTOGRAPHIC SIGNATURE:
+Snapchat quality: same grain, noise and sharpness as the rest of the photo.
+
+FINAL CHECK:
+Check the seams at the edge of the edited area.
+Viewer test: someone who never saw the original notices nothing.

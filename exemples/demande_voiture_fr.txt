@@ -1,0 +1,11 @@
+Remplacer la voiture garée par une BMW Série 7 G70 noire.
+Position et échelle déduites de l'environnement.
+
+VERROUS :
+- le fond et le parking
+- les autres voitures
+
+Garder la même hauteur de caméra et la même perspective.
+Même lumière de parking sombre, mêmes reflets au sol.
+Grain et compression d'une photo de smartphone.
+Contrôle final : aucune trace de l'ancienne voiture ni de sa plaque.
