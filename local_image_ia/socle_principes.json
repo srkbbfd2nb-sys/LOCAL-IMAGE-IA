@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-07b",
+  "version": "2026-10-07c",
   "avertissement": "Principes tirés des prompts fournis par Lazerr (dossier sources/prompts). Ce sont des règles de pratique photographique (O), pas des faits mesurés : leur effet sur le modèle se vérifie par comparaison. Les directives envoyées au modèle sont en anglais ; les contrôles finaux sont pour l'œil humain et les mesures.",
   "modules": [
     "IMAGE SOURCE",
@@ -722,9 +722,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Change only the requested colour or material; keep the object's geometry, folds, seams, stitching and highlight structure.",
-      "description": "Seule la couleur ou la matière change.",
-      "source": "selfie_reference_json.json (car_interior, wardrobe)",
+      "directive": "Apply the requested colour or material to the whole object, including its brightest areas and the parts in shadow: a shadow falling on the object stays where it is, with the same shape and softness, and darkens the new colour instead of keeping the old one. Keep its geometry, folds, seams and stitching.",
+      "description": "Tout l'objet change, parties à l'ombre comprises ; l'ombre reste et assombrit la nouvelle couleur.",
+      "source": "selfie_reference_json.json (car_interior, wardrobe) ; essai réel du 7 octobre 2026 (t-shirt : partie à l'ombre non recolorée)",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
@@ -743,7 +743,7 @@
       "modes": [
         "tous"
       ],
-      "directive": "The new material keeps plausible reflectance and texture under this light: matte stays matte, leather shows grain and soft highlights, metal reflects its surroundings, white stays detailed without clipping.",
+      "directive": "The new material has plausible reflectance and texture under the existing light: matte stays matte, leather shows grain and soft highlights, metal reflects its surroundings.",
       "description": "Réflectance plausible de la nouvelle matière.",
       "source": "selfie_reference_json.json (lighting) ; cahier_compositing_et_cas_corps.md (matériaux)",
       "conflits": [],

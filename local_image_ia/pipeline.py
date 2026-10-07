@@ -129,7 +129,8 @@ def finaliser(
             auto = masque_par_difference(original, candidat, protege)
             masque, derive = auto.masque, auto.derive
             notes += auto.notes
-            info_masque = {"source": "automatique", "part": round(auto.part, 4), "seuil": auto.seuil}
+            info_masque = {"source": "automatique", "part": round(auto.part, 4), "seuil": auto.seuil,
+                           "ilots": auto.ilots}
         info_masque["derive"] = derive.to_dict()
         enregistrer_png((masque.astype(np.uint8) * 255), sortie / "masques" / f"C{i}.png")
 

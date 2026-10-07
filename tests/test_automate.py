@@ -93,6 +93,18 @@ def test_masque_automatique_ignore_la_derive_globale():
     assert not auto2.masque[:, :320].any() and auto2.masque[250, 350]
 
 
+def test_ilot_laisse_par_le_modele_est_signale():
+    rng = np.random.default_rng(2)
+    original = np.clip(220 + rng.normal(0, 3, (H, W, 3)), 0, 255).astype(np.uint8)   # t-shirt blanc
+    candidat = original.copy()
+    candidat[100:400, 150:500] = (30, 80, 40)                                        # passé en vert
+    candidat[220:280, 300:360] = original[220:280, 300:360]                          # tache restée blanche
+    auto = masque_par_difference(original, candidat)
+    assert auto.ilots > 0.002
+    assert any("Îlot inchangé" in n for n in auto.notes)
+    assert auto.masque[150, 200] and not auto.masque[250, 330]
+
+
 def test_derive_de_couleur_estimee_sur_une_image_contrastee():
     yy, xx = np.mgrid[0:H, 0:W]
     original = np.stack([20 + 200 * xx / W, 30 + 180 * yy / H, 40 + 150 * xx / W], -1).astype(np.uint8)

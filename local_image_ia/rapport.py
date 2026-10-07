@@ -203,6 +203,8 @@ def rapport_markdown(
             for rang, c in enumerate(candidats, start=1):
                 zone = (f"{c.masque.get('source', '?')}, {c.masque['part']:.0%}"
                         if "part" in c.masque else c.masque.get("source", "—"))
+                if c.masque.get("ilots"):
+                    zone += f", **îlot inchangé {c.masque['ilots']:.1%}**"
                 if c.rejete:
                     o.append(f"| — | {c.nom} | `{c.fichier}` | {zone} | {REJETE} : {c.rejete} | | | | |")
                     continue

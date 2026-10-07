@@ -43,6 +43,9 @@ class Derive:
                 "decalages": [round(d, 2) for d in self.decalages]}
 
 
+ILOT_SIGNALE = 0.002     # îlot inchangé de plus de 0,2 % de l'image : signalé (E)
+
+
 @dataclass
 class MasqueAuto:
     masque: np.ndarray
@@ -50,6 +53,25 @@ class MasqueAuto:
     seuil: float
     derive: Derive
     notes: list[str] = field(default_factory=list)
+    ilots: float = 0.0
+
+
+def trous(masque: np.ndarray) -> np.ndarray:
+    """Zones hors masque entièrement entourées par le masque (non reliées au bord)."""
+    libre = ~masque
+    atteint = np.zeros_like(libre)
+    atteint[0, :], atteint[-1, :] = libre[0, :], libre[-1, :]
+    atteint[:, 0], atteint[:, -1] = libre[:, 0], libre[:, -1]
+    while True:
+        n = atteint.copy()
+        n[1:, :] |= atteint[:-1, :]
+        n[:-1, :] |= atteint[1:, :]
+        n[:, 1:] |= atteint[:, :-1]
+        n[:, :-1] |= atteint[:, 1:]
+        n &= libre
+        if np.array_equal(n, atteint):
+            return libre & ~atteint
+        atteint = n
 
 
 def reduire(image: np.ndarray, cote: int = COTE_ANALYSE) -> np.ndarray:
@@ -113,6 +135,10 @@ def masque_par_difference(
         m = eroder(dilater(m, 6), 6)          # fermeture : bouche les trous
         marge = max(3, round(0.015 * max(m.shape)))
         m = dilater(m, marge)                 # inclut les transitions du modèle
+    # Îlot : zone que le modèle a laissée telle quelle au milieu de ce qu'il a modifié.
+    # Le masque vient de la différence, donc un îlot est toujours un choix du modèle
+    # (souvent un oubli : partie claire d'un vêtement restée dans l'ancienne couleur).
+    ilots = float(trous(m).mean()) if m.any() else 0.0
     plein = np.asarray(Image.fromarray(m.astype(np.uint8) * 255).resize((w, h), Image.Resampling.NEAREST)) > 127
     if protege is not None:
         if (plein & protege).any():
@@ -124,9 +150,14 @@ def masque_par_difference(
         notes.append("Aucune modification nette détectée : le candidat ressemble à l'original.")
     elif part > PART_MAX_SIGNALEE:
         notes.append(f"Le modèle a modifié {part:.0%} de l'image : le verrou protège peu ici.")
+    if ilots >= ILOT_SIGNALE:
+        notes.append(f"Îlot inchangé de {ilots:.1%} de l'image au milieu de la zone modifiée : le "
+                     "modèle y a laissé l'original (visible en noir dans masques/). Vérifie à l'œil : "
+                     "c'est souvent un oubli, sauf si c'est une zone qui devait rester (visage…).")
     # Dérive réestimée sur la seule zone stable, en pleine définition d'analyse.
     stable = np.asarray(Image.fromarray((~plein).astype(np.uint8) * 255).resize(
         (o.shape[1], o.shape[0]), Image.Resampling.NEAREST)) > 127
     if stable.sum() > 1000:
         derive = estimer_derive(o, c, stable)
-    return MasqueAuto(masque=plein, part=part, seuil=round(seuil, 2), derive=derive, notes=notes)
+    return MasqueAuto(masque=plein, part=part, seuil=round(seuil, 2), derive=derive, notes=notes,
+                      ilots=round(ilots, 4))
