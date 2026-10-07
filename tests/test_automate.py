@@ -183,6 +183,8 @@ def test_diagnostic(comfy, tmp_path):
     rapport = automate(comfy).diagnostic(tmp_path / "diag")
     texte = rapport.read_text("utf-8")
     assert texte.count("| création") == 2 and "| édition" in texte and "ÉCHEC" not in texte
+    graines = {g["bruit"]["inputs"]["noise_seed"] for g in comfy.graphes}
+    assert len(graines) == 3  # sinon ComfyUI sert la 2e création depuis son cache
 
 
 def test_cli_traiter(comfy, tmp_path, capsys):

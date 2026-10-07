@@ -300,7 +300,9 @@ class Automate:
                     if image_creee is None:
                         raise ArretDeclare("Pas d'image créée pour l'essai d'édition.")
                     images = [self.client.televerser(image_creee, "lia_diagnostic.png")]
-                graphe = graphe_klein(self.modele, texte, images, 1234, format_creation="carre")
+                # Une graine différente par essai : ComfyUI renvoie sans recalculer le
+                # résultat d'un graphe identique déjà exécuté (mesure à 0 s sinon).
+                graphe = graphe_klein(self.modele, texte, images, 1234 + n, format_creation="carre")
                 sorties = self.client.attendre(self.client.soumettre(graphe), DELAI_PREMIERE_GENERATION)
                 imgs = self.client.images_de_sortie(sorties)
                 sortie = dossier / f"diagnostic_{n}.png"

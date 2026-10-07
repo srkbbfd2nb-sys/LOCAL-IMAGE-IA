@@ -4,7 +4,7 @@
 
 | Étape | Contenu | État |
 |---|---|---|
-| 1 | Installation de ComfyUI et du modèle, essai neutre, trois mesures | **automatisée** : `installer.bat` puis `diagnostic.bat` ; à lancer par toi |
+| 1 | Installation de ComfyUI et du modèle, essai neutre, trois mesures | **fait sur ta machine** (diagnostic ci-dessous) |
 | 2 | Verrou (masque fourni ou automatique) | fait (`verrou.py`, `masque_auto.py`) |
 | 3 | Compilateur de contrat et optimiseur | fait (`contrat.py`, `routage.py`, `socle.py`), testé sur tes 5 prompts |
 | 4 | Mesures : hors zone, grain, netteté, raccord, temps | fait (`mesures.py`, durées dans chaque rapport) |
@@ -13,12 +13,23 @@
 Tout est testé (53 tests) contre un faux ComfyUI qui imite l'API réelle, **pas encore
 sur ta machine ni avec le vrai modèle**. C'est la prochaine étape.
 
+### Diagnostic du 7 octobre 2026, 19 h 18 (ta machine)
+
+| Essai | Durée | Lecture |
+|---|---|---|
+| création 1, chargement du modèle compris | 17 s | mesure valable **(F)** |
+| création 2 | 0 s | **non valable** : graphe identique, ComfyUI a renvoyé son résultat en cache. Corrigé (graine différente par essai) |
+| édition, image 1 Mpx | 21 s | mesure valable **(F)** |
+
+Aucune erreur mémoire : les 6 Go suffisent pour klein 4B distillé, avec déport en
+mémoire vive géré par ComfyUI **(F)**. Estimation pour une vraie photo de 24 Mpx avec
+3 candidats : 1 à 2 minutes, dont environ 20 s de génération et jusqu'à une dizaine de
+secondes de traitement par le code par candidat **(E, à mesurer)**.
+
 ### Ce que j'attends de toi
 
-1. Lancer `windows\installer.bat`, puis `windows\diagnostic.bat`.
-2. M'envoyer `boite\diagnostic\diagnostic.md` (durées de la première et de la deuxième
-   création, de l'édition, et toute erreur mémoire), ou le message d'erreur si une étape
-   s'arrête.
+1. ~~Lancer `windows\installer.bat`, puis `windows\diagnostic.bat`.~~ Fait.
+2. ~~M'envoyer `boite\diagnostic\diagnostic.md`.~~ Fait.
 3. Premier essai réel : une photo sans enjeu + une demande courte (changer la couleur
    d'un vêtement) dans `boite\entree\`, puis ton jugement à l'œil comparé au classement.
 
