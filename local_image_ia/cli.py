@@ -20,6 +20,8 @@ Les trois mesures de l'étape 1 (ComfyUI doit tourner) :
 from __future__ import annotations
 
 import argparse
+import os
+import platform
 import sys
 from dataclasses import fields
 from pathlib import Path
@@ -108,7 +110,26 @@ def _parser() -> argparse.ArgumentParser:
     f.add_argument("--generateur", default=GENERATEUR_PAR_DEFAUT)
 
     sous.add_parser("socle", help="Lister les principes du socle")
+    sous.add_parser("verifier", help="Vérifier que ce Python fait tourner LOCAL-IMAGE-IA")
     return p
+
+
+def verifier_installation() -> None:
+    """Contrôle court, pour l'installateur : versions, socle, une compilation de contrat."""
+    import numpy
+    import PIL
+
+    from local_image_ia.contrat import compiler
+    from local_image_ia.demande import DemandeFigee
+
+    if sys.version_info < (3, 10):
+        raise ArretDeclare(f"Python {platform.python_version()} : il faut 3.10 ou plus récent.")
+    socle = charger_socle()
+    contrat = compiler(DemandeFigee.depuis_texte("Make the mug blue.\nKeep the background unchanged.\n"))
+    print(f"Python {platform.python_version()}, numpy {numpy.__version__}, Pillow {PIL.__version__}")
+    print(f"Socle : {len(socle.principes)} principes ; contrat d'essai : "
+          f"{len(contrat.entrees)} lignes, empreinte {contrat.demande.empreinte[:12]}")
+    print("LOCAL-IMAGE-IA OK")
 
 
 def _afficher_contrat(contrat: Contrat, sortie: str) -> None:
@@ -183,6 +204,8 @@ def main(argv: list[str] | None = None) -> int:
                 finaliser_sans_original(contrat, args.candidats, args.sortie,
                                         generateur=args.generateur)
             print(f"\nRésultat : {args.sortie}/resultat.png\nRapport  : {args.sortie}/rapport.md")
+        elif args.commande == "verifier":
+            verifier_installation()
         elif args.commande == "socle":
             socle = charger_socle()
             print(f"Socle version {socle.version} — {len(socle.principes)} principes")
@@ -192,6 +215,14 @@ def main(argv: list[str] | None = None) -> int:
     except ArretDeclare as exc:
         print(f"ARRÊT DÉCLARÉ : {exc}", file=sys.stderr)
         return 2
+    except BrokenPipeError:
+        # Sortie coupée par le lecteur (« | Select-Object -First 1 », « | head ») :
+        # ce n'est pas une erreur du programme.
+        try:
+            sys.stdout = open(os.devnull, "w")
+        except OSError:
+            pass
+        return 0
     except KeyboardInterrupt:
         print("\nArrêt demandé.")
         return 130

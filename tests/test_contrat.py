@@ -248,3 +248,18 @@ def test_cli_compiler_et_arret_declare(tmp_path, capsys):
     ko.write_text("Make the body muscular.\nLorem ipsum.\n", "utf-8")
     assert main(["compiler", str(ko), "-o", str(tmp_path / "s2"), "--orphelines", "arret"]) == 2
     assert "ARRÊT DÉCLARÉ" in capsys.readouterr().err
+
+
+def test_cli_verifier_et_sortie_coupee():
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    lanceur = Path(__file__).parent.parent / "lancer.py"
+    ok = subprocess.run([sys.executable, str(lanceur), "verifier"], capture_output=True, text=True)
+    assert ok.returncode == 0 and "LOCAL-IMAGE-IA OK" in ok.stdout
+    # Lecteur qui ferme après la première ligne (« | Select-Object -First 1 ») : pas d'échec.
+    proc = subprocess.Popen([sys.executable, str(lanceur), "socle"], stdout=subprocess.PIPE)
+    proc.stdout.readline()
+    proc.stdout.close()
+    assert proc.wait() == 0

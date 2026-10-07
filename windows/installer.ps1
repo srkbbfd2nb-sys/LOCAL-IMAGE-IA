@@ -90,10 +90,15 @@ foreach ($M in $Modeles) {
         Telecharger $M.Url $Fichier
     }
     if ((Get-Item $Fichier).Length -ne $M.Taille) { Arret "$($M.Nom) : taille inattendue. Supprime le fichier et relance." }
-    if (-not $SansVerificationSha) {
-        Write-Host "Verification de l'empreinte SHA-256 de $($M.Nom)..."
+    # Une empreinte deja verifiee n'est pas recalculee (plusieurs minutes pour 8 Go).
+    $Temoin = "$Fichier.sha256-ok"
+    $DejaVerifie = (Test-Path $Temoin) -and ((Get-Content $Temoin -Raw).Trim() -eq $M.Sha) -and
+                   ((Get-Item $Temoin).LastWriteTime -ge (Get-Item $Fichier).LastWriteTime)
+    if (-not $SansVerificationSha -and -not $DejaVerifie) {
+        Write-Host "Verification de l'empreinte SHA-256 de $($M.Nom) (quelques minutes)..."
         $Sha = (Get-FileHash -Algorithm SHA256 $Fichier).Hash.ToLower()
         if ($Sha -ne $M.Sha) { Arret "$($M.Nom) : empreinte inattendue ($Sha). Supprime le fichier et relance." }
+        Set-Content -Path $Temoin -Value $M.Sha -Encoding ASCII
     }
 }
 
@@ -104,8 +109,18 @@ if (-not (Test-Path $Config)) { Copy-Item (Join-Path $Racine "config.exemple.jso
 Write-Host "Depose tes demandes dans : $(Join-Path $Racine 'boite\entree')"
 
 Etape "5. Verification de LOCAL-IMAGE-IA"
-& $Py (Join-Path $Racine "lancer.py") socle | Select-Object -First 1
-if ($LASTEXITCODE -ne 0) { Arret "Le Python de ComfyUI n'arrive pas a lancer LOCAL-IMAGE-IA." }
+# Toute la sortie est lue (2>&1) : la couper avec Select-Object faisait echouer Python
+# en cours d'ecriture, et l'erreur reelle n'etait pas affichee.
+# PowerShell 5.1 transforme chaque ligne d'erreur d'un programme en exception quand
+# ErrorActionPreference vaut Stop : on lit d'abord tout, on juge ensuite sur le code.
+$ErrorActionPreference = "Continue"
+$Sortie = & $Py (Join-Path $Racine "lancer.py") verifier 2>&1
+$Code = $LASTEXITCODE
+$ErrorActionPreference = "Stop"
+$Sortie | ForEach-Object { Write-Host "  $_" }
+if ($Code -ne 0) {
+    Arret "Le Python de ComfyUI n'arrive pas a lancer LOCAL-IMAGE-IA (code $Code). Copie les lignes ci-dessus et envoie-les."
+}
 
 Write-Host ""
 Write-Host "Installation terminee." -ForegroundColor Green
