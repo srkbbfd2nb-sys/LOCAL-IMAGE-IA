@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from local_image_ia.demande import DemandeFigee
+from local_image_ia.formulation import lignes_negatives
 from local_image_ia.gouvernance import ArretDeclare
 from local_image_ia.mecanismes import GARANTS_PAR_DEFAUT, Mecanisme
 from local_image_ia.routage import etiquette_inconnue, lire_etiquette, router
@@ -33,10 +34,10 @@ from local_image_ia.socle import (
 COMPLETE = "complete"
 CONDENSEE = "condensee"
 
-ENTETE_SOCLE = (
-    "Additional principles (added by the optimizer; lower priority than every line above; "
-    "if one of them conflicts with a line above, the line above wins):"
-)
+# Le modèle d'image n'a que faire d'une méta-consigne (« priorité inférieure… ») : l'en-tête
+# reste court, l'étiquetage complet (origine, priorité, conflits) est dans le contrat et le
+# rapport. Les ajouts viennent toujours après la demande : FLUX.2 donne plus de poids au début.
+ENTETE_SOCLE = "Additional principles:"
 ORPHELINES = ("instruction", "arret")
 FORMAT = "contrat-local-image-ia/2"
 # Estimation grossière (E) : environ 4 caractères par jeton pour un texte anglais.
@@ -44,6 +45,10 @@ CARACTERES_PAR_JETON = 4
 # L'encodeur de texte de ComfyUI pour FLUX.2 klein complète à 512 jetons et ne coupe
 # pas (vérifié dans son code) ; au-delà, le risque est la dilution, pas la coupure (E).
 JETONS_REPERE = 512
+# Black Forest Labs : 30 à 80 mots « usually ideal », 50 à 80 pour une instruction
+# d'édition (guide FLUX.2 ; SYSTEM_MESSAGE_UPSAMPLING_I2I du dépôt black-forest-labs/flux2).
+MOTS_REPERE = 80
+SOCLE_MOTS_MAX = 80
 
 
 def estimer_jetons(texte: str) -> int:
@@ -69,7 +74,7 @@ class EntreeDemande:
 @dataclass
 class EntreeSocle:
     principe: Principe
-    statut: str  # "actif", "suspendu", "couvert", "hors type", "hors mode"
+    statut: str  # "actif", "suspendu", "couvert", "hors budget", "désactivé", "hors type", "hors mode"
     conflit_avec: str | None = None  # ligne en conflit (suspendu) ou qui couvre déjà (couvert)
 
 
@@ -85,6 +90,8 @@ class Contrat:
     garants: frozenset[Mecanisme] = GARANTS_PAR_DEFAUT
     mode: str = "edition"
     modules: list[str] = field(default_factory=list)
+    # Lignes formulées en négatif, avec une reformulation proposée (jamais appliquée).
+    conseils: list[dict] = field(default_factory=list)
 
     # ----- texte envoyé au modèle -------------------------------------------------
 
@@ -164,6 +171,7 @@ class Contrat:
             "types": self.types,
             "manques": self.manques,
             "avertissements": self.avertissements,
+            "conseils_formulation": self.conseils,
             "entrees": [
                 {
                     "id": e.id, "numero": e.numero, "texte": e.texte, "texte_modele": e.texte_modele,
@@ -210,6 +218,7 @@ class Contrat:
             avertissements=list(d["avertissements"]),
             garants=frozenset(Mecanisme(m) for m in d["garants"]),
             mode=d["mode"], modules=list(d["socle"]["modules"]),
+            conseils=list(d.get("conseils_formulation", [])),
         )
         verifier_non_suppression(contrat)
         for mode, cle in ((COMPLETE, "instruction_complete"), (CONDENSEE, "instruction_condensee")):
@@ -268,6 +277,8 @@ def compiler(
     mode: str = "edition",
     orphelines: str = "instruction",
     socle_complet: bool = False,
+    socle_mots_max: int = SOCLE_MOTS_MAX,
+    sans_socle: bool = False,
 ) -> Contrat:
     """Compile la demande en contrat.
 
@@ -278,6 +289,13 @@ def compiler(
 
     ``socle_complet`` : ajouter aussi les principes que la demande dit déjà
     (par défaut, un principe couvert par une ligne de la demande n'est pas répété).
+
+    ``socle_mots_max`` : nombre de mots au plus que le socle ajoute au texte du modèle
+    (0 : sans limite). Les principes sont pris par priorité ; les autres restent dans le
+    contrat, marqués « hors budget ».
+
+    ``sans_socle`` : n'envoyer au modèle que la demande (principes d'instruction marqués
+    « désactivé ») ; sert aux comparaisons. Les mécanismes du code restent actifs.
     """
     demande.verifier_integrite()
     socle = socle if socle is not None else charger_socle()
@@ -442,18 +460,57 @@ def compiler(
         else:
             entrees_socle.append(EntreeSocle(p, "actif"))
 
+    if sans_socle:
+        for s in entrees_socle:
+            if s.statut == "actif" and s.principe.mecanisme == Mecanisme.INSTRUCTION:
+                s.statut = "désactivé"
+        avertissements.append("Socle désactivé : seul le texte de ta demande est envoyé au modèle.")
+    elif socle_mots_max > 0:
+        candidats = [s for s in entrees_socle
+                     if s.statut == "actif" and s.principe.mecanisme == Mecanisme.INSTRUCTION]
+        ordre = sorted(candidats, key=lambda s: (s.principe.priorite,
+                                                 0 if "tous" not in s.principe.types else 1))
+        mots, niveau_coupe = 0, None
+        for s in ordre:
+            n = len(s.principe.directive.split())
+            # Priorité stricte : on ne descend d'un niveau que si tout le niveau a tenu.
+            if niveau_coupe is not None and s.principe.priorite > niveau_coupe:
+                s.statut = "hors budget"
+            elif mots + n <= socle_mots_max:
+                mots += n
+            else:
+                s.statut = "hors budget"
+                niveau_coupe = s.principe.priorite
+        exclus = sum(1 for s in candidats if s.statut == "hors budget")
+        if exclus:
+            avertissements.append(
+                f"Socle limité à {socle_mots_max} mots ({mots} utilisés) : {exclus} principe(s) "
+                "de priorité plus faible gardés dans le contrat mais non envoyés au modèle "
+                "(réglage socle_mots_max ; 0 = sans limite)."
+            )
+
+    conseils = lignes_negatives([(e.id, e.texte_modele) for e in entrees if e.porte_contenu])
+    if conseils:
+        avertissements.append(
+            f"{len(conseils)} ligne(s) formulée(s) en négatif : FLUX.2 ne gère pas les négations, "
+            "il faut décrire ce que l'on veut voir (F, Black Forest Labs). Reformulations "
+            "proposées dans le rapport ; ta demande n'est pas modifiée."
+        )
+
     contrat = Contrat(
         demande=demande, entrees=entrees, socle_version=socle.version, socle=entrees_socle,
         types=sorted(types), manques=manques, avertissements=avertissements, garants=garants,
-        mode=mode, modules=list(socle.modules),
+        mode=mode, modules=list(socle.modules), conseils=conseils,
     )
     jetons = estimer_jetons(contrat.instruction(COMPLETE))
-    if jetons > JETONS_REPERE:
+    mots = len(contrat.instruction(COMPLETE).split())
+    if mots > MOTS_REPERE:
         avertissements.append(
-            f"Instruction complète ≈ {jetons} jetons (estimation). ComfyUI ne la coupe pas, "
-            f"mais au-delà d'environ {JETONS_REPERE} jetons le modèle risque de diluer la "
-            f"consigne (E). Version condensée ≈ {estimer_jetons(contrat.instruction(CONDENSEE))} "
-            "jetons."
+            f"Instruction complète : {mots} mots (≈ {jetons} jetons). Black Forest Labs recommande "
+            f"30 à 80 mots, et 50 à 80 pour une édition (F, guide FLUX.2 et prompt système "
+            "officiel) ; FLUX.2 donne plus de poids au début du texte. ComfyUI ne coupe rien, "
+            "mais une consigne longue se dilue (E) : compare avec une version plus courte "
+            "(commande « comparer »)."
         )
     verifier_non_suppression(contrat)
     return contrat

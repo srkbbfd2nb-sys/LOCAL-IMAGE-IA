@@ -7,6 +7,10 @@ Usage automatique (le plus simple) :
 Une seule tâche, sans dossier surveillé :
     python -m local_image_ia traiter --demande demande.txt --image photo.jpg -o sortie
 
+Comparer les textes envoyés au modèle (demande seule, socle limité, socle complet),
+mêmes graines, planche à juger à l'œil :
+    python -m local_image_ia comparer --demande demande.txt --image photo.jpg -o comparaison
+
 Les trois mesures de l'étape 1 (ComfyUI doit tourner) :
     python -m local_image_ia diagnostic -o diagnostic
 
@@ -27,7 +31,7 @@ from dataclasses import fields
 from pathlib import Path
 
 from local_image_ia.automate import Automate, ConfigAutomate, Tache
-from local_image_ia.contrat import ORPHELINES, Contrat
+from local_image_ia.contrat import ORPHELINES, SOCLE_MOTS_MAX, Contrat
 from local_image_ia.gouvernance import ArretDeclare
 from local_image_ia.mecanismes import Mecanisme
 from local_image_ia.pipeline import (
@@ -46,6 +50,8 @@ def _options_automate(p: argparse.ArgumentParser) -> None:
     p.add_argument("--texte", choices=["complete", "condensee"])
     p.add_argument("--format", dest="format_creation", choices=list(FORMATS))
     p.add_argument("--graine", type=int)
+    p.add_argument("--socle-mots-max", type=int, dest="socle_mots_max",
+                   help="Mots ajoutés par le socle au plus (défaut 80 ; 0 = sans limite)")
 
 
 def _config(args) -> ConfigAutomate:
@@ -70,14 +76,18 @@ def _parser() -> argparse.ArgumentParser:
                    help="Secondes d'attente du démarrage de ComfyUI")
     _options_automate(s)
 
-    t = sous.add_parser("traiter", help="Traiter une seule demande")
-    t.add_argument("--demande", required=True)
-    t.add_argument("--image", help="Image à modifier (mode édition)")
-    t.add_argument("--ref", action="append", default=[], help="Image servant de modèle (répétable)")
-    t.add_argument("--masque", help="Zone à modifier (blanc) ; sinon masque automatique")
-    t.add_argument("--protege", help="Zones à ne jamais toucher (blanc)")
-    t.add_argument("-o", "--sortie", default="sortie")
-    _options_automate(t)
+    for nom, aide, defaut in (
+        ("traiter", "Traiter une seule demande", "sortie"),
+        ("comparer", "Comparer les textes envoyés au modèle, mêmes graines", "comparaison"),
+    ):
+        t = sous.add_parser(nom, help=aide)
+        t.add_argument("--demande", required=True)
+        t.add_argument("--image", help="Image à modifier (mode édition)")
+        t.add_argument("--ref", action="append", default=[], help="Image servant de modèle (répétable)")
+        t.add_argument("--masque", help="Zone à modifier (blanc) ; sinon masque automatique")
+        t.add_argument("--protege", help="Zones à ne jamais toucher (blanc)")
+        t.add_argument("-o", "--sortie", default=defaut)
+        _options_automate(t)
 
     d = sous.add_parser("diagnostic", help="Sonder ComfyUI et mesurer les temps de génération")
     d.add_argument("-o", "--sortie", default="diagnostic")
@@ -97,6 +107,10 @@ def _parser() -> argparse.ArgumentParser:
     c.add_argument("--socle-complet", action="store_true",
                    help="Ajouter aussi les principes que ta demande dit déjà")
     c.add_argument("--socle", help="Fichier de principes à utiliser à la place du socle intégré")
+    c.add_argument("--socle-mots-max", type=int, default=SOCLE_MOTS_MAX,
+                   help="Mots ajoutés par le socle au plus (0 = sans limite)")
+    c.add_argument("--sans-socle", action="store_true",
+                   help="N'envoyer au modèle que ta demande, sans principe ajouté")
 
     f = sous.add_parser("finaliser", help="Verrouiller, corriger, mesurer et rapporter des candidats")
     f.add_argument("--contrat", required=True)
@@ -143,9 +157,11 @@ def _afficher_contrat(contrat: Contrat, sortie: str) -> None:
         if k:
             print(f"  {m.value:<16} {k} ligne(s)")
     compte = {st: sum(1 for s in contrat.socle if s.statut == st)
-              for st in ("actif", "couvert", "suspendu")}
+              for st in ("actif", "couvert", "suspendu", "hors budget", "désactivé")}
     print(f"Socle : {compte['actif']} principe(s) ajouté(s), {compte['couvert']} déjà couvert(s) "
-          f"par ta demande, {compte['suspendu']} suspendu(s) pour conflit")
+          f"par ta demande, {compte['suspendu']} suspendu(s) pour conflit, "
+          f"{compte['hors budget']} hors budget, {compte['désactivé']} désactivé(s)")
+    print(f"Texte complet pour le modèle : {len(contrat.instruction().split())} mots")
     for m in contrat.manques:
         print(f"MANQUE : {m}")
     for a in contrat.avertissements:
@@ -169,7 +185,7 @@ def main(argv: list[str] | None = None) -> int:
             for c in automate.sonder():
                 print(f"  {c.nom} : {c.etat.value}")
             automate.surveiller(args.boite, une_fois=args.une_fois)
-        elif args.commande == "traiter":
+        elif args.commande in ("traiter", "comparer"):
             automate = Automate(_config(args))
             demande = Path(args.demande)
             tache = Tache(nom=demande.stem, demande=demande,
@@ -177,8 +193,13 @@ def main(argv: list[str] | None = None) -> int:
                           references=[Path(r) for r in args.ref],
                           masque=Path(args.masque) if args.masque else None,
                           protege=Path(args.protege) if args.protege else None)
-            dossier = automate.traiter(tache, args.sortie)
-            print(f"Résultat : {dossier / 'resultat.png'}\nRapport  : {dossier / 'rapport.md'}")
+            if args.commande == "traiter":
+                dossier = automate.traiter(tache, args.sortie)
+                print(f"Résultat : {dossier / 'resultat.png'}\nRapport  : {dossier / 'rapport.md'}")
+            else:
+                dossier = automate.comparer(tache, args.sortie)
+                print(f"Planche : {dossier / 'planche.jpg'}\n"
+                      f"Rapport : {dossier / 'rapport_comparaison.md'}")
         elif args.commande == "diagnostic":
             automate = Automate(_config(args))
             print(f"Attente de ComfyUI sur {automate.config.url} …")
@@ -188,7 +209,9 @@ def main(argv: list[str] | None = None) -> int:
         elif args.commande == "compiler":
             contrat = compiler_demande(args.demande, args.sortie, args.routage, args.types,
                                        args.socle, mode=args.mode, orphelines=args.orphelines,
-                                       socle_complet=args.socle_complet)
+                                       socle_complet=args.socle_complet,
+                                       socle_mots_max=args.socle_mots_max,
+                                       sans_socle=args.sans_socle)
             _afficher_contrat(contrat, args.sortie)
         elif args.commande == "finaliser":
             contrat = Contrat.charger(args.contrat)

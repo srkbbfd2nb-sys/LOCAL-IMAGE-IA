@@ -1,6 +1,6 @@
 {
-  "version": "2026-10-07d",
-  "avertissement": "Principes tirés des prompts fournis par Lazerr (dossier sources/prompts). Ce sont des règles de pratique photographique (O), pas des faits mesurés : leur effet sur le modèle se vérifie par comparaison. Les directives envoyées au modèle sont en anglais ; les contrôles finaux sont pour l'œil humain et les mesures.",
+  "version": "2026-10-12",
+  "avertissement": "Principes tirés des prompts de Lazerr (sources/prompts) et de sources externes vérifiées (docs/SOURCES_EXTERNES.md). Formulés en positif : FLUX.2 ne gère pas les formulations négatives (source officielle BFL). Règles de pratique (O) : leur effet se vérifie par comparaison (commande « comparer »).",
   "modules": [
     "IMAGE SOURCE",
     "ELEMENT TO MODIFY",
@@ -31,16 +31,17 @@
         "edition",
         "reference"
       ],
-      "directive": "First analyse the source image: subject, geometry, vanishing lines, horizon, surfaces, materials, secondary objects and contact zones.",
+      "directive": "Read the source first: subject, geometry, vanishing lines, horizon, surfaces, materials and contact zones.",
       "description": "Analyse préalable de la source.",
-      "source": "cahier_compositing_et_cas_corps.md (analyse de l'image source) ; voiture_bmw_g70.txt §1 ; protocole_master_corps.txt §1",
+      "source": "cahier_compositing_et_cas_corps.md (analyse de l'image source) ; voiture_bmw_g70.txt §1 ; protocole_master_corps.txt §1 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\banaly\\w*",
         "\\bmap (the|subject)\\b",
         "\\bidentify\\b"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-ANA-02",
@@ -54,16 +55,17 @@
         "edition",
         "reference"
       ],
-      "directive": "Separate real geometry and volume from what perspective, lighting, shadow, folds, posture compression, darkness, noise, blur and lens distortion only make appear; never read distortion or shadow as structure, never invent structure.",
+      "directive": "Treat perspective, shadows, folds and lens distortion as features of this photo, and build every change on the real geometry underneath.",
       "description": "Distinguer volume réel et volume apparent (A à G du protocole master).",
-      "source": "protocole_master_corps.txt §1 ; corps_condense_13_points.txt §1 ; voiture_bmw_g70.txt §1",
+      "source": "protocole_master_corps.txt §1 ; corps_condense_13_points.txt §1 ; voiture_bmw_g70.txt §1 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bseparate real\\b",
         "\\bdistinguish\\b",
         "\\bnever (read|interpret)\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-CAM-01",
@@ -77,16 +79,17 @@
         "edition",
         "reference"
       ],
-      "directive": "Keep the camera exactly: position, height, distance, pitch, yaw, roll, apparent focal length, field of view, framing and crop; do not level, recenter, flatten or re-project the view.",
+      "directive": "Keep the camera exactly as in the photo: same position, height, distance, angle, focal length, framing and crop.",
       "description": "Verrou caméra.",
-      "source": "voiture_bmw_g70.txt §2 ; corps_condense_13_points.txt §2 ; protocole_master_corps.txt §2 ; cahier_compositing_et_cas_corps.md (caméra virtuelle)",
+      "source": "voiture_bmw_g70.txt §2 ; corps_condense_13_points.txt §2 ; protocole_master_corps.txt §2 ; cahier_compositing_et_cas_corps.md (caméra virtuelle) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bcamera (lock|geometry|position)\\b",
         "\\b(keep|lock|preserve)\\b.{0,40}\\bcamera\\b",
         "^\\W*camera\\s*:"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-PER-01",
@@ -99,9 +102,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Every change happens inside the existing perspective field: nearer parts stay larger, farther parts smaller, new shapes follow the same vanishing lines, foreshortening and scale as their surroundings.",
+      "directive": "Build every change inside the existing perspective: nearer parts stay larger, farther parts smaller, along the same vanishing lines and scale.",
       "description": "Perspective et raccourcis conservés.",
-      "source": "protocole_master_corps.txt §2 ; corps_condense_13_points.txt §2 ; voiture_bmw_g70.txt §2 ; cahier_compositing_et_cas_corps.md (perspective et géométrie)",
+      "source": "protocole_master_corps.txt §2 ; corps_condense_13_points.txt §2 ; voiture_bmw_g70.txt §2 ; cahier_compositing_et_cas_corps.md (perspective et géométrie) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
@@ -109,7 +112,8 @@
         "\\bvanishing\\b",
         "\\bperspective field\\b",
         "\\braccourcis?\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-PER-02",
@@ -123,16 +127,17 @@
         "edition",
         "reference"
       ],
-      "directive": "Apparent width is not true width: judge proportions from this exact viewpoint, not from frontal reference proportions; keep the asymmetry the camera angle creates.",
+      "directive": "Judge proportions from this exact viewpoint, keeping the asymmetry the camera angle creates.",
       "description": "Proportions jugées depuis cet angle précis.",
-      "source": "protocole_master_corps.txt (avertissement de perspective) ; corps_condense_13_points.txt §2",
+      "source": "protocole_master_corps.txt (avertissement de perspective) ; corps_condense_13_points.txt §2 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bapparent width\\b",
         "\\bfrontal reference\\b",
         "\\bfrom this (exact )?(camera angle|viewpoint)\\b"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-LUM-01",
@@ -146,9 +151,9 @@
         "edition",
         "reference"
       ],
-      "directive": "Keep the original light: direction, source size, softness, intensity, ambient and reflected light, colour temperature and falloff; changed areas receive exactly this light.",
+      "directive": "Keep the original light: same direction, softness, intensity and colour temperature; changed areas receive exactly this light.",
       "description": "Verrou lumière.",
-      "source": "voiture_bmw_g70.txt §7 ; corps_condense_13_points.txt §8 ; protocole_master_corps.txt §14 ; cahier_compositing_et_cas_corps.md (lumière)",
+      "source": "voiture_bmw_g70.txt §7 ; corps_condense_13_points.txt §8 ; protocole_master_corps.txt §14 ; cahier_compositing_et_cas_corps.md (lumière) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [
         "\\b(chang|modifi|nouvel|new|different)\\w*.{0,15}\\b(lumiere|eclairage|light)",
         "\\b(lumiere|eclairage|light)\\w*.{0,15}\\b(chang|modifi|different)"
@@ -159,7 +164,8 @@
         "\\block the original lighting\\b",
         "\\bkeep\\b.{0,40}\\blight",
         "^\\W*lighting\\s*:"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-LUM-02",
@@ -172,9 +178,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "No added light: no new key light, no rim light, no brightened subject, no contrast boost to reveal shapes; no highlight that could not exist in this lighting.",
+      "directive": "Changed areas carry only the light already present in the scene, at the photo's existing contrast.",
       "description": "Aucune lumière ajoutée.",
-      "source": "voiture_bmw_g70.txt §7 ; corps_condense_13_points.txt §8 ; protocole_master_corps.txt §14",
+      "source": "voiture_bmw_g70.txt §7 ; corps_condense_13_points.txt §8 ; protocole_master_corps.txt §14 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
@@ -182,7 +188,8 @@
         "\\bkey light\\b",
         "\\bno added light\\b",
         "\\bcontrast boost\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-OMB-01",
@@ -195,14 +202,15 @@
       "modes": [
         "tous"
       ],
-      "directive": "New or changed volumes cast and receive shadows consistent with the existing light (same direction, length, softness, density), with contact shadows where surfaces touch; no dark outlines.",
+      "directive": "New or changed volumes cast and receive shadows matching the existing light, with contact shadows where surfaces touch.",
       "description": "Ombres compatibles et ombres de contact.",
-      "source": "voiture_bmw_g70.txt §8 ; protocole_master_corps.txt §15 ; cahier_compositing_et_cas_corps.md (ombres)",
+      "source": "voiture_bmw_g70.txt §8 ; protocole_master_corps.txt §15 ; cahier_compositing_et_cas_corps.md (ombres) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bcontact shadows?\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-ENV-01",
@@ -216,15 +224,16 @@
         "edition",
         "reference"
       ],
-      "directive": "Leave the environment untouched: no warping, bending, displacement or cloning of walls, floor, lines, tiles or objects near the edited area.",
+      "directive": "Walls, floor, lines and objects around the edit stay straight, in place and unchanged.",
       "description": "Environnement intact près de la zone éditée.",
-      "source": "voiture_bmw_g70.txt §9 ; protocole_master_corps.txt §17 ; corps_condense_13_points.txt §10",
+      "source": "voiture_bmw_g70.txt §9 ; protocole_master_corps.txt §17 ; corps_condense_13_points.txt §10 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bwarp\\w*",
         "\\bclon(ed|ing)\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-ENV-02",
@@ -237,16 +246,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Correct occlusion order: nothing floating, fused or intersecting; edited elements stand in front of or behind the scene exactly as physics requires.",
+      "directive": "Correct occlusion order: every element sits firmly in front of or behind the scene, grounded and physically consistent.",
       "description": "Ordre d'occlusion correct.",
-      "source": "protocole_master_corps.txt §18 ; voiture_bmw_g70.txt §9",
+      "source": "protocole_master_corps.txt §18 ; voiture_bmw_g70.txt §9 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bcorrect occlusion\\b",
         "\\bocclusion order\\w*",
         "\\bfloating\\b"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-MAT-01",
@@ -259,9 +269,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Keep real material micro-structure (skin pores, fabric weave, paint, metal, glass, dust, micro-scratches, small natural imperfections); never smooth, plastic-looking surfaces.",
+      "directive": "Keep real material micro-structure: visible skin pores, fabric weave, paint, metal and small natural imperfections.",
       "description": "Microstructure réelle des matériaux.",
-      "source": "cahier_compositing_et_cas_corps.md (matériaux et microstructure) ; protocole_master_corps.txt §13",
+      "source": "cahier_compositing_et_cas_corps.md (matériaux et microstructure) ; protocole_master_corps.txt §13 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [
         "\\b(smooth|lisse)\\w*\\s+(skin|peau|surfaces?|finish)\\b",
         "\\bairbrush\\w*",
@@ -271,7 +281,8 @@
       "couverture": [
         "\\bpores\\b",
         "\\bmicro[- ]?structure\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-PIP-01",
@@ -284,16 +295,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Edited areas match the photo's resolution, softness, noise, grain, compression, local contrast and lens rendering; never sharper, cleaner or more detailed than the rest of the image.",
+      "directive": "Edited areas match the photo's resolution, softness, noise, grain and compression, at the same sharpness as the rest of the image.",
       "description": "Même signature photographique que la source.",
-      "source": "corps_12_points_signature.txt (signature photographique) ; voiture_bmw_g70.txt §10 ; protocole_master_corps.txt §19 ; cahier_compositing_et_cas_corps.md (texture photographique)",
+      "source": "corps_12_points_signature.txt (signature photographique) ; voiture_bmw_g70.txt §10 ; protocole_master_corps.txt §19 ; cahier_compositing_et_cas_corps.md (texture photographique) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bphoto(graphic)? (character|signature|texture)\\b",
         "\\bmatch\\w*\\b.{0,60}\\b(resolution|grain|noise)\\b",
         "\\bsame\\b.{0,40}\\b(grain|noise)\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-PIP-02",
@@ -306,9 +318,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Stay an ordinary smartphone photograph: no studio, magazine, advertising, cinematic or DSLR rendering, no HDR, no denoise, no beauty filter, no grading.",
+      "directive": "Keep the look of an ordinary smartphone photograph: natural colours, everyday dynamic range, casual snapshot rendering.",
       "description": "Rendu de smartphone ordinaire.",
-      "source": "voiture_bmw_g70.txt §10 ; corps_condense_13_points.txt §11 ; protocole_master_corps.txt §20",
+      "source": "voiture_bmw_g70.txt §10 ; corps_condense_13_points.txt §11 ; protocole_master_corps.txt §20 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [
         "\\b(studio|magazine|cinematic|cinematique|dslr|hdr|ultra[- ]?(sharp|net\\w*)|8k|4k)\\b"
       ],
@@ -316,7 +328,8 @@
       "couverture": [
         "\\bsmartphone\\b",
         "\\bphone (shot|photo\\w*)\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-INT-01",
@@ -329,14 +342,15 @@
       "modes": [
         "edition"
       ],
-      "directive": "Change only what is asked; everything else stays exactly as in the photo. The result must read as the same photograph, taken at the same instant, with the same camera, the same light and the same pose.",
+      "directive": "Change only what is asked and keep everything else exactly as in the photo: same moment, same camera, same light, same pose.",
       "description": "Même photo, même instant.",
-      "source": "voiture_bmw_g70.txt (GOAL) ; corps_condense_13_points.txt (GOAL) ; protocole_master_corps.txt (PRIMARY OBJECTIVE)",
+      "source": "voiture_bmw_g70.txt (GOAL) ; corps_condense_13_points.txt (GOAL) ; protocole_master_corps.txt (PRIMARY OBJECTIVE) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bsame (photo|photograph|moment|instant)\\b"
-      ]
+      ],
+      "priorite": 0
     },
     {
       "id": "S-INT-02",
@@ -349,9 +363,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Edges of the edited area blend into the scene like the rest of the photo: organic contours, no cutout edge, halo or compositing seam; crisp lines stay true where the subject has them.",
+      "directive": "Edges of the edited area blend organically into the scene, exactly like the rest of the photo.",
       "description": "Contours intégrés, sans détourage.",
-      "source": "voiture_bmw_g70.txt §12 ; protocole_master_corps.txt (contrôle final) ; cahier_compositing_et_cas_corps.md (intégration du sujet)",
+      "source": "voiture_bmw_g70.txt §12 ; protocole_master_corps.txt (contrôle final) ; cahier_compositing_et_cas_corps.md (intégration du sujet) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
@@ -359,7 +373,8 @@
         "\\bcutout\\b",
         "\\bedge transitions?\\b",
         "\\borganic\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-INT-03",
@@ -372,16 +387,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Bounce light and reflections are exchanged with nearby surfaces consistently (glass, paint, skin, wet or glossy ground).",
+      "directive": "Nearby surfaces exchange bounce light and reflections consistently with the edit.",
       "description": "Lumière de rebond et reflets.",
-      "source": "cahier_compositing_et_cas_corps.md (intégration du sujet) ; voiture_bmw_g70.txt §8",
+      "source": "cahier_compositing_et_cas_corps.md (intégration du sujet) ; voiture_bmw_g70.txt §8 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bbounce\\b",
         "\\breflected light\\b",
         "\\breflections?\\b"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-COL-01",
@@ -394,16 +410,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Edited areas inherit the photo's exposure, white balance, gamma, tonal curve, saturation and colour response; foreground and background stay colour-consistent; do not recolour the whole image.",
+      "directive": "Edited areas share the photo's exposure, white balance, contrast and saturation.",
       "description": "Même réponse colorimétrique, cohérence premier plan / arrière-plan.",
-      "source": "protocole_master_corps.txt §21 ; voiture_bmw_g70.txt §10 ; cahier_compositing_et_cas_corps.md (colorimétrie)",
+      "source": "protocole_master_corps.txt §21 ; voiture_bmw_g70.txt §10 ; cahier_compositing_et_cas_corps.md (colorimétrie) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bwhite balance\\b",
         "\\bgamma\\b",
         "\\bcolou?r (science|response)\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-MIC-01",
@@ -416,16 +433,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Detail density matches the source: no oversharpened pores, no excessive micro-detail, no artificial high-frequency texture, no generative smoothness.",
+      "directive": "Detail density matches the source: natural, softly resolved texture at the same scale as the rest of the photo.",
       "description": "Densité de détail identique à la source.",
-      "source": "protocole_master_corps.txt §13 et §19 ; corps_12_points_signature.txt",
+      "source": "protocole_master_corps.txt §13 et §19 ; corps_12_points_signature.txt ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bmicro[- ]?detail\\b",
         "\\bhigh[- ]frequency\\b",
         "\\boversharpen\\w*"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-IMP-01",
@@ -438,14 +456,64 @@
       "modes": [
         "tous"
       ],
-      "directive": "Keep natural imperfections: asymmetry, irregular texture, tiny tonal variations, imperfect transitions, minor optical flaws; plausibility, not perfection.",
+      "directive": "Keep natural imperfections: slight asymmetry, irregular texture, small tonal variations; plausibility over perfection.",
       "description": "Réalisme par l'imperfection (dégradation réaliste).",
-      "source": "protocole_master_corps.txt §23 ; corps_12_points_signature.txt ; cahier_compositing_et_cas_corps.md (dégradation réaliste)",
+      "source": "protocole_master_corps.txt §23 ; corps_12_points_signature.txt ; cahier_compositing_et_cas_corps.md (dégradation réaliste) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bimperfections?\\b",
         "\\birregularit\\w*"
+      ],
+      "priorite": 2
+    },
+    {
+      "id": "S-REA-01",
+      "module": "PHOTOGRAPHIC PIPELINE",
+      "domaine": "photographic pipeline",
+      "mecanisme": "instruction",
+      "types": [
+        "tous"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "priorite": 3,
+      "directive": "Ordinary phone depth of field: most of the scene stays legible, with a softly detailed background.",
+      "description": "Profondeur de champ de téléphone, pas de flou cinématographique.",
+      "source": "wuyoscar/GPT-Image2-Skill, « Realism Guidelines » (MIT)",
+      "conflits": [
+        "\\b(bokeh|shallow depth of field|faible profondeur de champ|arriere[- ]plan flou)\\b"
+      ],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bdepth[- ]of[- ]field\\b",
+        "\\bprofondeur de champ\\b",
+        "\\bbokeh\\b"
+      ]
+    },
+    {
+      "id": "S-REA-02",
+      "module": "ELEMENT TO MODIFY",
+      "domaine": "element to modify",
+      "mecanisme": "instruction",
+      "types": [
+        "corps"
+      ],
+      "modes": [
+        "tous"
+      ],
+      "priorite": 3,
+      "directive": "Real hair and skin: flyaways, uneven strands, slight frizz, subtle redness and natural facial asymmetry.",
+      "description": "Cheveux et peau réels, asymétrie naturelle.",
+      "source": "wuyoscar/GPT-Image2-Skill, « Realism Guidelines » (MIT)",
+      "conflits": [
+        "\\b(lisse|smooth\\w*|airbrush\\w*)\\s+(skin|peau|hair|cheveux)\\b"
+      ],
+      "conflits_explicites": [],
+      "couverture": [
+        "\\bflyaways?\\b",
+        "\\basymmetr\\w*"
       ]
     },
     {
@@ -459,15 +527,16 @@
       "modes": [
         "edition"
       ],
-      "directive": "Use the smallest possible edit region; never regenerate the whole photograph.",
+      "directive": "Edit the smallest possible region and keep the rest of the photograph untouched.",
       "description": "Plus petite zone possible.",
-      "source": "voiture_bmw_g70.txt §11 ; protocole_master_corps.txt §25 ; corps_12_points_signature.txt",
+      "source": "voiture_bmw_g70.txt §11 ; protocole_master_corps.txt §25 ; corps_12_points_signature.txt ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bsmallest\\b",
         "\\blocal edit\\w*"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-CON-02",
@@ -480,16 +549,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Add no visible watermark, logo, text, signature, caption, button or interface overlay; remove any present in a reference image.",
+      "directive": "The image shows only the photographed scene, free of added text, logos, watermarks and interface elements.",
       "description": "Aucun texte, logo ni surimpression.",
-      "source": "corps_12_points_signature.txt (propreté technique) ; selfie_reference_json.json (objective)",
+      "source": "corps_12_points_signature.txt (propreté technique) ; selfie_reference_json.json (objective) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bwatermarks?\\b",
         "\\blogos?\\b",
         "\\boverlays?\\b"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-NEG-01",
@@ -502,9 +572,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Avoid: halos, edge ringing, banding, repeated or periodic texture, duplicated details, liquify or rubber-like deformation, geometrically rigid contours, impossible shadows, noise inconsistent between zones.",
+      "directive": "Clean organic edges, smooth tonal gradients, varied natural textures and consistent noise across the whole image.",
       "description": "Défauts à éviter (liste de rejet).",
-      "source": "protocole_master_corps.txt §29 ; corps_12_points_signature.txt ; corps_condense_13_points.txt §13",
+      "source": "protocole_master_corps.txt §29 ; corps_12_points_signature.txt ; corps_condense_13_points.txt §13 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
@@ -512,7 +582,8 @@
         "\\bringing\\b",
         "\\bbanding\\b",
         "\\bliquify\\b"
-      ]
+      ],
+      "priorite": 3
     },
     {
       "id": "S-COR-01",
@@ -525,16 +596,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Muscle or volume grows under the skin through real shape and shading, never painted on; no drawn lines, no symmetrical blocks, no dark separation lines.",
+      "directive": "Muscle volume grows under the skin through real shape and soft shading that follows the existing light.",
       "description": "Volume sous la peau, jamais dessiné.",
-      "source": "protocole_master_corps.txt §8 et §13 ; corps_condense_13_points.txt §7",
+      "source": "protocole_master_corps.txt §8 et §13 ; corps_condense_13_points.txt §7 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bpainted\\b",
         "\\bdrawn\\b",
         "\\bunder the skin\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-COR-02",
@@ -547,16 +619,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Grow each segment gradually and continuously; never scale the silhouette or a limb uniformly; keep rib cage and pelvis geometry, do not shrink the waist.",
+      "directive": "Grow each segment gradually and continuously; keep the rib cage, pelvis and waist geometry of the original body.",
       "description": "Croissance progressive, pas de mise à l'échelle uniforme.",
-      "source": "protocole_master_corps.txt §4, §7, §9 ; corps_condense_13_points.txt §4-5",
+      "source": "protocole_master_corps.txt §4, §7, §9 ; corps_condense_13_points.txt §4-5 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\buniform\\w*\\b.{0,20}\\bscal\\w*",
         "\\bshrink the waist\\b",
         "\\bgradually\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-COR-03",
@@ -569,9 +642,9 @@
       "modes": [
         "tous"
       ],
-      "directive": "Keep anatomical plausibility: same number of limbs and fingers, joints and landmarks in place, hands and fingers unchanged in size, proportions consistent with the same person.",
+      "directive": "Anatomically plausible: five fingers per hand, joints in place, hands at their original size, proportions of the same person.",
       "description": "Plausibilité anatomique (« Not too much arms »).",
-      "source": "protocole_master_corps.txt §7, §26, §27 ; corps_condense_13_points.txt §13",
+      "source": "protocole_master_corps.txt §7, §26, §27 ; corps_condense_13_points.txt §13 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
@@ -579,7 +652,8 @@
         "\\btoo much arms\\b",
         "\\banatomically plausible\\b",
         "\\bfinger anatomy\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-COR-04",
@@ -593,14 +667,15 @@
         "edition",
         "reference"
       ],
-      "directive": "Keep the person's identity: face, features, hair, beard, age and ethnicity unchanged; the edit never spreads beyond the body.",
+      "directive": "Keep the person's face, features, hair and age exactly as in the photo.",
       "description": "Identité inchangée.",
-      "source": "protocole_master_corps.txt §24 ; corps_condense_13_points.txt §12",
+      "source": "protocole_master_corps.txt §24 ; corps_condense_13_points.txt §12 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bidentity\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-COR-05",
@@ -614,16 +689,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Clothing follows the new shape: folds, tension, seams and thickness move with the volume underneath; never stretch fabric uniformly.",
+      "directive": "Clothing follows the new shape with natural folds, tension and seams.",
       "description": "Le vêtement suit le volume.",
-      "source": "protocole_master_corps.txt §16 ; corps_condense_13_points.txt §9",
+      "source": "protocole_master_corps.txt §16 ; corps_condense_13_points.txt §9 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "^\\W*(\\d+[.)]\\s*)?clothing\\b",
         "\\bfabric\\b",
         "\\bgarment\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-VOL-01",
@@ -636,15 +712,16 @@
       "modes": [
         "tous"
       ],
-      "directive": "Change volume gradually along each part; never scale the whole shape uniformly; transitions into neighbouring parts stay smooth.",
+      "directive": "Change volume gradually along each part, with smooth transitions into neighbouring parts.",
       "description": "Changement de forme progressif.",
-      "source": "protocole_master_corps.txt §12",
+      "source": "protocole_master_corps.txt §12 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bgradual\\w*",
         "\\buniform\\w*\\b.{0,20}\\bscal\\w*"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-REM-01",
@@ -657,16 +734,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Remove every trace of the replaced object (badge, lights, edges, paint, old shadow shape, reflections) and rebuild any revealed background to match its surroundings, texture and noise included; no hybrid of old and new.",
+      "directive": "The new object fully replaces the old one; any revealed background is rebuilt to match its surroundings, texture and noise included.",
       "description": "Aucune trace de l'objet d'origine, fond révélé reconstruit.",
-      "source": "voiture_bmw_g70.txt §5 et §12",
+      "source": "voiture_bmw_g70.txt §5 et §12 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bno trace\\b",
         "\\bremove the original\\b",
         "\\brevealed\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-REM-02",
@@ -679,16 +757,17 @@
       "modes": [
         "tous"
       ],
-      "directive": "Scale and place the new object from the environment (ground lines, references of known size), not from the old silhouette; it must physically fit with credible clearances and ground contact.",
+      "directive": "Scale and place the new object from the environment: ground lines, nearby references, credible clearances and ground contact.",
       "description": "Échelle déduite de l'environnement, ajustement physique.",
-      "source": "voiture_bmw_g70.txt §4",
+      "source": "voiture_bmw_g70.txt §4 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bscale it from\\b",
         "\\bphysically fit\\b",
         "\\bclearances?\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-REM-03",
@@ -701,15 +780,16 @@
       "modes": [
         "tous"
       ],
-      "directive": "The new object is correct in every identifying detail for its exact model; no mixed generations or invented details; small parts (plates, badges, text) keep the source's brightness and sharpness.",
+      "directive": "The new object is correct in every identifying detail of its exact model, with small text and badges as sharp as the source.",
       "description": "Identité exacte du nouvel objet.",
-      "source": "voiture_bmw_g70.txt §3 et §6",
+      "source": "voiture_bmw_g70.txt §3 et §6 ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bcorrect in every detail\\b",
         "\\bno mixed\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-CM-01",
@@ -722,15 +802,16 @@
       "modes": [
         "tous"
       ],
-      "directive": "Apply the requested colour or material to the whole object, including its brightest areas and the parts in shadow: a shadow falling on the object stays where it is, with the same shape and softness, and darkens the new colour instead of keeping the old one. Keep its geometry, folds, seams and stitching.",
+      "directive": "Apply the new colour to the whole object, brightest areas and shadowed parts included; shadows keep their shape and darken the new colour. Keep its geometry, folds, seams and stitching.",
       "description": "Tout l'objet change, parties à l'ombre comprises ; l'ombre reste et assombrit la nouvelle couleur.",
-      "source": "selfie_reference_json.json (car_interior, wardrobe) ; essai réel du 7 octobre 2026 (t-shirt : partie à l'ombre non recolorée)",
+      "source": "selfie_reference_json.json (car_interior, wardrobe) ; essai réel du 7 octobre 2026 (t-shirt : partie à l'ombre non recolorée) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\bsame silhouette\\b",
         "\\bexact same\\b.{0,30}\\bgeometry\\b"
-      ]
+      ],
+      "priorite": 1
     },
     {
       "id": "S-CM-02",
@@ -743,15 +824,16 @@
       "modes": [
         "tous"
       ],
-      "directive": "The new material has plausible reflectance and texture under the existing light: matte stays matte, leather shows grain and soft highlights, metal reflects its surroundings.",
+      "directive": "The new material shows plausible texture and reflectance under the existing light: matte stays matte, leather shows soft highlights, metal reflects its surroundings.",
       "description": "Réflectance plausible de la nouvelle matière.",
-      "source": "selfie_reference_json.json (lighting) ; cahier_compositing_et_cas_corps.md (matériaux)",
+      "source": "selfie_reference_json.json (lighting) ; cahier_compositing_et_cas_corps.md (matériaux) ; formulation positive : BFL, guide FLUX.2 et SYSTEM_MESSAGE_UPSAMPLING_I2I (dépôt black-forest-labs/flux2) : formulation positive, ce qui change et ce qui reste",
       "conflits": [],
       "conflits_explicites": [],
       "couverture": [
         "\\breflectance\\b",
         "\\btexture and stitching\\b"
-      ]
+      ],
+      "priorite": 2
     },
     {
       "id": "S-VER-01",
@@ -769,7 +851,8 @@
       "source": "Architecture retenue, mécanisme 1",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CND-01",
@@ -788,7 +871,8 @@
       "source": "Architecture retenue, mécanisme 2",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-SIG-01",
@@ -809,7 +893,8 @@
         "\\b(do not|don't|never|no|ne pas|n'ajoute\\w*|pas d'?|sans)\\W+(\\w+\\W+){0,2}(inject\\w*|add\\w*|ajout\\w*)?\\W*(\\w+\\W+){0,1}(artificial|artificiel\\w*)\\W+(noise|bruit|grain)",
         "\\b(do not|don't|never|ne pas)\\W+(inject|add|ajout)\\w*\\W+(\\w+\\W+){0,2}(noise|bruit|grain)"
       ],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-SIG-02",
@@ -827,7 +912,8 @@
       "source": "corps_12_points_signature.txt (signature photographique)",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-SIG-03",
@@ -845,7 +931,8 @@
       "source": "cahier_compositing_et_cas_corps.md (gestion colorimétrique) ; protocole_master_corps.txt §21",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-LUM-03",
@@ -863,7 +950,8 @@
       "source": "essai réel du 7 octobre 2026 (ombre du t-shirt mal recolorée par le modèle) ; cahier_compositing_et_cas_corps.md (lumière)",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-01",
@@ -881,7 +969,8 @@
       "source": "cahier_compositing_et_cas_corps.md ; voiture_bmw_g70.txt §12",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-02",
@@ -899,7 +988,8 @@
       "source": "cahier_compositing_et_cas_corps.md ; protocole_master_corps.txt §28",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-03",
@@ -917,7 +1007,8 @@
       "source": "cahier_compositing_et_cas_corps.md ; protocole_master_corps.txt §28",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-04",
@@ -935,7 +1026,8 @@
       "source": "cahier_compositing_et_cas_corps.md ; corps_12_points_signature.txt",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-05",
@@ -953,7 +1045,8 @@
       "source": "cahier_compositing_et_cas_corps.md ; voiture_bmw_g70.txt §12",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-06",
@@ -971,7 +1064,8 @@
       "source": "protocole_master_corps.txt §28 ; voiture_bmw_g70.txt §9",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-07",
@@ -989,7 +1083,8 @@
       "source": "voiture_bmw_g70.txt (TEST) ; corps_condense_13_points.txt (TEST) ; protocole_master_corps.txt §30",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-08",
@@ -1007,7 +1102,8 @@
       "source": "protocole_master_corps.txt §26-27 ; corps_condense_13_points.txt §13",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     },
     {
       "id": "S-CTL-09",
@@ -1025,7 +1121,8 @@
       "source": "voiture_bmw_g70.txt §12",
       "conflits": [],
       "conflits_explicites": [],
-      "couverture": []
+      "couverture": [],
+      "priorite": 1
     }
   ]
 }

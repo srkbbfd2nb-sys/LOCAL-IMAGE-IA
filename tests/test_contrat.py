@@ -125,9 +125,9 @@ def test_sans_instruction_arrete():
 
 
 def test_socle_s_ajoute_etiquete_et_apres_la_demande():
-    c = contrat()
+    c = contrat(socle_mots_max=0)
     texte = c.instruction(COMPLETE)
-    assert "Additional principles (added by the optimizer" in texte
+    assert "\nAdditional principles:\n" in texte
     assert texte.index("Viewer test") < texte.index("Additional principles")
     assert c.types == ["corps"]
     actifs = {s.principe.id for s in c.socle_actif()}
@@ -142,7 +142,7 @@ def test_principe_deja_dit_par_la_demande_n_est_pas_repete():
     assert omb.statut == "couvert" and omb.conflit_avec == "L002"
     assert "contact shadows where surfaces touch" not in c.instruction(COMPLETE)
     complet = contrat("Make the body muscular.\nAdd contact shadows where the arms touch.\n",
-                      socle_complet=True)
+                      socle_complet=True, socle_mots_max=0)
     assert "contact shadows where surfaces touch" in complet.instruction(COMPLETE)
 
 
@@ -263,3 +263,59 @@ def test_cli_verifier_et_sortie_coupee():
     proc.stdout.readline()
     proc.stdout.close()
     assert proc.wait() == 0
+
+
+def test_budget_du_socle_garde_les_principes_prioritaires():
+    c = contrat("Make the body muscular.\n")
+    ajoutes = [x for x in c.socle_actif(Mecanisme.INSTRUCTION)]
+    mots = sum(len(x.principe.directive.split()) for x in ajoutes)
+    assert 0 < mots <= 80
+    assert all(x.principe.priorite <= 1 for x in ajoutes)
+    assert "S-INT-01" in {x.principe.id for x in ajoutes}      # ce qui reste identique, d'abord
+    hors = [x for x in c.socle if x.statut == "hors budget"]
+    assert hors and any("Socle limité à 80 mots" in a for a in c.avertissements)
+    # Les mécanismes du code ne comptent pas dans le budget : ils restent actifs.
+    assert next(x for x in c.socle if x.principe.id == "S-VER-01").statut == "actif"
+    sans_limite = contrat("Make the body muscular.\n", socle_mots_max=0)
+    assert not [x for x in sans_limite.socle if x.statut == "hors budget"]
+
+
+def test_socle_entierement_en_positif():
+    import re
+
+    from local_image_ia.socle import charger_socle
+
+    for p in charger_socle().principes:
+        if p.mecanisme == Mecanisme.INSTRUCTION:
+            assert not re.search(r"\b(no|not|never|avoid|don't|without)\b", p.directive.lower()), p.id
+
+
+def test_sans_socle_seule_la_demande_part_au_modele(tmp_path):
+    c = contrat(sans_socle=True)
+    assert c.instruction(COMPLETE) == DEMANDE
+    assert any(s.statut == "désactivé" for s in c.socle)
+    # Les mécanismes du code (vérification, signature) restent actifs.
+    assert all(s.principe.mecanisme != Mecanisme.INSTRUCTION for s in c.socle_actif())
+    c.enregistrer(tmp_path / "c.json")
+    assert Contrat.charger(tmp_path / "c.json").instruction(COMPLETE) == DEMANDE
+
+
+def test_lignes_negatives_signalees_sans_toucher_la_demande(tmp_path):
+    from local_image_ia.rapport import rapport_markdown
+    from local_image_ia.mecanismes import capacites_phase0
+
+    texte = ("Make the shirt dark green.\nDo not change the face.\nNo blur, no HDR.\n"
+             "Do not alter:\n- the background\nNever generate a new photo. Keep it beautiful.\n")
+    c = contrat(texte)
+    conseils = {k["id"]: k for k in c.conseils}
+    assert set(conseils) == {"L002", "L003", "L004", "L006"}   # « - the background » : son titre suffit
+    assert conseils["L002"]["proposition"] == "keep the face and identity exactly as in the photo"
+    assert conseils["L003"]["proposition"] == "sharp focus matching the rest of the photo"
+    # La proposition vient de la partie niée, pas de « beautiful » qui suit.
+    assert conseils["L006"]["proposition"] == "edit this exact photo, changing only the requested area"
+    assert c.instruction(COMPLETE).startswith(texte)
+    assert any("formulée(s) en négatif" in a for a in c.avertissements)
+    md = rapport_markdown(c, [], capacites_phase0(), verifier_non_suppression(c), "t")
+    assert "## Conseils de formulation" in md and "n'est pas modifiée" in md
+    c.enregistrer(tmp_path / "c.json")
+    assert Contrat.charger(tmp_path / "c.json").conseils == c.conseils

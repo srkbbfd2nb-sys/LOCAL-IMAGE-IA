@@ -6,6 +6,8 @@
   "fondu": 8,
   "orphelines": "instruction",
   "socle_complet": false,
+  "socle_actif": true,
+  "socle_mots_max": 80,
   "texte": "complete",
   "format_creation": "portrait",
   "graine": null,

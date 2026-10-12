@@ -209,3 +209,49 @@ def test_cli_traiter(comfy, tmp_path, capsys):
     assert code == 0
     assert (tmp_path / "s" / "resultat.png").exists()
     assert "Résultat" in capsys.readouterr().out
+
+
+def test_comparer_memes_graines_textes_differents(comfy, tmp_path):
+    demande = tmp_path / "corps.txt"
+    demande.write_text(DEMANDE, "utf-8")
+    original = photo(tmp_path)
+    dossier = automate(comfy, candidats=2).comparer(Tache("corps", demande, image=original),
+                                                    tmp_path / "cmp")
+    assert (dossier / "planche.jpg").exists() and (dossier / "rapport_comparaison.md").exists()
+    textes = {}
+    for g in comfy.graphes:
+        textes.setdefault(g["texte"]["inputs"]["text"], []).append(g["bruit"]["inputs"]["noise_seed"])
+    # Une seule chose change d'une variante à l'autre : le texte. Les graines sont les mêmes.
+    assert len(textes) >= 2 and len({tuple(v) for v in textes.values()}) == 1
+    seule = (dossier / "demande_seule" / "instruction_envoyee.txt").read_text("utf-8")
+    assert seule == DEMANDE and "Additional principles" not in seule
+    assert "Additional principles" in (dossier / "socle_80" / "instruction_envoyee.txt").read_text("utf-8")
+    rapport = (dossier / "rapport_comparaison.md").read_text("utf-8")
+    assert "| demande_seule |" in rapport and "Ton verdict" in rapport
+    # Original + chaque variante relancée, une ligne par graine.
+    relancees = 3 - rapport.count("non relancée")
+    with Image.open(dossier / "planche.jpg") as planche:
+        assert planche.size == ((1 + relancees) * W, 2 * (H + 34))   # proportions de la photo
+
+
+def test_comparer_ne_relance_pas_un_texte_identique(comfy, tmp_path):
+    demande = tmp_path / "tasse.txt"
+    demande.write_text("A plain white ceramic mug on a wooden table.\n", "utf-8")
+    a = automate(comfy, candidats=1, socle_mots_max=5000)
+    dossier = a.comparer(Tache("tasse", demande), tmp_path / "cmp")
+    rapport = (dossier / "rapport_comparaison.md").read_text("utf-8")
+    # Un budget assez large rend « socle limité » et « socle complet » identiques.
+    assert "texte identique à socle_5000" in rapport
+    assert not (dossier / "socle_complet").exists() and len(comfy.graphes) == 2
+
+
+def test_surveiller_boite_comparer(comfy, tmp_path):
+    boite = tmp_path / "boite"
+    comparer = boite / "comparer"
+    comparer.mkdir(parents=True)
+    (comparer / "tasse.txt").write_text("A mug on a table.\n", "utf-8")
+    vieillir(*comparer.iterdir())
+    automate(comfy, candidats=1).surveiller(boite, une_fois=True)
+    (sortie,) = (boite / "sortie").iterdir()
+    assert sortie.name.endswith("_tasse_comparaison")
+    assert (sortie / "rapport_comparaison.md").exists() and list(comparer.iterdir()) == []

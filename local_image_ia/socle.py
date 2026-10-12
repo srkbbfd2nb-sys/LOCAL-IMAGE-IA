@@ -56,6 +56,7 @@ class Principe:
     conflits: tuple[str, ...] = ()
     conflits_explicites: tuple[str, ...] = ()
     couverture: tuple[str, ...] = ()
+    priorite: int = 2  # 1 essentiel, 2 utile, 3 complément : ordre de sélection sous budget
 
     def s_applique_a(self, types_demande: set[str]) -> bool:
         return "tous" in self.types or bool(types_demande & set(self.types))
@@ -70,7 +71,7 @@ class Principe:
             "modes": list(self.modes), "directive": self.directive,
             "description": self.description, "source": self.source,
             "conflits": list(self.conflits), "conflits_explicites": list(self.conflits_explicites),
-            "couverture": list(self.couverture),
+            "couverture": list(self.couverture), "priorite": self.priorite,
         }
 
     @classmethod
@@ -83,6 +84,7 @@ class Principe:
             conflits=tuple(p.get("conflits", [])),
             conflits_explicites=tuple(p.get("conflits_explicites", [])),
             couverture=tuple(p.get("couverture", [])),
+            priorite=int(p.get("priorite", 2)),
         )
 
 

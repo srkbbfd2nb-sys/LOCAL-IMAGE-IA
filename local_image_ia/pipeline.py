@@ -21,7 +21,7 @@ import numpy as np
 from PIL import Image
 
 from local_image_ia.contrat import (
-    COMPLETE, CONDENSEE, Contrat, charger_routage_manuel, compiler, verifier_non_suppression,
+    COMPLETE, CONDENSEE, SOCLE_MOTS_MAX, Contrat, charger_routage_manuel, compiler, verifier_non_suppression,
 )
 from local_image_ia.demande import DemandeFigee
 from local_image_ia.gouvernance import ArretDeclare, Capacite, verifier_circularite
@@ -56,11 +56,14 @@ def compiler_demande(
     mode: str = "edition",
     orphelines: str = "instruction",
     socle_complet: bool = False,
+    socle_mots_max: int = SOCLE_MOTS_MAX,
+    sans_socle: bool = False,
 ) -> Contrat:
     demande = DemandeFigee.depuis_fichier(chemin_demande)
     manuel = charger_routage_manuel(chemin_routage, demande) if chemin_routage else None
     contrat = compiler(demande, charger_socle(chemin_socle), manuel, types, mode=mode,
-                       orphelines=orphelines, socle_complet=socle_complet)
+                       orphelines=orphelines, socle_complet=socle_complet,
+                       socle_mots_max=socle_mots_max, sans_socle=sans_socle)
     sortie = Path(dossier_sortie)
     sortie.mkdir(parents=True, exist_ok=True)
     contrat.enregistrer(sortie / "contrat.json")

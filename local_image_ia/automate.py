@@ -12,6 +12,11 @@ Sans image à modifier mais avec des références : mode « reference ». Sans a
 image : mode « creation ». Le résultat arrive dans ``boite/sortie/<date>_<nom>/``
 (``resultat.png`` + ``rapport.md``), et les fichiers déposés sont rangés dans
 ``boite/archive/``.
+
+Déposée dans ``boite/comparer/`` au lieu de ``boite/entree/``, la même tâche est traitée
+plusieurs fois avec les mêmes graines, en ne changeant que le texte envoyé au modèle
+(ta demande seule, avec le socle limité, avec tout le socle) : ``planche.jpg`` et
+``rapport_comparaison.md`` dans ``boite/sortie/<date>_<nom>_comparaison/``.
 """
 
 from __future__ import annotations
@@ -22,13 +27,15 @@ import secrets
 import shutil
 import time
 import traceback
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
 from local_image_ia.comfy import ClientComfy
-from local_image_ia.contrat import COMPLETE, CONDENSEE
+from local_image_ia.comparaison import Variante, ecrire_planche, ecrire_rapport, variantes_standard
+from local_image_ia.contrat import COMPLETE, CONDENSEE, SOCLE_MOTS_MAX, compiler
+from local_image_ia.demande import DemandeFigee
 from local_image_ia.gouvernance import ArretDeclare, Capacite, EtatCapacite
 from local_image_ia.images import charger_image, enregistrer_png
 from local_image_ia.mecanismes import capacites_phase0
@@ -70,6 +77,8 @@ class ConfigAutomate:
     fondu: int = 8
     orphelines: str = "instruction"
     socle_complet: bool = False
+    socle_actif: bool = True      # false : seule ta demande est envoyée (comparaisons)
+    socle_mots_max: int = SOCLE_MOTS_MAX   # mots ajoutés par le socle au plus ; 0 = sans limite
     texte: str = COMPLETE         # « condensee » seulement après comparaison
     format_creation: str = "portrait"
     graine: int | None = None
@@ -97,6 +106,8 @@ class ConfigAutomate:
                                [f"Possibles : {', '.join(FORMATS)}"])
         if self.candidats < 1:
             raise ArretDeclare("Il faut au moins un candidat.")
+        if self.socle_mots_max < 0:
+            raise ArretDeclare("socle_mots_max doit être positif (0 = sans limite).")
 
 
 def lister_taches(dossier: str | Path) -> list[Tache]:
@@ -162,8 +173,13 @@ class Automate:
 
     # ----- une tâche ----------------------------------------------------------------
 
-    def traiter(self, tache: Tache, dossier: str | Path) -> Path:
-        """Traite une tâche dans ``dossier`` (créé). Lève ArretDeclare en cas d'échec."""
+    def traiter(self, tache: Tache, dossier: str | Path, reglages: dict | None = None) -> Path:
+        """Traite une tâche dans ``dossier`` (créé). Lève ArretDeclare en cas d'échec.
+
+        ``reglages`` : réglages qui remplacent la configuration pour cette tâche seulement.
+        """
+        config = replace(self.config, **(reglages or {}))
+        config.verifier()
         debut = time.monotonic()
         dossier = Path(dossier)
         (dossier / "entree").mkdir(parents=True, exist_ok=True)
@@ -174,14 +190,16 @@ class Automate:
                 charger_image(f)  # lève un arrêt déclaré explicite (format non lu)
 
         contrat = compiler_demande(tache.demande, dossier, mode=tache.mode,
-                                   orphelines=self.config.orphelines,
-                                   socle_complet=self.config.socle_complet)
+                                   orphelines=config.orphelines,
+                                   socle_complet=config.socle_complet,
+                                   socle_mots_max=config.socle_mots_max,
+                                   sans_socle=not config.socle_actif)
         durees: dict[str, float] = {"compilation du contrat": round(time.monotonic() - debut, 1)}
         capacites = capacites_phase0() + self.sonder() + [
             Capacite(f"Générateur : {self.modele.nom}", EtatCapacite.VERIFIE, "ComfyUI",
                      f"Licence {self.modele.licence}"),
         ]
-        instruction = contrat.instruction(self.config.texte)
+        instruction = contrat.instruction(config.texte)
         (dossier / "instruction_envoyee.txt").write_text(instruction, "utf-8")
 
         noms = []
@@ -192,18 +210,18 @@ class Automate:
             enregistrer_png(charger_image(f), prepare)
             noms.append(self.client.televerser(prepare, f"lia_{secrets.token_hex(4)}_{i}.png"))
 
-        base = self.config.graine if self.config.graine is not None else secrets.randbelow(2**31)
+        base = config.graine if config.graine is not None else secrets.randbelow(2**31)
         bruts: list[Path] = []
         (dossier / "bruts").mkdir(exist_ok=True)
-        for k in range(self.config.candidats):
+        for k in range(config.candidats):
             ecoule = time.monotonic() - debut
-            if k > 0 and self._derniere_duree and ecoule + self._derniere_duree > self.config.budget_s:
-                self.journal(f"  budget de {int(self.config.budget_s)} s atteint : {k} candidat(s).")
+            if k > 0 and self._derniere_duree and ecoule + self._derniere_duree > config.budget_s:
+                self.journal(f"  budget de {int(config.budget_s)} s atteint : {k} candidat(s).")
                 durees["arrêt sur budget"] = round(ecoule, 1)
                 break
             graine = base + k
             graphe = graphe_klein(self.modele, instruction, noms, graine,
-                                  format_creation=self.config.format_creation)
+                                  format_creation=config.format_creation)
             t = time.monotonic()
             delai = (DELAI_PREMIERE_GENERATION if self._derniere_duree is None
                      else max(120.0, 3 * self._derniere_duree))
@@ -221,9 +239,9 @@ class Automate:
         t = time.monotonic()
         generateur = f"{self.modele.nom} dans ComfyUI"
         if tache.mode == "edition":
-            finaliser(contrat, tache.image, tache.masque, bruts, dossier, fondu=self.config.fondu,
+            finaliser(contrat, tache.image, tache.masque, bruts, dossier, fondu=config.fondu,
                       graine=base, generateur=generateur, chemin_protege=tache.protege,
-                      capacites=capacites, durees=durees, recoloration=self.config.recoloration)
+                      capacites=capacites, durees=durees, recoloration=config.recoloration)
         else:
             finaliser_sans_original(contrat, bruts, dossier, generateur=generateur,
                                     capacites=capacites, durees=durees)
@@ -233,11 +251,46 @@ class Automate:
         rapport = dossier / "rapport.json"
         d = json.loads(rapport.read_text("utf-8"))
         d["durees"] = durees
-        d["config"] = asdict(self.config)
+        d["config"] = asdict(config)
         rapport.write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n", "utf-8")
         with open(dossier / "rapport.md", "a", encoding="utf-8") as md:
             md.write(f"Durée totale de la demande : {durees['total']} s "
-                     f"(budget visé : {int(self.config.budget_s)} s).\n")
+                     f"(budget visé : {int(config.budget_s)} s).\n")
+        return dossier
+
+    # ----- comparaison de textes ------------------------------------------------------
+
+    def comparer(self, tache: Tache, dossier: str | Path,
+                 variantes: list[Variante] | None = None) -> Path:
+        """Même tâche, mêmes graines, plusieurs textes : une planche et un rapport à juger à l'œil."""
+        dossier = Path(dossier)
+        dossier.mkdir(parents=True, exist_ok=True)
+        variantes = variantes or variantes_standard(self.config.socle_mots_max)
+        base = self.config.graine if self.config.graine is not None else secrets.randbelow(2**31)
+        demande = DemandeFigee.depuis_fichier(tache.demande)
+        deja: dict[str, str] = {}
+        for v in variantes:
+            config = replace(self.config, **v.reglages)
+            contrat = compiler(demande, mode=tache.mode, orphelines=config.orphelines,
+                               socle_complet=config.socle_complet,
+                               socle_mots_max=config.socle_mots_max,
+                               sans_socle=not config.socle_actif)
+            v.instruction = contrat.instruction(config.texte)
+            if v.instruction in deja:
+                # Même texte, mêmes graines : le résultat serait le même, inutile de relancer.
+                v.identique_a = deja[v.instruction]
+                self.journal(f"  variante {v.nom} : texte identique à {v.identique_a}, non relancée")
+                continue
+            deja[v.instruction] = v.nom
+            self.journal(f"  variante {v.nom} ({len(v.instruction.split())} mots)")
+            try:
+                self.traiter(tache, dossier / v.nom, {**v.reglages, "graine": base})
+            except ArretDeclare as exc:
+                v.erreur = exc.motif
+                _ecrire_erreur(dossier / v.nom, exc)
+        original = charger_image(tache.image) if tache.image is not None else None
+        planche = ecrire_planche(dossier, variantes, original, base)
+        ecrire_rapport(dossier, variantes, demande.empreinte, base, self.config.texte, planche)
         return dossier
 
     # ----- boucle de surveillance -----------------------------------------------------
@@ -245,19 +298,29 @@ class Automate:
     def surveiller(self, boite: str | Path, une_fois: bool = False, intervalle: float = 2.0) -> None:
         boite = Path(boite)
         entree, sortie, archive = boite / "entree", boite / "sortie", boite / "archive"
-        for d in (entree, sortie, archive):
+        comparer = boite / "comparer"
+        for d in (entree, comparer, sortie, archive):
             d.mkdir(parents=True, exist_ok=True)
         self.journal(f"Dépose tes demandes dans {entree}")
+        self.journal(f"Pour comparer les textes envoyés au modèle : {comparer}")
         while True:
-            for tache in lister_taches(entree):
+            depots = [(t, False) for t in lister_taches(entree)]
+            depots += [(t, True) for t in lister_taches(comparer)]
+            for tache, comparaison in depots:
                 if not fichiers_stables(tache.fichiers):
                     continue
                 horodatage = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                dossier = sortie / f"{horodatage}_{tache.nom}"
-                self.journal(f"Tâche « {tache.nom} » (mode {tache.mode})")
+                suffixe = "_comparaison" if comparaison else ""
+                dossier = sortie / f"{horodatage}_{tache.nom}{suffixe}"
+                self.journal(f"Tâche « {tache.nom} » (mode {tache.mode}"
+                             + (", comparaison de textes)" if comparaison else ")"))
                 try:
-                    self.traiter(tache, dossier)
-                    self.journal(f"  → {dossier / 'resultat.png'}")
+                    if comparaison:
+                        self.comparer(tache, dossier)
+                        self.journal(f"  → {dossier / 'planche.jpg'}")
+                    else:
+                        self.traiter(tache, dossier)
+                        self.journal(f"  → {dossier / 'resultat.png'}")
                 except ArretDeclare as exc:
                     _ecrire_erreur(dossier, exc)
                     self.journal(f"  ARRÊT DÉCLARÉ : {exc.motif} (voir {dossier / 'ERREUR.md'})")
@@ -265,7 +328,7 @@ class Automate:
                     _ecrire_erreur(dossier, exc, traceback.format_exc())
                     self.journal(f"  ERREUR inattendue : {exc} (voir {dossier / 'ERREUR.md'})")
                 finally:
-                    rangement = archive / f"{horodatage}_{tache.nom}"
+                    rangement = archive / f"{horodatage}_{tache.nom}{suffixe}"
                     rangement.mkdir(parents=True, exist_ok=True)
                     for f in tache.fichiers:
                         if f.exists():

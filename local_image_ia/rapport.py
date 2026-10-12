@@ -267,6 +267,15 @@ def rapport_markdown(
         o += [f"- {a}" for a in contrat.avertissements]
         o.append("")
 
+    if contrat.conseils:
+        o += ["## Conseils de formulation", "",
+              "FLUX.2 ne comprend pas les négations : « no blur » peut faire apparaître du flou. "
+              "Black Forest Labs conseille de décrire ce que l'on veut voir (F). **Ta demande "
+              "n'est pas modifiée** : reformule toi-même si tu le souhaites, et compare.", "",
+              "| ID | Ligne | Reformulation positive proposée |", "|---|---|---|"]
+        o += [f"| {c['id']} | {_cellule(c['texte'])} | {c['proposition'] or '— (à écrire toi-même)'} |"
+              for c in contrat.conseils] + [""]
+
     controle = liste_controle(contrat, candidats)
     if controle:
         o += ["## Liste de contrôle à l'œil", ""] + [f"- [ ] {i}" for i in controle] + [""]
