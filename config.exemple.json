@@ -6,10 +6,10 @@
   "fondu": 8,
   "orphelines": "instruction",
   "socle_complet": false,
-  "socle_actif": true,
+  "socle_actif": false,
   "socle_mots_max": 80,
   "texte": "complete",
   "format_creation": "portrait",
   "graine": null,
-  "recoloration": "comparer"
+  "recoloration": "non"
 }

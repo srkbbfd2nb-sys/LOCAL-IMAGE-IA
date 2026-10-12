@@ -77,12 +77,16 @@ class ConfigAutomate:
     fondu: int = 8
     orphelines: str = "instruction"
     socle_complet: bool = False
-    socle_actif: bool = True      # false : seule ta demande est envoyée (comparaisons)
+    # Texte envoyé au modèle : ta demande seule par défaut. Comparaison du 12 octobre 2026
+    # (t-shirt, 3 graines) : chaque principe ajouté au texte a dégradé la lumière, à l'œil et
+    # au score. Les principes restent appliqués par le code (verrou, grain, contrôles).
+    socle_actif: bool = False
     socle_mots_max: int = SOCLE_MOTS_MAX   # mots ajoutés par le socle au plus ; 0 = sans limite
     texte: str = COMPLETE         # « condensee » seulement après comparaison
     format_creation: str = "portrait"
     graine: int | None = None
-    recoloration: str | bool = "comparer"   # couleur : « comparer », « oui » ou « non »
+    # Recoloration par l'ombrage d'origine : laissait des traces (essais 3 et 4), désactivée.
+    recoloration: str | bool = "non"        # « non », « oui » ou « comparer »
 
     @classmethod
     def charger(cls, chemin: str | Path | None) -> "ConfigAutomate":

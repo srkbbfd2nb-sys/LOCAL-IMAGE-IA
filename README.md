@@ -57,7 +57,6 @@ Le résultat arrive dans `boite\sortie\<date>_<nom>\` :
 |---|---|
 | `resultat.png` | le meilleur candidat selon les défauts mesurables (référence exacte) |
 | `resultat.jpg` | la même image en JPEG, pour l'ouvrir ou la partager facilement |
-| `resultat_recolore.png` | changement de couleur seulement : la variante avec l'ombrage de ta photo, à comparer |
 | `candidat_01.png`, … | tous les candidats, verrouillés et corrigés |
 | `masques\C1.png`, … | la zone prise du modèle (blanc) ; tout le noir est l'original |
 | `rapport.md` | classement, état de chaque ligne, liste de contrôle à l'œil, durées |
@@ -98,11 +97,11 @@ compatible » (voir [le guide de prise de vue](docs/GUIDE_PRISE_DE_VUE_IPHONE16.
 | `texte` | `complete` | `condensee` seulement après comparaison (voir docs) |
 | `orphelines` | `instruction` | ligne qu'aucune règle ne classe : envoyée au modèle (`instruction`) ou arrêt (`arret`) |
 | `socle_complet` | `false` | `true` répète aussi les principes que ta demande dit déjà |
-| `socle_actif` | `true` | `false` : seule ta demande est envoyée au modèle |
-| `socle_mots_max` | `80` | mots ajoutés par le socle au plus, par priorité ; `0` = sans limite (voir [les sources](docs/SOURCES_EXTERNES.md)) |
+| `socle_actif` | `false` | `false` : seule ta demande est envoyée au modèle (choisi après comparaison, voir la feuille de route) ; `true` : les principes du socle s'ajoutent au texte |
+| `socle_mots_max` | `80` | avec `socle_actif` à `true` : mots ajoutés par le socle au plus, par priorité ; `0` = sans limite (voir [les sources](docs/SOURCES_EXTERNES.md)) |
 | `format_creation` | `portrait` | taille en mode création : `portrait`, `paysage`, `carre`, `vertical_9_16` |
 | `graine` | `null` | fixer une graine pour reproduire un résultat |
-| `recoloration` | `"comparer"` | changement de couleur : `"comparer"` donne `resultat.png` plus une variante `resultat_recolore.png` (ombres, plis et texture repris de ta photo) ; `"oui"` ou `"non"` une fois ton choix fait |
+| `recoloration` | `"non"` | changement de couleur : `"oui"` reprend ombres, plis et texture de ta photo par le code ; `"comparer"` ajoute cette variante (`resultat_recolore.png`) à côté du résultat. Désactivé : la variante laissait des traces sur tes essais |
 
 ## Comment ta demande est traitée
 
@@ -110,14 +109,14 @@ compatible » (voir [le guide de prise de vue](docs/GUIDE_PRISE_DE_VUE_IPHONE16.
 2. **Compilée** : chaque ligne reçoit un des cinq mécanismes (verrou, conditionnement,
    instruction, signature, vérification). Une ligne qu'aucune règle ne classe va au
    modèle telle quelle, marquée « défaut ».
-3. **Complétée** par le socle de principes (50 règles tirées de tes prompts et des
+3. **Confrontée au socle de principes** (50 règles tirées de tes prompts et des
    consignes officielles de Black Forest Labs, écrites en positif, rangées selon ton
-   prompt modulaire de [IMAGE SOURCE] à [FINAL REALISM CHECK]). Un principe que ta
-   demande dit déjà n'est pas répété ; un principe que ta demande contredit est
-   suspendu ; au-delà de 80 mots ajoutés, les principes de priorité plus faible restent
-   de côté. Le rapport dit tout cela, et signale les lignes de ta demande écrites en
-   négatif (FLUX.2 ne comprend pas « no blur ») avec une reformulation proposée : ta
-   demande, elle, n'est jamais modifiée.
+   prompt modulaire de [IMAGE SOURCE] à [FINAL REALISM CHECK]). Les principes que le
+   code peut tenir (verrou, grain, dérive de couleur, contrôles) sont appliqués. **Le
+   texte envoyé au modèle est ta demande seule** : sur ta photo du t-shirt, chaque
+   principe ajouté au texte a dégradé la lumière (comparaison du 12 octobre). Le rapport
+   signale les lignes de ta demande écrites en négatif (FLUX.2 ne comprend pas « no
+   blur ») avec une reformulation proposée : ta demande, elle, n'est jamais modifiée.
 4. **Générée** : plusieurs candidats dans ComfyUI.
 5. **Vérifiée et assemblée** (édition) : zone modifiée délimitée, dérive de couleur
    corrigée, original recopié autour, grain réappliqué si besoin, mesures, classement.

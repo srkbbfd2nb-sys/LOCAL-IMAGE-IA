@@ -33,9 +33,25 @@ secondes de traitement par le code par candidat **(E, à mesurer)**.
 | 1 | bon dans l'ensemble, grosse tache sur une ombre du t-shirt | consigne de couleur réécrite (S-CM-01) |
 | 2 | tache plus petite, toujours présente | ombrage repris de l'original par le code (S-LUM-03) |
 | 3 | **pire** : taches noires pixelisées sur les zones éclairées, ombre non résolue ; l'application Photos de Windows n'ouvre pas un fichier | défaut de la recoloration reproduit et corrigé ; recoloration en simple variante à comparer ; copie JPEG des résultats |
+| 4 (comparaison, 12 octobre) | **demande seule meilleure** : défauts de lumière avec le socle, absents sans ; résultats normaux bons ; variante recolorée laisse une trace ; Photos ouvre tout (le bug était ponctuel) | texte envoyé = ta demande seule par défaut ; recoloration désactivée ; taille de la photo écrite dans le rapport |
 
-Mesures : 64 s par photo pour 3 candidats ; zone modifiée nettement plus nette et plus
-bruitée que le reste (×2) sur les deux essais, cause à établir (taille de la photo ?).
+Comparaison du 12 octobre, même photo, mêmes trois graines **(F)** :
+
+| Variante | Mots envoyés | Score par graine (plus bas = mieux) |
+|---|---|---|
+| demande seule | 20 | 1,70 · 1,27 · 1,38 |
+| demande + 3 principes (socle limité à 80 mots) | 102 | 1,94 · 1,48 · 1,58 |
+| demande + tout le socle | 498 | 2,65 · 1,81 · 1,91 |
+
+Ton œil et les mesures donnent le même ordre sur les trois graines : plus le texte est
+long, plus il y a de défauts. Portée : une photo, un changement de couleur **(E pour
+les autres types)**. Le socle reste dans le code (verrou, grain, contrôles) et dans la
+commande « comparer », pour tester les autres types de demande avant de conclure.
+
+Mesures : 61 à 95 s par photo pour 3 candidats selon la longueur du texte ; zone modifiée
+plus nette que le reste (×1,9 à ×2,2) et un peu plus bruitée (×1,2 à ×1,3), jugée bonne à
+l'œil. La photo fait environ 1 Mpx (aucun candidat redimensionné) : l'écart ne vient pas
+d'un agrandissement ; le modèle rend plus net qu'une photo de téléphone compressée **(E)**.
 
 ### Socle réécrit d'après les consignes officielles (12 octobre 2026)
 
@@ -48,11 +64,9 @@ tourné sur ta machine.
 1. ~~Lancer `windows\installer.bat`, puis `windows\diagnostic.bat`.~~ Fait.
 2. ~~M'envoyer `boite\diagnostic\diagnostic.md`.~~ Fait.
 3. ~~Premier essai réel~~ : fait (t-shirt, trois essais).
-4. Dépose la photo du t-shirt et sa demande dans `boite\comparer\`, puis envoie-moi
-   `rapport_comparaison.md` avec ton verdict sur `planche.jpg`.
-5. Dis-moi la taille en pixels de la photo du t-shirt (clic droit → Propriétés →
-   Détails), et le nom du fichier que l'application Photos refuse d'ouvrir, avec le
-   message exact.
+4. ~~Comparaison sur la photo du t-shirt~~ : fait, demande seule retenue.
+5. Prochain essai : un autre type de demande (volume, remplacement d'objet) dans
+   `boite\comparer\`, pour vérifier que la conclusion tient hors changement de couleur.
 
 ### Repli si la mémoire ne suffit pas (déclaré, non installé)
 
@@ -96,8 +110,9 @@ inacceptable, les replis, dans l'ordre :
 - [ ] **Grain** : ton prompt « 12 points » interdit d'injecter du bruit ; le système
   suspend donc la réapplication du grain quand cette ligne est présente. À garder ?
 - [ ] **Plafond de 5 minutes par photo** (proposition, non mesurée).
-- [ ] **Budget du socle à 80 mots** (proposition d'après BFL, à trancher par la
-  comparaison) et **en-tête court** « Additional principles: ».
+- [x] **Texte envoyé au modèle** : ta demande seule (comparaison du 12 octobre). Le
+  budget de 80 mots et l'en-tête court ne servent plus qu'avec `socle_actif: true`.
+- [x] **Recoloration** : désactivée (traces visibles sur les essais 3 et 4).
 - [ ] **Longueur des prompts** : tes prompts font 1 300 à 5 500 jetons (estimation) ;
   au-delà d'environ 512, le modèle risque de diluer la consigne **(E)**. La version
   condensée retire peu de chose. Il faudra comparer un prompt long et un prompt court

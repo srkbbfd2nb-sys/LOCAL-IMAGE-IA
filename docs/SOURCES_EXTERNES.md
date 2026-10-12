@@ -80,3 +80,12 @@ Prochaines étapes possibles, **à décider après la comparaison sur tes photos
 - Les reformulations proposées pour les lignes négatives sont des suggestions de
   vocabulaire, choisies par motif ; certaines tomberont à côté. Le rapport les présente
   comme des propositions.
+
+## 5. Premier verdict sur ta machine (12 octobre 2026)
+
+Sur la photo du t-shirt, avec les mêmes trois graines, la demande seule (20 mots) a donné
+moins de défauts de lumière que la demande complétée par 3 principes (102 mots) ou par
+tout le socle (498 mots), à ton œil comme au score mesuré **(F)**. C'est cohérent avec la
+consigne de BFL d'un texte court. Le texte envoyé au modèle est donc désormais ta demande
+seule ; le socle reste appliqué par le code et testable avec « comparer ». À confirmer
+sur d'autres types de demande **(E)**.

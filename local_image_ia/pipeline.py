@@ -96,13 +96,14 @@ def finaliser(
     chemin_protege: str | Path | None = None,
     capacites: list[Capacite] | None = None,
     durees: dict | None = None,
-    recoloration: str | bool = "comparer",
+    recoloration: str | bool = "non",
 ) -> list[MesuresCandidat]:
     """Édition. ``chemin_masque`` à None : masque automatique, candidat par candidat.
 
     ``recoloration`` : pour un changement de couleur, réappliquer l'ombrage de l'original
     (principe S-LUM-03, demandes de type couleur ou matière seulement) : « oui », « non »,
-    ou « comparer » (défaut : résultat sans, plus une variante avec, à juger à l'œil).
+    ou « comparer » (résultat sans, plus une variante avec, à juger à l'œil). Défaut « non » :
+    la variante laissait des traces visibles sur les essais réels.
     """
     debut = time.monotonic()
     verifier_circularite(generateur, juge)
@@ -216,6 +217,10 @@ def finaliser(
                 "réappliqué à la nouvelle couleur (expérimental). Garde celle qui te paraît juste et "
                 "dis-le-moi : le réglage « recoloration » passera à « oui » ou « non ».")
         notes_globales += [f"Variante recolorée : {n}" for n in variante.notes]
+    h, w = forme
+    notes_globales.append(
+        f"Photo d'origine : {w}×{h} px ({w * h / 1e6:.1f} Mpx). Le modèle travaille à environ "
+        "1 Mpx ; un candidat d'une autre taille est remis à celle de la photo (voir les notes).")
     if Path(chemin_original).suffix.lower() not in FORMATS_SANS_PERTE:
         notes_globales.append(
             "Original en JPEG : les sorties sont en PNG pour que le verrou reste exact. "

@@ -131,7 +131,10 @@ def test_traiter_edition_de_bout_en_bout(comfy, tmp_path):
     assert "total" in rapport["durees"]
     # Le texte envoyé au modèle est l'instruction complète du contrat.
     envoye = comfy.graphes[0]["texte"]["inputs"]["text"]
-    assert envoye.startswith(DEMANDE) and envoye == (dossier / "instruction_envoyee.txt").read_text("utf-8")
+    assert envoye == (dossier / "instruction_envoyee.txt").read_text("utf-8")
+    # Par défaut, ta demande seule (décision du 12 octobre 2026, voir la feuille de route).
+    assert envoye == DEMANDE
+    assert not (dossier / "resultat_recolore.png").exists()
     # Hors zone modifiée, l'original est recopié au pixel près, pour chaque candidat.
     orig = np.asarray(Image.open(original).convert("RGB"))
     for i in (1, 2):
@@ -142,6 +145,7 @@ def test_traiter_edition_de_bout_en_bout(comfy, tmp_path):
         assert np.array_equal(sortie[~masque], orig[~masque])
     texte = (dossier / "rapport.md").read_text("utf-8")
     assert "Résultat retenu" in texte and "automatique" in texte
+    assert f"Photo d'origine : {W}×{H} px" in texte
 
 
 def test_traiter_creation_sans_image(comfy, tmp_path):

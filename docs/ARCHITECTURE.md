@@ -218,6 +218,13 @@ Le type de demande est celui de la première ligne qui en nomme un (l'objectif).
 changement de couleur est reconnu aussi sans le mot « couleur » : verbe de
 transformation suivi d'un nom de couleur (« Make the white t-shirt dark green »).
 
+**Par défaut, aucun principe n'est ajouté au texte du modèle** (`socle_actif: false`) :
+sur la comparaison du 12 octobre (photo du t-shirt, trois graines), la demande seule a
+donné moins de défauts de lumière que la demande complétée, à l'œil comme au score. Les
+principes exécutés par le code (verrou, grain, dérive, contrôles) restent appliqués, et
+les règles ci-dessous valent quand `socle_actif` est à `true` ou dans la commande
+« comparer ».
+
 Exemple mesuré : sur ton prompt « 13 points », 27 principes sont déjà couverts et 2
 seulement sont ajoutés au texte du modèle (densité de micro-détail, aucun texte ni logo).
 Sur une demande courte (« Make the white t-shirt dark green. Keep the background

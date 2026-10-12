@@ -464,7 +464,10 @@ def compiler(
         for s in entrees_socle:
             if s.statut == "actif" and s.principe.mecanisme == Mecanisme.INSTRUCTION:
                 s.statut = "désactivé"
-        avertissements.append("Socle désactivé : seul le texte de ta demande est envoyé au modèle.")
+        avertissements.append(
+            "Principes du socle non envoyés au modèle (réglage socle_actif) : seul le texte de ta "
+            "demande part au modèle. Le verrou, le grain et les contrôles du socle restent "
+            "appliqués par le code.")
     elif socle_mots_max > 0:
         candidats = [s for s in entrees_socle
                      if s.statut == "actif" and s.principe.mecanisme == Mecanisme.INSTRUCTION]

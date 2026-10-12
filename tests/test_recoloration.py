@@ -56,8 +56,9 @@ def test_recoloration_dans_la_chaine_complete(tmp_path):
     vert = lambda im: (im[240:280, 280:400, 1] > im[240:280, 280:400, 0] + 5).mean() > 0.95
     lire = lambda f: np.asarray(Image.open(f)).astype(float)
 
-    # Défaut « comparer » : résultat sans recoloration + variante recolorée, copies JPEG.
-    finaliser(contrat, tmp_path / "o.png", None, [tmp_path / "c.png"], tmp_path / "s")
+    # « comparer » : résultat sans recoloration + variante recolorée, copies JPEG.
+    finaliser(contrat, tmp_path / "o.png", None, [tmp_path / "c.png"], tmp_path / "s",
+              recoloration="comparer")
     assert not vert(lire(tmp_path / "s" / "resultat.png"))
     variante = lire(tmp_path / "s" / "resultat_recolore.png")
     assert vert(variante)
@@ -68,8 +69,7 @@ def test_recoloration_dans_la_chaine_complete(tmp_path):
     (oui,) = finaliser(contrat, tmp_path / "o.png", None, [tmp_path / "c.png"], tmp_path / "s2",
                        recoloration="oui")
     assert oui.masque["recoloration"]["appliquee"] and vert(lire(tmp_path / "s2" / "resultat.png"))
-    finaliser(contrat, tmp_path / "o.png", None, [tmp_path / "c.png"], tmp_path / "s3",
-              recoloration="non")
+    finaliser(contrat, tmp_path / "o.png", None, [tmp_path / "c.png"], tmp_path / "s3")  # défaut « non »
     assert not (tmp_path / "s3" / "resultat_recolore.png").exists()
 
 

@@ -122,8 +122,8 @@ def _parser() -> argparse.ArgumentParser:
     f.add_argument("--fondu", type=int, default=8, help="Largeur du fondu, en pixels, dans la zone modifiée")
     f.add_argument("--graine", type=int, default=0)
     f.add_argument("--generateur", default=GENERATEUR_PAR_DEFAUT)
-    f.add_argument("--recoloration", choices=["comparer", "oui", "non"], default="comparer",
-                   help="Changement de couleur : réappliquer l'ombrage de l'original (défaut : comparer)")
+    f.add_argument("--recoloration", choices=["comparer", "oui", "non"], default="non",
+                   help="Changement de couleur : réappliquer l'ombrage de l'original (défaut : non)")
 
     sous.add_parser("socle", help="Lister les principes du socle")
     sous.add_parser("verifier", help="Vérifier que ce Python fait tourner LOCAL-IMAGE-IA")
