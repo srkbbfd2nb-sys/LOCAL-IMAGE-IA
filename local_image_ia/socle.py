@@ -34,7 +34,14 @@ _MOTIFS_TYPES: dict[str, re.Pattern[str]] = {
         r"\b(remplac\w*|replac\w*|swap\w*|a la place|instead of|substitu\w*)\b"),
     "couleur_matiere": re.compile(
         r"\b(couleur\w*|colou?r\w*|teinte\w*|matiere\w*|material\w*|cuir|leather|tissu|fabric"
-        r"|peinture|paint\w*)\b"),
+        r"|peinture|paint\w*)\b"
+        # « Make the white t-shirt dark green » : un verbe de transformation suivi d'un nom
+        # de couleur, sans le mot « couleur ».
+        r"|\b(make|turn|change|dye|recolou?r\w*|mets?|mettre|rends?|rendre|passe|passer"
+        r"|teins?|teindre|colore\w*)\b.{0,40}\b(red|green|blue|yellow|black|white|gr[ae]y"
+        r"|orange|purple|violet|pink|brown|beige|navy|teal|cyan|magenta|turquoise|burgundy"
+        r"|khaki|olive|cream|gold\w*|silver|rouge|verte?s?|bleue?s?|jaunes?|noire?s?"
+        r"|blanche?s?|grise?s?|roses?|marron|bordeaux|kaki|doree?s?|argente\w*)\b"),
 }
 
 # Une ligne négative (« jamais studio ») ne contredit pas un principe qui dit la même chose.

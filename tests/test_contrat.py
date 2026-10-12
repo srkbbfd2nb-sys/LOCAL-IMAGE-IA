@@ -319,3 +319,11 @@ def test_lignes_negatives_signalees_sans_toucher_la_demande(tmp_path):
     assert "## Conseils de formulation" in md and "n'est pas modifiée" in md
     c.enregistrer(tmp_path / "c.json")
     assert Contrat.charger(tmp_path / "c.json").conseils == c.conseils
+
+
+def test_changement_de_couleur_reconnu_sans_le_mot_couleur():
+    for texte in ("Make the white t-shirt dark green.\n", "Mets le t-shirt blanc en vert foncé.\n"):
+        c = contrat(texte)
+        assert c.types == ["couleur_matiere"]
+        assert "S-CM-01" in [s.principe.id for s in c.socle_actif()]   # l'ombre change de couleur aussi
+    assert contrat("Make the visible physique naturally muscular.\n").types == ["corps"]

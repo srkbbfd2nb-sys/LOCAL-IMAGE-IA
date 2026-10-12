@@ -10,7 +10,7 @@
 | 4 | Mesures : hors zone, grain, netteté, raccord, temps | fait (`mesures.py`, durées dans chaque rapport) |
 | 5 | Automatisation : dossier surveillé, candidats, budget, rapport | fait (`automate.py`, `comfy.py`, `workflows.py`) |
 
-Tout est testé (53 tests) contre un faux ComfyUI qui imite l'API réelle, **pas encore
+Tout est testé (67 tests) contre un faux ComfyUI qui imite l'API réelle, **pas encore
 sur ta machine ni avec le vrai modèle**. C'est la prochaine étape.
 
 ### Diagnostic du 7 octobre 2026, 19 h 18 (ta machine)
@@ -37,12 +37,22 @@ secondes de traitement par le code par candidat **(E, à mesurer)**.
 Mesures : 64 s par photo pour 3 candidats ; zone modifiée nettement plus nette et plus
 bruitée que le reste (×2) sur les deux essais, cause à établir (taille de la photo ?).
 
+### Socle réécrit d'après les consignes officielles (12 octobre 2026)
+
+Socle en positif, budget de 80 mots par priorité, conseils sur les lignes négatives,
+commande « comparer » ([audit des sources](SOURCES_EXTERNES.md)). Rien de cela n'a encore
+tourné sur ta machine.
+
 ### Ce que j'attends de toi
 
 1. ~~Lancer `windows\installer.bat`, puis `windows\diagnostic.bat`.~~ Fait.
 2. ~~M'envoyer `boite\diagnostic\diagnostic.md`.~~ Fait.
-3. Premier essai réel : une photo sans enjeu + une demande courte (changer la couleur
-   d'un vêtement) dans `boite\entree\`, puis ton jugement à l'œil comparé au classement.
+3. ~~Premier essai réel~~ : fait (t-shirt, trois essais).
+4. Dépose la photo du t-shirt et sa demande dans `boite\comparer\`, puis envoie-moi
+   `rapport_comparaison.md` avec ton verdict sur `planche.jpg`.
+5. Dis-moi la taille en pixels de la photo du t-shirt (clic droit → Propriétés →
+   Détails), et le nom du fichier que l'application Photos refuse d'ouvrir, avec le
+   message exact.
 
 ### Repli si la mémoire ne suffit pas (déclaré, non installé)
 
@@ -86,6 +96,8 @@ inacceptable, les replis, dans l'ordre :
 - [ ] **Grain** : ton prompt « 12 points » interdit d'injecter du bruit ; le système
   suspend donc la réapplication du grain quand cette ligne est présente. À garder ?
 - [ ] **Plafond de 5 minutes par photo** (proposition, non mesurée).
+- [ ] **Budget du socle à 80 mots** (proposition d'après BFL, à trancher par la
+  comparaison) et **en-tête court** « Additional principles: ».
 - [ ] **Longueur des prompts** : tes prompts font 1 300 à 5 500 jetons (estimation) ;
   au-delà d'environ 512, le modèle risque de diluer la consigne **(E)**. La version
   condensée retire peu de chose. Il faudra comparer un prompt long et un prompt court

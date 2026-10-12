@@ -36,6 +36,8 @@ boite/entree/  ──►  automate.py  ──►  contrat.py (optimiseur)  ─�
 | `masque_auto.py` | zone modifiée déduite du candidat, dérive de couleur |
 | `verrou.py`, `signature.py`, `mesures.py` | recopie de l'original, grain, mesures |
 | `rapport.py` | rapport ligne par ligne |
+| `formulation.py` | lignes de la demande écrites en négatif, reformulation positive proposée (jamais appliquée) |
+| `comparaison.py` | planche et rapport de la commande « comparer » (mêmes graines, textes différents) |
 | `gouvernance.py` | règles du Protocole LAB traduites en code |
 
 ## Les trois modes
@@ -142,8 +144,9 @@ un modèle de langage :
 2. **Contrat** : chaque ligne avec contenu a une destination. Par défaut, une ligne
    qu'aucune règle ne classe va en instruction, marquée « défaut » ; l'option
    `orphelines: "arret"` rétablit l'arrêt déclaré.
-3. **Socle additif** : les principes s'ajoutent après ta demande, sous un en-tête qui
-   les déclare comme ajouts de priorité inférieure, regroupés par module.
+3. **Socle additif** : les principes s'ajoutent après ta demande (FLUX.2 donne plus de
+   poids au début du texte), sous l'en-tête court « Additional principles: », regroupés
+   par module. Leur statut d'ajout, leur source et leur priorité sont dans le contrat.
 4. **Rapport** : un état par ligne et par candidat.
 
 Contrôles supplémentaires : l'instruction complète contient toutes tes lignes dans
@@ -188,8 +191,11 @@ graine, version complète contre version condensée. La décision t'appartient.
 
 ## Le socle de principes
 
-Fichier `local_image_ia/socle_principes.json`, modifiable, 47 principes tirés de tes
-prompts (`sources/prompts/`). Chaque principe a :
+Fichier `local_image_ia/socle_principes.json`, modifiable, 50 principes (version
+2026-10-12) tirés de tes prompts (`sources/prompts/`), des consignes officielles de Black
+Forest Labs et des « Realism Guidelines » de wuyoscar/GPT-Image2-Skill (MIT) ; audit
+complet dans [SOURCES_EXTERNES.md](SOURCES_EXTERNES.md). Toutes les directives envoyées
+au modèle sont écrites en positif (un test l'impose). Chaque principe a :
 
 - un **module** de ton prompt modulaire : IMAGE SOURCE, ELEMENT TO MODIFY, CAMERA TO
   PRESERVE, PERSPECTIVE, LIGHTING, ENVIRONMENT, MATERIALS, PHOTOGRAPHIC PIPELINE,
@@ -200,14 +206,25 @@ prompts (`sources/prompts/`). Chaque principe a :
 - des **types** (`tous`, `corps`, `volume_forme`, `remplacement_objet`,
   `couleur_matiere`) et des **modes** ;
 - sa **source** exacte (fichier et section) ;
+- une **priorité** de 0 à 3 (0 : intégrité de la photo ; 1 : caméra, lumière, rendu
+  photographique et consignes principales du type de demande ; 2 et 3 : finitions). Le budget
+  `socle_mots_max` (80 mots par défaut) prend les principes par priorité stricte : un
+  niveau n'est entamé que si le précédent a tenu en entier. Les autres restent dans le
+  contrat, marqués « hors budget » ;
 - des motifs de **conflit** (ta ligne contredit le principe : il est suspendu) et de
   **couverture** (ta ligne dit déjà la même chose : il n'est pas répété).
 
-Le type de demande est celui de la première ligne qui en nomme un (l'objectif).
+Le type de demande est celui de la première ligne qui en nomme un (l'objectif). Un
+changement de couleur est reconnu aussi sans le mot « couleur » : verbe de
+transformation suivi d'un nom de couleur (« Make the white t-shirt dark green »).
 
-Exemple mesuré : sur ton prompt « 13 points », 25 principes sont déjà couverts et 2
-seulement sont ajoutés au texte du modèle (densité de micro-détail, aucun texte ni logo). Sur une demande
-courte, tout le socle s'ajoute : c'est là que l'optimiseur apporte le plus.
+Exemple mesuré : sur ton prompt « 13 points », 27 principes sont déjà couverts et 2
+seulement sont ajoutés au texte du modèle (densité de micro-détail, aucun texte ni logo).
+Sur une demande courte (« Make the white t-shirt dark green. Keep the background
+unchanged. »), le budget retient l'intégrité de la photo, la couleur appliquée aux zones
+d'ombre, et la caméra : 92 mots envoyés en tout, au lieu de plusieurs centaines avec tout
+le socle. La commande « comparer » dit, sur tes photos, laquelle des deux longueurs
+donne le moins de défauts.
 
 ### Conflit notable : le grain
 

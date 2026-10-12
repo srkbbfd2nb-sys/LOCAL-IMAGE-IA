@@ -64,7 +64,24 @@ Le résultat arrive dans `boite\sortie\<date>_<nom>\` :
 | `instruction_envoyee.txt` | le texte exact envoyé au modèle |
 | `bruts\` | les sorties du modèle avant traitement |
 
-Les fichiers déposés sont rangés dans `boite\archive\`. Si quelque chose bloque, un
+Les fichiers déposés sont rangés dans `boite\archive\`.
+
+### Comparer les textes envoyés au modèle
+
+Dépose la même tâche dans `boite\comparer\` au lieu de `boite\entree\`. Le système la
+traite trois fois avec **les mêmes graines**, en ne changeant que le texte envoyé :
+
+| Variante | Texte envoyé |
+|---|---|
+| `demande_seule` | ta demande, rien d'autre |
+| `socle_80` | ta demande + les principes prioritaires du socle (80 mots ajoutés au plus) |
+| `socle_complet` | ta demande + tous les principes applicables |
+
+Résultat dans `boite\sortie\<date>_<nom>_comparaison\` : `planche.jpg` (l'original puis
+une colonne par variante, une ligne par graine), `rapport_comparaison.md` (mots envoyés,
+mesures, case à cocher pour ton verdict) et un sous-dossier complet par variante. Compte
+environ trois fois la durée d'une demande. Une variante dont le texte serait identique à
+une autre n'est pas relancée. Si quelque chose bloque, un
 `ERREUR.md` explique quoi et comment corriger, et la boîte continue avec les tâches
 suivantes.
 
@@ -81,6 +98,8 @@ compatible » (voir [le guide de prise de vue](docs/GUIDE_PRISE_DE_VUE_IPHONE16.
 | `texte` | `complete` | `condensee` seulement après comparaison (voir docs) |
 | `orphelines` | `instruction` | ligne qu'aucune règle ne classe : envoyée au modèle (`instruction`) ou arrêt (`arret`) |
 | `socle_complet` | `false` | `true` répète aussi les principes que ta demande dit déjà |
+| `socle_actif` | `true` | `false` : seule ta demande est envoyée au modèle |
+| `socle_mots_max` | `80` | mots ajoutés par le socle au plus, par priorité ; `0` = sans limite (voir [les sources](docs/SOURCES_EXTERNES.md)) |
 | `format_creation` | `portrait` | taille en mode création : `portrait`, `paysage`, `carre`, `vertical_9_16` |
 | `graine` | `null` | fixer une graine pour reproduire un résultat |
 | `recoloration` | `"comparer"` | changement de couleur : `"comparer"` donne `resultat.png` plus une variante `resultat_recolore.png` (ombres, plis et texture repris de ta photo) ; `"oui"` ou `"non"` une fois ton choix fait |
@@ -91,15 +110,20 @@ compatible » (voir [le guide de prise de vue](docs/GUIDE_PRISE_DE_VUE_IPHONE16.
 2. **Compilée** : chaque ligne reçoit un des cinq mécanismes (verrou, conditionnement,
    instruction, signature, vérification). Une ligne qu'aucune règle ne classe va au
    modèle telle quelle, marquée « défaut ».
-3. **Complétée** par le socle de principes (47 règles tirées de tes prompts, rangées
-   selon ton prompt modulaire de [IMAGE SOURCE] à [FINAL REALISM CHECK]). Un principe
-   que ta demande dit déjà n'est pas répété ; un principe que ta demande contredit est
-   suspendu. Dans les deux cas, le rapport le dit.
+3. **Complétée** par le socle de principes (50 règles tirées de tes prompts et des
+   consignes officielles de Black Forest Labs, écrites en positif, rangées selon ton
+   prompt modulaire de [IMAGE SOURCE] à [FINAL REALISM CHECK]). Un principe que ta
+   demande dit déjà n'est pas répété ; un principe que ta demande contredit est
+   suspendu ; au-delà de 80 mots ajoutés, les principes de priorité plus faible restent
+   de côté. Le rapport dit tout cela, et signale les lignes de ta demande écrites en
+   négatif (FLUX.2 ne comprend pas « no blur ») avec une reformulation proposée : ta
+   demande, elle, n'est jamais modifiée.
 4. **Générée** : plusieurs candidats dans ComfyUI.
 5. **Vérifiée et assemblée** (édition) : zone modifiée délimitée, dérive de couleur
    corrigée, original recopié autour, grain réappliqué si besoin, mesures, classement.
 
-Détails : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · suite du projet :
+Détails : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · sources du socle :
+[docs/SOURCES_EXTERNES.md](docs/SOURCES_EXTERNES.md) · suite du projet :
 [docs/FEUILLE_DE_ROUTE.md](docs/FEUILLE_DE_ROUTE.md) · tes prompts d'origine :
 [sources/](sources/).
 
@@ -107,7 +131,7 @@ Détails : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · suite du projet :
 
 ```bash
 pip install -e .[dev]
-pytest                      # 53 tests, dont la chaîne automatique contre un faux ComfyUI
+pytest                      # 67 tests, dont la chaîne automatique contre un faux ComfyUI
 python -m local_image_ia compiler sources/prompts/voiture_bmw_g70.txt -o sortie
 ```
 
